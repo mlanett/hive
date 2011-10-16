@@ -7,5 +7,6 @@ module Hive
   autoload :ThreadedColony, "hive/threaded_colony"
   
   autoload :Common,         "hive/common"
+  autoload :Idler,          "hive/idler"
   autoload :Log,            "hive/log"
 end
