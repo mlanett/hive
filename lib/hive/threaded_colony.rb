@@ -35,9 +35,7 @@ class Hive::ThreadedColony
       
       pid = fork do
         Thread.current[:name] = nil
-        log "Worker Starting"
         callable.call
-        log "Worker Exiting"
       end # fork
       
       Thread.current[:name] = [ newtid, pid ].join("-")

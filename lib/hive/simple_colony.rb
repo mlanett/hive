@@ -1,6 +1,7 @@
 class Hive::SimpleColony
   
   include Hive::Log
+  include Hive::Common
   
   attr :running
   def initialize
@@ -10,26 +11,33 @@ class Hive::SimpleColony
   def launch( options = {}, &callable_block )
     raise if options[:callable] && callable_block
     callable = options[:callable] || callable_block
+    timeout  = options[:timeout] || 1024
     
-    land while running >= 4
+    collect while running >= 4
     pid = fork do
-      log "Worker Starting"
-      callable.call
-      log "Worker Exiting"
+      # this is the monitor
+      
+      real_pid = fork do
+        # this is the real job
+        callable.call
+      end
+      
+      result = wait_and_terminate( real_pid, :timeout => timeout )
+      log "Job complete, result: #{result}."
     end
     @running += 1
     log "Forked Worker #{pid}; Total Running #{running}"
     pid
   end
   
-  def land()
+  def collect()
     pid = Process.wait
     @running -= 1
-    log "Landed #{pid}; Total Running #{running}"
+    log "Collected #{pid}; Total Running #{running}"
   end
   
   def collect_all
-    land while running > 0
+    collect while running > 0
   end
   
 end # Hive::SimpleColony
