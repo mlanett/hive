@@ -45,9 +45,17 @@ class Hive::PollingColony
   end
   
   def collect()
-    pid = Process.wait
-    @running -= 1
-    log "Collected #{pid}; Total Running #{running}"
+    # go through all pids
+    pids = []
+    @workers.each do |pid, worker|
+      status = check( pid )
+      pids << pid if status
+    end
+    pids.each do |pid|
+      @workers.delete(pid)
+      @running -= 1
+      log "Collected #{pid}; Total Running #{running}"
+    end
   end
   
   def collect_all
