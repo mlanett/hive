@@ -10,4 +10,5 @@ module Hive
   autoload :Idler,          "hive/idler"
   autoload :Log,            "hive/log"
   autoload :ProcessStorage, "hive/process_storage"
+  autoload :SignalHook,     "hive/signal_hook"
 end
