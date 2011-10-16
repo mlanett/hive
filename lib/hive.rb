@@ -9,4 +9,5 @@ module Hive
   autoload :Common,         "hive/common"
   autoload :Idler,          "hive/idler"
   autoload :Log,            "hive/log"
+  autoload :ProcessStorage, "hive/process_storage"
 end
