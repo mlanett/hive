@@ -1,0 +1,7 @@
+Hive helps to run pools of workers.
+
+A pool contains several workers.
+
+Workers are processes which run jobs.
+
+Jobs are simple tasks.
