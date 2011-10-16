@@ -5,6 +5,7 @@ module Hive
   autoload :Daemon,         "hive/daemon"
   autoload :Idler,          "hive/idler"
   autoload :Log,            "hive/log"
+  autoload :Policy,         "hive/policy"
   autoload :PollingColony,  "hive/polling_colony"
   autoload :ProcessStorage, "hive/process_storage"
   autoload :RedisColony,    "hive/redis_colony"
