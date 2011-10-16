@@ -9,8 +9,8 @@ p = lambda do
   print "#{Process.pid} Slept #{t} seconds.\n"
 end
 
-2.times do
-  c.launch( callable: p, timeout: 3 )
+1000.times do
+  c.launch( callable: p, timeout: 7 )
 end
 
 c.collect_all
