@@ -2,18 +2,15 @@ class Hive::RedisColony
   
   include Hive::Log
   
-  attr :name
   attr :running
   attr :pids
   
   def initialize( options = {} )
-    @name    = options[:name] || (begin @@cid ||= 0; @@cid += 1; end)
     @running = 0
     @pids    = {}
   end
   
   def launch( options = {}, &callable_block )
-    raise if options[:callable] && callable_block
     callable = options[:callable] || callable_block
     
     collect while running >= 4
@@ -21,7 +18,7 @@ class Hive::RedisColony
       callable.call
     end
     @running += 1
-    log "Forked Worker #{pid}; Total Running #{running}"
+    log "LaunchedWorker #{pid}; Total Running #{running}"
     pid
   end
   

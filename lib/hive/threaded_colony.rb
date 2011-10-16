@@ -26,7 +26,6 @@ class Hive::ThreadedColony
   end
   
   def launch( options = {}, &callable_block )
-    raise if options[:callable] && callable_block
     callable = options[:callable] || callable_block
     
     thread = Thread.new(options) do |options|
@@ -50,7 +49,7 @@ class Hive::ThreadedColony
     # Safe even if out of order
     Thread.exclusive { @threads[thread.object_id] = thread; @workers += 1 }
     
-    log "Forked Worker #{thread[:name]}"
+    log "LaunchedWorker #{thread[:name]}"
     return thread
   end # launch
   

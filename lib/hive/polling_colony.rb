@@ -3,35 +3,45 @@ class Hive::PollingColony
   include Hive::Log
   include Hive::Common
   
-  attr :name
   attr :running
-  attr :pids
+  attr :workers
   
   def initialize( options = {} )
-    @name    = options[:name] || (begin @@cid ||= 0; @@cid += 1; end)
     @running = 0
-    @pids    = {}
+    @workers = {}
   end
   
   def launch( options = {}, &callable_block )
-    raise if options[:callable] && callable_block
     callable = options[:callable] || callable_block
+    timeout  = options[:timeout] || 1024
     
     collect while running >= 4
+    
     pid = fork do
-      log "Monitor started."
+      # this is the monitor
       
       real_pid = fork do
+        # this is the real job
         callable.call
       end
       
-      log "Monitor watching #{real_pid}"
-      wait_and_terminate( real_pid, timeout )
-      log "Monitor and worker complete."
+      result = wait_and_terminate( real_pid, timeout: timeout )
+      log "Job complete, result: #{result}."
     end
-    @running += 1
-    log "Forked Worker #{pid}; Total Running #{running}"
+    
+    worker = launched( pid, timeout )
+    log "Launched #{worker}; Total Running #{running}"
     pid
+  end
+  
+  def launched( pid, timeout, start_time = Time.now.to_i )
+    @running += 1
+    @workers[pid] = Worker.new( pid, start_time, start_time + timeout, 0.125, start_time + 0.125 )
+  end
+  
+  def check( pid )
+    dummy, status = Process.wait2( pid, Process::WNOHANG )
+    status
   end
   
   def collect()
@@ -44,17 +54,15 @@ class Hive::PollingColony
     collect while running > 0
   end
   
-  include Log
-  
-  class Pid < Struct.new :pid, :start_time, :deadline, :window, :next_check, :last_status
+  class Worker < Struct.new :pid, :start_time, :deadline, :window, :next_check
     def to_s
       return [
-        "Pid(",
-        pid,
-        Time.now - start_time,
-        last_status
+        "Worker(", [
+          pid,
+          Time.now.to_i - start_time
+        ].compact.join(","),
         ")"
-      ].compact.join(",")
+      ].compact.join
     end
   end
   
