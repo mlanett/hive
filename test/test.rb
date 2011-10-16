@@ -1,17 +1,16 @@
 require "hive"
 
-C = Hive::SimpleColony
-
-c = C.new
+c = Hive::ThreadedColony.new
 
 p = lambda do
-  puts "#{Process.pid} Hello, world!"
-  sleep rand(10)
-  puts "#{Process.pid} Goodbye cruel world!"
+  t = rand(10)
+  print "#{Process.pid} Hello, world!\n"
+  sleep(t)
+  print "#{Process.pid} Slept #{t} seconds.\n"
 end
 
 10.times do
-  c.launch(p)
+  c.launch( :callable => p, :timeout => 2 )
 end
 
 c.collect_all
