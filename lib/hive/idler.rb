@@ -43,4 +43,10 @@ class Hive::Idler
     return result
   end
   
+  private
+  
+  #def sleep(i)
+  #  Hive::SignalHook.trap("INT") { @sleep = 0 }.attempt { Kernel.sleep(i) }
+  #end
+  
 end # Hive::Idler
