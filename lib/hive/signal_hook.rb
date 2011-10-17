@@ -36,7 +36,7 @@ class Hive::SignalHook
 
   class << self
     def trap( signal, &block )
-      hook       = SignalHook.new
+      hook       = new
       hook.local = block
       previous   = Signal.trap( signal ) { hook.trigger }
       hook.chain = previous if previous && previous.kind_of?(Proc)
