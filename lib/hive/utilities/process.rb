@@ -31,5 +31,33 @@ module Hive::Utilities::Process
     dummy, status = ::Process.wait2( pid, ::Process::WNOHANG )
     status
   end
-  
+
+  def fork_and_detach( options = {}, &action)
+    fork do
+      ::Process.setsid
+      exit if fork
+      redirect_stdio( options[:stdout] )
+      action.call
+    end
+  end
+
+  def redirect_stdio( stdout )
+    STDIN.reopen "/dev/null"
+    if stdout then
+      mask = File.umask(0000)
+      file = File.new( stdout, "a" ) # append or create, write only
+      File.umask( mask )
+      STDOUT.reopen( file )
+    else
+      STDOUT.reopen "/dev/null"
+    end
+    STDERR.reopen(STDOUT)
+  end
+
+  def alive?( pid )
+    ::Process.kill( 0, pid )
+  rescue Errno::ESRCH
+    false
+  end
+
 end # Hive::Utilities::Process

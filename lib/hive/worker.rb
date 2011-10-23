@@ -10,15 +10,15 @@
 class Hive::Worker
 
   include Hive::Utilities::Observeable
+  extend Hive::Utilities::Process
 
   # forks a new process
   # creates a new instance of the job class
   # runs a loop which calls the job
-  def self.spawn( *arguments )
-    fork do
-      STDIN.reopen "/dev/null"
+  def self.spawn( *arguments, &proc )
+    fork_and_detach do
       trap("TERM") { quit! }
-      new( *arguments ).run
+      new( *arguments, &proc ).run
     end
   end
 
@@ -28,9 +28,9 @@ class Hive::Worker
 
   def initialize( options = {}, job, &callable_job )
     job ||= callable_job
-    @policy            = Hive::Policy.new(options)
-    @job_with_idle     = Hive::Idler.new(job)
-    @state             = :running
+    @policy        = Hive::Policy.new(options)
+    @job_with_idle = Hive::Idler.new(job)
+    @state         = :running
   end
 
   def run()
