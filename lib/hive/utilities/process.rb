@@ -1,10 +1,10 @@
-module Hive::Common
+module Hive::Utilities::Process
   
   def wait_impatiently( pid, deadline )
     status   = nil
     interval = 0.125
     begin # execute at least once to get status
-      dummy, status = Process.wait2( pid, Process::WNOHANG )
+      dummy, status = ::Process.wait2( pid, ::Process::WNOHANG )
       break if status
       log "Waiting for #{pid}", "Sleeping #{interval}" if false
       sleep(interval)
@@ -23,13 +23,13 @@ module Hive::Common
     
     log "Job #{pid} is overdue, killing"
     
-    Process.kill( signal, pid )
+    ::Process.kill( signal, pid )
     status = wait_impatiently( pid, Time.now.to_i + 1 )
     return status if status
     
-    Process.kill( "TERM", pid ) if ! status
-    dummy, status = Process.wait2( pid, Process::WNOHANG )
+    ::Process.kill( "TERM", pid ) if ! status
+    dummy, status = ::Process.wait2( pid, ::Process::WNOHANG )
     status
   end
   
-end # Hive::Common
+end # Hive::Utilities::Process

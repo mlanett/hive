@@ -1,7 +1,7 @@
 class Hive::SimpleColony
   
   include Hive::Log
-  include Hive::Common
+  include Hive::Utilities::Process
   
   attr :running
   

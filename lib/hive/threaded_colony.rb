@@ -3,7 +3,7 @@
 class Hive::ThreadedColony
   
   include Hive::Log
-  include Hive::Common
+  include Hive::Utilities::Process
   
   attr :workers
   attr :threads
