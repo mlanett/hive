@@ -118,20 +118,17 @@ class Hive::Configuration
   end
 
   def options_for_daemon_spawn
+    mkdirp root, "#{root}/log", "#{root}/tmp", "#{root}/tmp/pids" if ! dry_run
     return {
       working_dir: root,
-      log_file:    "#{root}/#{name}_#{env}.log",
-      pid_file:    "#{root}/#{name}_#{env}.pid",
-      sync_log:    %w(development test).member?(env)
+      log_file:    "#{root}/log/#{name}_#{env}.log",
+      pid_file:    "#{root}/tmp/pids/#{name}_#{env}.pid",
+      sync_log:    local?
     }
   end
 
   def args_for_daemon_spawn
     args + [self]
-  end
-
-  def default_root
-    %w(development test).member?(env) ? "." : "/tmp/#{name}"
   end
 
   # ----------------------------------------------------------------------------
@@ -150,12 +147,12 @@ class Hive::Configuration
   def chdir(path)
     if ! @root then
       p = File.expand_path(path)
-      Dir.mkdir(p) if ! Dir.exists?(p) && ! dry_run
+      mkdirp(p) if ! dry_run
       Dir.chdir(p)
       log "Changed working directory (root) to #{p}" if verbose >= 1
       @root = p
     else
-      log "Warning working directory already set to #{root}; not changing to #{path}"
+      log "Warning: working directory already set to #{root}; not changing to #{path}"
     end
   end
 
@@ -187,6 +184,22 @@ class Hive::Configuration
   end
 
   def after_fork(&block)
+  end
+
+  # ----------------------------------------------------------------------------
+  private
+  # ----------------------------------------------------------------------------
+
+  def local?
+    %w(development test).member?(env)
+  end
+
+  def default_root
+    local? ? "." : "/tmp/#{name}"
+  end
+
+  def mkdirp(*ps)
+    ps.each { |p| Dir.mkdir(p) if ! Dir.exists?(p) }
   end
 
 end
