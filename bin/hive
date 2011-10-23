@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+
+File.expand_path(File.dirname(__FILE__)+"/../lib").tap { |d| $:.unshift(d) if ! $:.member?(d) }
+require "hive"
+require "optparse"
+
+configuration = Hive::Configuration.parse(ARGV)
+Hive::Daemon.spawn!(
+  working_dir: configuration.root,
+  log_file:    "#{configuration.root}/#{configuration.name}_#{configuration.env}.log",
+  pid_file:    "#{configuration.root}/#{configuration.name}_#{configuration.env}.pid",
+  sync_log:    %w(development test).member?(configuration.env)
+)

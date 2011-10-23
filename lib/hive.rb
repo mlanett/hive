@@ -2,6 +2,7 @@ require "hive/version"
 
 module Hive
   autoload :Common,         "hive/common"
+  autoload :Configuration,  "hive/configuration"
   autoload :Daemon,         "hive/daemon"
   autoload :Idler,          "hive/idler"
   autoload :Log,            "hive/log"
