@@ -1,15 +1,24 @@
 #!/usr/bin/env ruby
 
+=begin
+
+  Usage:
+  hive [options] start | stop | restart | status
+
+  e.g.
+  hive --dry-run --verbose --env production --name it --chdir /tmp/it start
+  hive /opt/rails/it/current/config/it start
+  Options must preceed the command.
+
+  Note: the pid file depends on chdir, env, and name, so you have to specify them for any command to work.
+  They can be specified in a configuration file.
+
+=end
+
 File.expand_path(File.dirname(__FILE__)+"/../lib").tap { |d| $:.unshift(d) if ! $:.member?(d) }
 require "hive"
-require "optparse"
 
 my = Hive::Configuration.parse(ARGV)
 if ! my.dry_run then
-  Hive::Daemon.spawn!(
-    working_dir: my.root,
-    log_file:    "#{my.root}/#{my.name}_#{my.env}.log",
-    pid_file:    "#{my.root}/#{my.name}_#{my.env}.pid",
-    sync_log:    %w(development test).member?(my.env)
-  )
+  Hive::Daemon.spawn!( my.options_for_daemon_spawn, my.args_for_daemon_spawn )
 end

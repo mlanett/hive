@@ -12,10 +12,7 @@ class Hive::Daemon < DaemonSpawn::Base
   def start( arguments )
     trap("TERM") { stop } # Replace daemon_spawn's exit() with an async stop
     
-    file = arguments[0]
-    conf = YAML::load( ERB.new( IO.read( file ) ).result )
-    defs = conf.delete("defaults")
-    conf = Hash[ conf.map { |k,v| [ k, defs.merge( v || {} ) ] } ]
+    my = arguments[0] or raise "Missing configuration"
     
     pools = conf.map do |name,options|
       if ! pclass = options.delete("class") then

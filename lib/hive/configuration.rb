@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+require "optparse"
 require "ruby-debug"
 
 =begin
@@ -59,9 +60,10 @@ class Hive::Configuration
     end.parse!(argv)
 
     while argv.any? && File.exists?(argv.first) do
-      us.load_file( argv.pop )
+      us.load_file( argv.shift )
     end
 
+    us.args = argv
     us.finalize
   end
 
@@ -72,7 +74,8 @@ class Hive::Configuration
   attr :name, true
   attr :verbose, true
   attr :dry_run, true
-  
+  attr :args, true
+
   attr :defaults
   attr :jobs
 
@@ -113,7 +116,20 @@ class Hive::Configuration
     freeze
     self
   end
-  
+
+  def options_for_daemon_spawn
+    return {
+      working_dir: root,
+      log_file:    "#{root}/#{name}_#{env}.log",
+      pid_file:    "#{root}/#{name}_#{env}.pid",
+      sync_log:    %w(development test).member?(env)
+    }
+  end
+
+  def args_for_daemon_spawn
+    args + [self]
+  end
+
   # ----------------------------------------------------------------------------
   # DSL
   # ----------------------------------------------------------------------------
