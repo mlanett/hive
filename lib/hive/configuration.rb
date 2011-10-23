@@ -57,7 +57,9 @@ class Hive::Configuration
       opts.on( "--dry-run",           "Don't launch the daemon.")     { us.dry_run = true }
     end.parse!
 
-    argv.compact.each { |f| us.load_file(f) }
+    while argv.any? && File.exists?(argv.first) do
+      us.load_file( argv.pop )
+    end
 
     us.finalize
   end
