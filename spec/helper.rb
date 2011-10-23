@@ -23,3 +23,5 @@ require "bundler/setup"                                                         
 require "minitest/autorun"                                                            # enable minitest
 File.expand_path("../../spec", __FILE__).tap { |p| $:.push(p) unless $:.member?(p) }  # set path
 require "hive"                                                                        # load this gem
+
+REDIS = { :url => "redis://127.0.0.1:6379/1" }
