@@ -23,12 +23,3 @@ require "bundler/setup"                                                         
 require "minitest/autorun"                                                            # enable minitest
 File.expand_path("../../spec", __FILE__).tap { |p| $:.push(p) unless $:.member?(p) }  # set path
 require "hive"                                                                        # load this gem
-
-def wait( timeout = 1, &test )
-  tester = Hive::Idler.new(test)
-  finish = Time.now.to_f + timeout
-  loop do
-    break if tester.call
-    break if finish < Time.now.to_f
-  end
-end

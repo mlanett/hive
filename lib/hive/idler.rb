@@ -44,4 +44,15 @@ class Hive::Idler
     return result
   end
 
+  class << self
+    def wait( timeout = 1, &test )
+      tester = new(test)
+      finish = Time.now.to_f + timeout
+      loop do
+        break if tester.call
+        break if finish < Time.now.to_f
+      end
+    end
+  end # class
+
 end # Hive::Idler
