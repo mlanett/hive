@@ -8,8 +8,13 @@ module Hive
   autoload :Policy,         "hive/policy"
   autoload :PollingColony,  "hive/polling_colony"
   autoload :ProcessStorage, "hive/process_storage"
-  autoload :RedisColony,    "hive/redis_colony"
   autoload :SignalHook,     "hive/signal_hook"
   autoload :SimpleColony,   "hive/simple_colony"
   autoload :ThreadedColony, "hive/threaded_colony"
+end
+
+module Hive::Redis
+  autoload :Colony,         "hive/colony"
+  autoload :Observer,       "hive/observer"
+  autoload :Storage,        "hive/storage"
 end

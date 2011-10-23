@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-module Hive::RedisObserver
+module Hive::Redis::Observer
   
   def notify_started
     @ro_workers = "hive:workers"
@@ -20,7 +20,7 @@ module Hive::RedisObserver
   end
   
   def redis
-    ::Hive::RedisObserver.redis
+    Hive::Redis::Observer.redis
   end
   
   class << self

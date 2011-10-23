@@ -1,4 +1,4 @@
-class Hive::RedisColony
+class Hive::Redis::Colony
   
   include Hive::Log
   
@@ -46,4 +46,4 @@ class Hive::RedisColony
     end
   end
   
-end # Hive::RedisColony
+end # Hive::Redis::Colony

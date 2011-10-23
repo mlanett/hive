@@ -8,7 +8,7 @@ worker.feedback = Hive::Feedback.new($storage)
 
 =end
 
-class Hive::RedisFeedback
+class Hive::Redis::Feedback
   
   attr_reader :key, :keyh, :keyq
   attr :redis
@@ -76,4 +76,4 @@ class Hive::RedisFeedback
     JSON.parse(message) if message
   end
   
-end # Hive::RedisFeedback
+end # Hive::Redis::Feedback
