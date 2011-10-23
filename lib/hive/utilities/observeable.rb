@@ -7,8 +7,10 @@ module Hive::Utilities::Observeable
   end
 
   def notify( *details )
-    (@observers || []).each do |observer|
-      observer.notify( self, *details )
+    if @observers then
+      @observers.each do |observer|
+        observer.notify( self, *details )
+      end
     end
   end
 
