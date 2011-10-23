@@ -1,9 +1,9 @@
 class Hive::Policy
-  
+
   def initialize( options = {} )
     @options = options
   end
-  
+
   class << self
     def declare_i( name, default_value )
       name_s = name.to_s
@@ -18,7 +18,7 @@ class Hive::Policy
       end
     end
   end
-  
+
   declare_i :pool_min_workers,      1
   declare_i :pool_max_workers,      10
   declare_f :worker_idle_max_sleep, 64
