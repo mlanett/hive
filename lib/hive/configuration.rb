@@ -110,7 +110,7 @@ class Hive::Configuration
       log "Defaulting name to #{name}" if verbose >= 1
     end
     if ! @root then
-      chdir "/tmp/#{name}"
+      chdir(default_root)
     end
     log inspect if verbose >= 2
     freeze
@@ -128,6 +128,10 @@ class Hive::Configuration
 
   def args_for_daemon_spawn
     args + [self]
+  end
+
+  def default_root
+    %w(development test).member?(env) ? "." : "/tmp/#{name}"
   end
 
   # ----------------------------------------------------------------------------
