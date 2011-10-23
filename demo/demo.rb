@@ -7,6 +7,10 @@
 add_path File.dirname(__FILE__)
 require "job1"
 
+set_env   "development" if ! env
+set_name  "demo"
+chdir     "/tmp/demo"
+
 set_defaults(
   pool_min_workers: 1,
   warntime:         10,
@@ -29,7 +33,3 @@ after_fork do
   # reset ActiveRecord and other pools
   puts "Forked!"
 end
-
-set_env   "development" if ! env
-set_name  "demo"
-chdir     "/tmp/demo"
