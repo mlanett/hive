@@ -1,7 +1,9 @@
 # -*- encoding: utf-8 -*-
 # This file is evaluated in the context of a Hive::Configuration instance.
-# DSL attributes include: env, env=
+# DSL attributes include: env, set_env, name, set_name
 # DSL methods include: chdir, add_path, set_defaults, add_pool, before_fork, after_fork.
+
+set_name "demo"
 
 add_path File.dirname(__FILE__)
 require "job1"

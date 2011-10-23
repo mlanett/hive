@@ -9,7 +9,7 @@ Offers a DSL to build the jobs as well as setting before/after-fork hooks.
 Hive configuration:
 
 env()
-env=(ENV)
+set_env(ENV)
 --env=ENV
 Sets the environment.
 Used in pid file and log file naming.
@@ -48,9 +48,9 @@ class Hive::Configuration
     optparse = OptionParser.new do |opts|
       opts.banner = "Usage: #{__FILE__} [options]* configuration_file_rb"
       opts.on( "-c", "--chdir DIR",   "Change working directory." )   { |d| us.chdir(d) }
-      opts.on( "-e", "--env ENV",     "Set environment (env).")       { |e| us.env = e }
+      opts.on( "-e", "--env ENV",     "Set environment (env).")       { |e| us.set_env(e) }
       opts.on( "-h", "--help",        "Display this usage summary." ) { puts opts; exit }
-      opts.on( "-n", "--name NAME",   "Set daemon's name.")           { |n| us.name = n }
+      opts.on( "-n", "--name NAME",   "Set daemon's name.")           { |n| us.set_name(n) }
       opts.on( "-p", "--path PATH",   "Add to load path.")            { |d| us.add_path(d) }
       opts.on( "-r", "--require LIB", "Require a library.")           { |l| us.require_lib(l) }
       opts.on( "-s", "--script DSL",  "Include DSL script.")          { |s| us.load_script(s) }
@@ -118,20 +118,25 @@ class Hive::Configuration
   # DSL
   # ----------------------------------------------------------------------------
 
-  def env=(e)
-    if @env then
-      log "Warning: changing environment from #{@env} to #{e}"
-    end
-    @env = e
+  def set_env(env)
+    @env = env
   end
-  
+
+  def set_name(name)
+    @name = name
+  end
+
   # takes effect immediately
   def chdir(path)
-    p = File.expand_path(path)
-    Dir.mkdir(p) if ! Dir.exists?(p) && ! dry_run
-    Dir.chdir(p)
-    log "Changed working directory (root) to #{p}" if verbose >= 1
-    @root = p
+    if ! @root then
+      p = File.expand_path(path)
+      Dir.mkdir(p) if ! Dir.exists?(p) && ! dry_run
+      Dir.chdir(p)
+      log "Changed working directory (root) to #{p}" if verbose >= 1
+      @root = p
+    else
+      log "Warning working directory already set to #{root}; not changing to #{path}"
+    end
   end
 
   # takes effect immediately
