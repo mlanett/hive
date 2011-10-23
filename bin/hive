@@ -4,12 +4,12 @@ File.expand_path(File.dirname(__FILE__)+"/../lib").tap { |d| $:.unshift(d) if ! 
 require "hive"
 require "optparse"
 
-configuration = Hive::Configuration.parse(ARGV)
-if ! configuration.dry_run then
+my = Hive::Configuration.parse(ARGV)
+if ! my.dry_run then
   Hive::Daemon.spawn!(
-    working_dir: configuration.root,
-    log_file:    "#{configuration.root}/#{configuration.name}_#{configuration.env}.log",
-    pid_file:    "#{configuration.root}/#{configuration.name}_#{configuration.env}.pid",
-    sync_log:    %w(development test).member?(configuration.env)
+    working_dir: my.root,
+    log_file:    "#{my.root}/#{my.name}_#{my.env}.log",
+    pid_file:    "#{my.root}/#{my.name}_#{my.env}.pid",
+    sync_log:    %w(development test).member?(my.env)
   )
 end
