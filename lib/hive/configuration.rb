@@ -53,10 +53,10 @@ class Hive::Configuration
       opts.on( "-n", "--name NAME",   "Set daemon's name.")           { |n| us.name = n }
       opts.on( "-p", "--path PATH",   "Add to load path.")            { |d| us.add_path(d) }
       opts.on( "-r", "--require LIB", "Require a library.")           { |l| us.require_lib(l) }
-      opts.on( "-s", "--script DSL",  "Include DSL script.")          { |s| us.load_dsl(s) }
+      opts.on( "-s", "--script DSL",  "Include DSL script.")          { |s| us.load_script(s) }
       opts.on( "-v", "--verbose",     "Print stuff out.")             { |s| us.verbose += 1 }
       opts.on( "--dry-run",           "Don't launch the daemon.")     { us.dry_run = true }
-    end.parse!
+    end.parse!(argv)
 
     while argv.any? && File.exists?(argv.first) do
       us.load_file( argv.pop )
@@ -83,7 +83,7 @@ class Hive::Configuration
     @jobs     = {}
   end
 
-  def load_dsl(string)
+  def load_script(string)
     log "Loading #{string}" if verbose >= 2
     instance_eval(string)
   end
