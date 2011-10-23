@@ -60,4 +60,6 @@ module Hive::Utilities::Process
     false
   end
 
+  extend Hive::Utilities::Process
+
 end # Hive::Utilities::Process

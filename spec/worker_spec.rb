@@ -44,11 +44,10 @@ describe Hive::Worker do
     pid   = Process.pid
     redis = Redis.connect(REDIS)
     redis.set "Hive::SpawningJob", pid
-    
-    pid   = Hive::Worker.spawn({},Hive::QuittingJob.new)
-    Hive::Idler.wait_until { redis.get("Hive::SpawningJob") != pid }
-    
-    redis.get("Hive::SpawningJob").wont_equal pid
+
+    Hive::Worker.spawn({},Hive::SpawningJob.new)
+    Hive::Idler.wait_until { redis.get("Hive::SpawningJob").to_i != pid }
+    redis.get("Hive::SpawningJob").to_i.wont_equal pid
     redis.del "Hive::SpawningJob"
   end
 
