@@ -1,6 +1,3 @@
-# http://bfts.rubyforge.org/minitest/MiniTest/Assertions.html
-require "hive/process_storage"
-
 describe Hive::ProcessStorage do
   
   before do

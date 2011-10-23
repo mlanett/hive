@@ -20,6 +20,15 @@ must_throw             sym, msg = nil
 =end
 
 require "bundler/setup"                                                               # load dependencies
+require "minitest/autorun"                                                            # enable minitest
 File.expand_path("../../spec", __FILE__).tap { |p| $:.push(p) unless $:.member?(p) }  # set path
 require "hive"                                                                        # load this gem
-require "minitest/autorun"                                                            # enable minitest
+
+def wait( timeout = 1, &test )
+  tester = Hive::Idler.new(test)
+  finish = Time.now.to_f + timeout
+  loop do
+    break if tester.call
+    break if finish < Time.now.to_f
+  end
+end
