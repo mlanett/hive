@@ -45,7 +45,7 @@ class Hive::Idler
   end
 
   class << self
-    def wait( timeout = 1, &test )
+    def wait_until( timeout = 1, &test )
       tester = new(test)
       finish = Time.now.to_f + timeout
       loop do
