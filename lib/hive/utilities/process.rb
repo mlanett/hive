@@ -1,6 +1,6 @@
 module Hive::Utilities::Process
   
-  def wait_impatiently( pid, deadline )
+  def wait_until_deadline( pid, deadline )
     status   = nil
     interval = 0.125
     begin # execute at least once to get status
@@ -9,7 +9,7 @@ module Hive::Utilities::Process
       log "Waiting for #{pid}", "Sleeping #{interval}" if false
       sleep(interval)
       interval *= 2 if interval < 1.0
-    end while Time.now.to_i < deadline
+    end while Time.now.to_f < deadline
     status
   end
   
@@ -18,13 +18,13 @@ module Hive::Utilities::Process
     timeout = options[:timeout] || 1024
     signal  = options[:signal] || "HUP"
     
-    status = wait_impatiently( pid, Time.now.to_i + timeout )
+    status = wait_until_deadline( pid, Time.now.to_f + timeout )
     return status if status
     
     log "Job #{pid} is overdue, killing"
     
     ::Process.kill( signal, pid )
-    status = wait_impatiently( pid, Time.now.to_i + 1 )
+    status = wait_until_deadline( pid, Time.now.to_f + 1 )
     return status if status
     
     ::Process.kill( "TERM", pid ) if ! status
