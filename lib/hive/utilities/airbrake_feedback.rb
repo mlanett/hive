@@ -25,4 +25,4 @@ class Hive::Utilities::AirbrakeFeedback
     Airbrake.notify(x)
   end
 
-end # Hive::Feedback
+end # Hive::Utilities::AirbrakeFeedback

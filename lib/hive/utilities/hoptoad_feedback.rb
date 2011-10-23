@@ -25,4 +25,4 @@ class Hive::Utilities::HoptoadFeedback
     HoptoadNotifier.notify(x)
   end
 
-end # Hive::Feedback
+end # Hive::Utilities::HoptoadFeedback

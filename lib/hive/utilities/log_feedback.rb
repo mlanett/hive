@@ -10,7 +10,7 @@
   
 =end
 
-class Hive::LogFeedback
+class Hive::Utilities::LogFeedback
   
   include Hive::Log
   include Hive::Utilities::Observer
@@ -32,11 +32,11 @@ class Hive::LogFeedback
   end
   
   def job_error(x)
-    log "A job #{it} failed with an error:#{x.inspect}, in worker #{me}"
+    log "Warning: Worker #{me} experienced a job failure due to an error:#{x.inspect}; job was #{it}"
   end
   
   def worker_stopped()
-    log "Stopped"
+    log "Worker #{me} has stopped"
   end
 
-end # Hive::Feedback
+end # Hive::Utilities::LogFeedback
