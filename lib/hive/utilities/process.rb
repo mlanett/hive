@@ -6,7 +6,7 @@ module Hive::Utilities::Process
     begin # execute at least once to get status
       dummy, status = ::Process.wait2( pid, ::Process::WNOHANG )
       break if status
-      log "Waiting for #{pid}", "Sleeping #{interval}" if false
+      #log "Waiting for #{pid}", "Sleeping #{interval}" if false
       sleep(interval)
       interval *= 2 if interval < 1.0
     end while Time.now.to_f < deadline
@@ -14,14 +14,14 @@ module Hive::Utilities::Process
   end
   
   def wait_and_terminate( pid, options = {} )
-    log "Monitoring job #{pid}" if false
+    #log "Monitoring job #{pid}"
     timeout = options[:timeout] || 1024
     signal  = options[:signal] || "HUP"
     
     status = wait_until_deadline( pid, Time.now.to_f + timeout )
     return status if status
     
-    log "Job #{pid} is overdue, killing"
+    #log "Job #{pid} is overdue, killing"
     
     ::Process.kill( signal, pid )
     status = wait_until_deadline( pid, Time.now.to_f + 1 )
