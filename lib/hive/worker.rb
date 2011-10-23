@@ -23,15 +23,13 @@ class Hive::Worker
   end
 
   attr :policy
-  attr :job_with_feedback
   attr :job_with_idle
   attr :state
 
   def initialize( options = {}, job, &callable_job )
     job ||= callable_job
     @policy            = Hive::Policy.new(options)
-    @job_with_feedback = Hive::Feedback.new( self, job )
-    @job_with_idle     = Hive::Idler.new(@job_with_feedback)
+    @job_with_idle     = Hive::Idler.new(job)
     @state             = :running
   end
 
