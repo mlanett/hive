@@ -10,7 +10,9 @@
 require "airbrake"
 
 class Hive::Utilities::AirbrakeFeedback
-  
+
+  include Hive::Utilities::Observer
+
   attr :it # job
   attr :me # worker
   
@@ -18,22 +20,9 @@ class Hive::Utilities::AirbrakeFeedback
     @it = callable || callable_block
     @me = observed
   end
-  
-  def with_feedback( &block )
-    yield
-  end
-  
+
   def job_error(x)
     Airbrake.notify(x)
   end
-  
-  def call( *args, &block )
-    begin
-      it.call( *args, &block )
-    rescue => x
-      job_error(x)
-      raise x
-    end
-  end
-  
+
 end # Hive::Feedback

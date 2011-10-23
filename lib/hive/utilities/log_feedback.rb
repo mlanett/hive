@@ -13,7 +13,8 @@
 class Hive::LogFeedback
   
   include Hive::Log
-  
+  include Hive::Utilities::Observer
+
   attr :it # job
   attr :me # worker
   

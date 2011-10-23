@@ -9,6 +9,8 @@
 
 class Hive::Worker
 
+  include Hive::Utilities::Observeable
+
   # forks a new process
   # creates a new instance of the job class
   # runs a loop which calls the job
@@ -34,12 +36,22 @@ class Hive::Worker
   end
 
   def run()
+    notify :worker_started
     context = { :worker => self }
-    #job_with_feedback.with_feedback do
-      while state == :running do
+    while state == :running do
+
+      begin
         job_with_idle.call( context )
+      rescue => x
+        notify :job_error, x
+        # consume this exception
+      ensure
+        notify :heartbeat
       end
-    #end
+
+    end
+  ensure
+    notify :worker_stopped
   end
 
   def quit!()
