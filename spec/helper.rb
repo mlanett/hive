@@ -20,6 +20,7 @@ must_throw             sym, msg = nil
 =end
 
 require "bundler/setup"                                                               # load dependencies
+require "ruby-debug"                                                                  # because sometimes you need it
 require "minitest/autorun"                                                            # enable minitest
 File.expand_path("../../spec", __FILE__).tap { |p| $:.push(p) unless $:.member?(p) }  # set path
 require "hive"                                                                        # load this gem

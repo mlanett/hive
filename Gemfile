@@ -5,4 +5,5 @@ gemspec
 
 group :development, :test do
   gem "minitest"
+  gem "ruby-debug19", :require => false
 end
