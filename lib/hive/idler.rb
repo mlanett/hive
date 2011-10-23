@@ -27,13 +27,14 @@ class Hive::Idler
     begin
       result = @callable.call(*args,&block)
     rescue Exception                          # when errors occur,
-      @sleep  = MIN_SLEEP                     # reduce sleeping almost all the way
+      @sleep = MIN_SLEEP                      # reduce sleeping almost all the way (but not to 0)
       raise                                   # do not consume any exceptions
     end
     
-    if result then
+    if result then                            # We did something!
       @sleep = nil                            # stop sleeping
     else
+                                              # We haven't done anything
                                               # don't actually sleep on first pass
       Kernel.sleep(2**@sleep) if @sleep       # Interrupt will propogate through sleep().
                                               # sleep longer next time
@@ -42,11 +43,5 @@ class Hive::Idler
     
     return result
   end
-  
-  private
-  
-  #def sleep(i)
-  #  Hive::SignalHook.trap("INT") { @sleep = 0 }.attempt { Kernel.sleep(i) }
-  #end
-  
+
 end # Hive::Idler
