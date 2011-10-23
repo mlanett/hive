@@ -3,7 +3,7 @@ module Hive::Log
   def log( *stuffs )
     message = [
       #(Time.now.strftime '%Y%m%d%H%M%S'),
-      Time.now.to_i.to_s(16).upcase,
+      Time.now.to_i,
       " [",
       Process.pid,
       (Thread.current[:name] || Thread.current.object_id unless Thread.current == Thread.main),
