@@ -8,8 +8,9 @@
 add_path File.expand_path(File.dirname(__FILE__))
 require "job1"
 
+# best to pass these on the command line
 #set_env "development" if ! env
-set_name "demo"
+#set_name "demo"
 #chdir "/tmp/demo"
 
 set_defaults :feedback => [ :log ] unless env == "test" # No noise when testing please.
