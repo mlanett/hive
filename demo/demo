@@ -12,6 +12,8 @@ require "job1"
 set_name "demo"
 #chdir "/tmp/demo"
 
+set_defaults :feedback => [ :log ] unless env == "test" # No noise when testing please.
+
 set_defaults(
   pool_min_workers: 1,
   warntime:         10,
@@ -23,7 +25,8 @@ set_defaults(
 add_pool Job1,
   heartbeat:        60,
   pool_min_workers: 1,
-  pool_max:         10
+  pool_max:         10,
+  feedback:         [ :log ]
 
 before_fork do
   # load Rails

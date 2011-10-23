@@ -169,9 +169,19 @@ class Hive::Configuration
     require(r)
     log "Required #{r}" if verbose >= 2
   end
-  
+
+  def set_default(key,value)
+    # values which are arrays get merged, but nil will overwrite
+    case value
+    when Array
+      @defaults[key] = (@defaults[key] || []) + value
+    else
+      @defaults[key] = value
+    end
+  end
+
   def set_defaults(options)
-    @defaults.merge!(options)
+    options.each { |k,v| set_default(k,v) }
   end
   
   def add_pool(name,options)
