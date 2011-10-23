@@ -1,8 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-require "erb"
 require "daemon_spawn"
-require "yaml"
 require "hive"
 
 class Hive::Daemon < DaemonSpawn::Base
@@ -13,6 +11,8 @@ class Hive::Daemon < DaemonSpawn::Base
     trap("TERM") { stop } # Replace daemon_spawn's exit() with an async stop
     
     my = arguments[0] or raise "Missing configuration"
+
+    raise # XXX this is all broken
     
     pools = conf.map do |name,options|
       if ! pclass = options.delete("class") then
