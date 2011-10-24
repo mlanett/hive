@@ -17,7 +17,6 @@ class Hive::Worker
   # runs a loop which calls the job
   def self.spawn( *arguments, &proc )
     fork_and_detach do
-      trap("TERM") { quit! }
       new( *arguments, &proc ).run
     end
   end
@@ -28,12 +27,16 @@ class Hive::Worker
 
   def initialize( options = {}, job, &callable_job )
     job ||= callable_job
+    if ! job.respond_to?(:call) then
+      job = job.new
+    end
     @policy        = Hive::Policy.new(options)
     @job_with_idle = Hive::Idler.new(job)
     @state         = :running
   end
 
   def run()
+    trap("TERM") { quit! }
     notify :worker_started
     context = { :worker => self }
     while state == :running do

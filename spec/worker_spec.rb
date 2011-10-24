@@ -1,20 +1,21 @@
 class Hive::SpawningJob
-  def call( context = {} )
+  def initialize
     redis.set("Hive::SpawningJob",Process.pid)
-    context[:worker].quit
+  end
+  def call( context = {} )
+    context[:worker].quit!
   end
   def redis
     @redis ||= Redis.connect(REDIS)
   end
 end
 
-class Hive::QuittingJob
+class Hive::TermJob
+  def initialize
+    redis.set "Hive::TermJob", Process.pid
+  end
   def call( context = {} )
-    if redis.get("Hive::QuittingJob") == "quit" then
-      context[:worker].quit!
-    else
-      false
-    end
+    false
   end
   def redis
     @redis ||= Redis.connect(REDIS)
@@ -45,10 +46,26 @@ describe Hive::Worker do
     redis = Redis.connect(REDIS)
     redis.set "Hive::SpawningJob", pid
 
-    Hive::Worker.spawn({},Hive::SpawningJob.new)
+    Hive::Worker.spawn({},Hive::SpawningJob)
     Hive::Idler.wait_until { redis.get("Hive::SpawningJob").to_i != pid }
     redis.get("Hive::SpawningJob").to_i.wont_equal pid
     redis.del "Hive::SpawningJob"
+  end
+
+  it "should respond to TERM" do
+    redis = Redis.connect(REDIS)
+    redis.del "Hive::TermJob"
+
+    Hive::Worker.spawn({},Hive::TermJob)
+    Hive::Idler.wait_until { redis.get("Hive::TermJob").to_i != 0 }
+    pid = redis.get("Hive::TermJob").to_i
+    Hive::Utilities::Process.alive?(pid).must_equal true
+
+    Process.kill( "TERM", pid )
+    Hive::Idler.wait_until { ! Hive::Utilities::Process.alive?(pid) }
+    Hive::Utilities::Process.alive?(pid).must_equal false
+
+    redis.del "Hive::TermJob"
   end
 
 end

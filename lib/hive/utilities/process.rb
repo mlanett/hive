@@ -55,7 +55,7 @@ module Hive::Utilities::Process
   end
 
   def alive?( pid )
-    ::Process.kill( 0, pid )
+    !! ::Process.kill( 0, pid )
   rescue Errno::ESRCH
     false
   end
