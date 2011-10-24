@@ -1,3 +1,5 @@
+# -*- encoding: utf-8 -*-
+
 =begin
 must_be                o1, op, o2, msg = nil
 must_be_close_to       exp, act, delta = 0.001, msg = nil
@@ -22,6 +24,7 @@ must_throw             sym, msg = nil
 require "bundler/setup"                                                               # load dependencies
 require "ruby-debug"                                                                  # because sometimes you need it
 require "minitest/autorun"                                                            # enable minitest
+require "minitest/pride"                                                              # …and fancy printing
 File.expand_path("../../spec", __FILE__).tap { |p| $:.push(p) unless $:.member?(p) }  # set path
 require "hive"                                                                        # load this gem
 
