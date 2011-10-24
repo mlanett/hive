@@ -9,25 +9,25 @@ add_path File.expand_path(File.dirname(__FILE__))
 require "job1"
 
 # best to pass these on the command line
-#set_env "development" if ! env
-#set_name "demo"
-#chdir "/tmp/demo"
+# set_env "development" if ! env
+# set_name "demo"
+# chdir "/tmp/demo"
 
-set_defaults :feedback => [ :log ] unless env == "test" # No noise when testing please.
+set_defaults :observers => [ :log ] unless env == "test" # No noise when testing please.
 
 set_defaults(
   pool_min_workers: 1,
   warntime:         10,
   killtime:         100,
   batchsize:        100,
-  lifetime:         3600
+  lifetime:         3600,
+  observers:        [ :redis ]
 )
 
 add_pool Job1,
   heartbeat:        60,
   pool_min_workers: 1,
-  pool_max:         10,
-  feedback:         [ :log ]
+  pool_max:         10
 
 before_fork do
   # load Rails
