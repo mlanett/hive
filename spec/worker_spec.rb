@@ -1,3 +1,5 @@
+# -*- encoding: utf-8 -*-
+
 class Hive::SpawningJob
   def initialize
     redis.set("Hive::SpawningJob",Process.pid)

@@ -1,3 +1,5 @@
+# -*- encoding: utf-8 -*-
+
 describe Hive::ProcessStorage do
   
   before do

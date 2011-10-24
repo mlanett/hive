@@ -1,3 +1,5 @@
+# -*- encoding: utf-8 -*-
+
 class Hive::Policy
 
   def initialize( options = {} )

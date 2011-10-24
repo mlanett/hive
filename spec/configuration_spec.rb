@@ -1,3 +1,5 @@
+# -*- encoding: utf-8 -*-
+
 describe Hive::Configuration do
 
   it "should parse command-line switches" do

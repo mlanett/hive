@@ -1,3 +1,5 @@
+# -*- encoding: utf-8 -*-
+
 describe Hive::Idler do
 
   it "should not run idle tasks too much" do

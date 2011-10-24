@@ -1,3 +1,5 @@
+# -*- encoding: utf-8 -*-
+
 module Hive::Utilities::Process
   
   def wait_until_deadline( pid, deadline )
