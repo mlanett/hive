@@ -9,7 +9,6 @@ module Hive
   autoload :PollingColony,  "hive/polling_colony"
   autoload :Pool,           "hive/pool"
   autoload :ProcessStorage, "hive/process_storage"
-  autoload :SignalHook,     "hive/signal_hook"
   autoload :SimpleColony,   "hive/simple_colony"
   autoload :ThreadedColony, "hive/threaded_colony"
   autoload :Worker,         "hive/worker"
@@ -22,6 +21,7 @@ module Hive::Utilities
   autoload :Observeable,      "hive/utilities/observeable"
   autoload :Observer,         "hive/utilities/observer"
   autoload :Process,          "hive/utilities/process"
+  autoload :SignalHook,       "hive/utilities/signal_hook"
 end
 
 module Hive::Redis
