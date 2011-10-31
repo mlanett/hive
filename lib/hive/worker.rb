@@ -33,10 +33,10 @@ class Hive::Worker
     @policy        = Hive::Policy.new(options)
     @job_with_idle = Hive::Idler.new(job)
     @state         = :running
+    trap("TERM") { quit! }
   end
 
   def run()
-    trap("TERM") { quit! }
     notify :worker_started
     context = { :worker => self }
     while state == :running do
