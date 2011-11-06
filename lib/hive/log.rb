@@ -2,7 +2,7 @@ module Hive::Log
   
   def log( *stuffs )
     message = [
-      #(Time.now.strftime '%Y%m%d%H%M%S'),
+      #(Time.now.strftime "%Y%m%d%H%M%S"),
       Time.now.to_i,
       " [",
       Process.pid,
