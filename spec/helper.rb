@@ -11,8 +11,15 @@ require "bundler/setup"                                                         
 require "ruby-debug"                                                                  # because sometimes you need it
 require "hive"                                                                        # load this gem
 
+module RedisClient
+  def redis
+    @redis ||= Redis.connect(REDIS)
+  end
+end
+
 RSpec.configure do |spec|
-  # spec.include Helpers
+  # @see https://www.relishapp.com/rspec/rspec-core/docs/helper-methods/define-helper-methods-in-a-module
+  spec.include RedisClient, :redis => true
 end
 
 REDIS = { :url => "redis://127.0.0.1:6379/1" }

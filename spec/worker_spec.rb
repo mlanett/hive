@@ -3,26 +3,22 @@
 require "helper"
 
 class Hive::SpawningJob
+  include RedisClient
   def initialize
     redis.set("Hive::SpawningJob",Process.pid)
   end
   def call( context = {} )
     context[:worker].quit!
   end
-  def redis
-    @redis ||= Redis.connect(REDIS)
-  end
 end
 
 class Hive::TermJob
+  include RedisClient
   def initialize
     redis.set "Hive::TermJob", Process.pid
   end
   def call( context = {} )
     false
-  end
-  def redis
-    @redis ||= Redis.connect(REDIS)
   end
 end
 
@@ -45,31 +41,33 @@ describe Hive::Worker do
     worker.run
   end
 
-  it "should spawn a new process" do
-    pid   = Process.pid
-    redis = Redis.connect(REDIS)
-    redis.set "Hive::SpawningJob", pid
+  describe "when spawning a process", :redis => true do
 
-    Hive::Worker.spawn({},Hive::SpawningJob)
-    Hive::Idler.wait_until { redis.get("Hive::SpawningJob").to_i != pid }
-    redis.get("Hive::SpawningJob").to_i.should_not eq(pid)
-    redis.del "Hive::SpawningJob"
-  end
+    it "should spawn a new process" do
+      pid   = Process.pid
+      redis.set "Hive::SpawningJob", pid
 
-  it "should respond to TERM" do
-    redis = Redis.connect(REDIS)
-    redis.del "Hive::TermJob"
+      Hive::Worker.spawn({},Hive::SpawningJob)
+      Hive::Idler.wait_until { redis.get("Hive::SpawningJob").to_i != pid }
+      redis.get("Hive::SpawningJob").to_i.should_not eq(pid)
+      redis.del "Hive::SpawningJob"
+    end
 
-    Hive::Worker.spawn({},Hive::TermJob)
-    Hive::Idler.wait_until { redis.get("Hive::TermJob").to_i != 0 }
-    pid = redis.get("Hive::TermJob").to_i
-    Hive::Utilities::Process.alive?(pid).should be_true
+    it "should respond to TERM" do
+      redis.del "Hive::TermJob"
 
-    Process.kill( "TERM", pid )
-    Hive::Idler.wait_until { ! Hive::Utilities::Process.alive?(pid) }
-    Hive::Utilities::Process.alive?(pid).should be_false
+      Hive::Worker.spawn({},Hive::TermJob)
+      Hive::Idler.wait_until { redis.get("Hive::TermJob").to_i != 0 }
+      pid = redis.get("Hive::TermJob").to_i
+      Hive::Utilities::Process.alive?(pid).should be_true
 
-    redis.del "Hive::TermJob"
+      Process.kill( "TERM", pid )
+      Hive::Idler.wait_until { ! Hive::Utilities::Process.alive?(pid) }
+      Hive::Utilities::Process.alive?(pid).should be_false
+
+      redis.del "Hive::TermJob"
+    end
+
   end
 
 end
