@@ -1,5 +1,5 @@
 require "bundler/gem_tasks"
-require 'rspec/core/rake_task'
+require "rspec/core/rake_task"
 
 # the minitest way
 # task :test do

@@ -6,4 +6,4 @@ require "autotest/bundler"
 require "autotest/growl" rescue false
 
 # ... add the following line after all other requires in your ~/.autotest:
-require 'autotest/fsevent' rescue false
+require "autotest/fsevent" rescue false
