@@ -33,7 +33,7 @@ class MyServer < DaemonSpawn::Base
     $0 = app_name
     pclass = app_name.split("::").inject(Kernel) { |m, n| m.const_get(n) } rescue nil
     raise "Unknown processor." unless pclass
-    Hive::Pool.new(app_name, {}).run_in_worker(ENV["PROCESSOR"]) do
+    Hive::Pool.new(app_name, Hive::Policy.new).run_in_worker(ENV["PROCESSOR"]) do
       Worker.work(pclass)
     end
   end

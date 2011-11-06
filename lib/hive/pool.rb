@@ -13,15 +13,17 @@ class Hive::Pool
   attr :policy
   attr :storage   # where to store worker details
   
-  def initialize( kind, options, storage = default_storage )
+  def initialize( kind, policy, storage = default_storage )
     @kind      = class_by_scoped_name(kind)
-    @policy    = Hive::Policy.new(options)
+    @policy    = policy
     @storage   = storage
   end
   
   def synchronize
     # launch workers
+    job = kind.respond_to?(:call) ? kind : kind.respond_to?(:new) ? kind.new : kind
     policy.pool_min_workers.times do
+      w = Hive::Worker.new( policy, job )
       # puts "launch"
     end
   end

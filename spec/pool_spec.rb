@@ -18,7 +18,7 @@ describe Hive::Pool do
     it "should spin up two workers" do
       redis.del "Hive::SpecJob"
 
-      it = Hive::Pool.new( "Hive::SpecJob", :pool_min_workers => 2, :worker_max_jobs => 1 )
+      it = Hive::Pool.new( "Hive::SpecJob", Hive::Policy.new(:pool_min_workers => 2, :worker_max_jobs => 1) )
       it.synchronize
       Hive::Idler.wait_until { redis.scard("Hive::SpecJob") == 2 }
 

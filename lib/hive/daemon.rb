@@ -19,7 +19,7 @@ class Hive::Daemon < DaemonSpawn::Base
         log "Can not use pool #{name}"
         next
       end
-      pool = Hive::Pool.new( pclass, options )
+      pool = Hive::Pool.new( pclass, Hive::Policy.new(options) )
     end
     
     i = Hive::Idler.new do
