@@ -4,6 +4,6 @@ source "http://rubygems.org"
 gemspec
 
 group :development, :test do
-  gem "minitest"
+  gem "rspec"
   gem "ruby-debug19", :require => false
 end

@@ -1,8 +1,11 @@
 require "bundler/gem_tasks"
+require 'rspec/core/rake_task'
 
-task :test do
-  require_relative "./spec/helper"
-  FileList["spec/**/*_{spec}.rb"].each { |f| load(f) }
-end
+# the minitest way
+# task :test do
+#   require_relative "./spec/helper"
+#   FileList["spec/**/*_{spec}.rb"].each { |f| load(f) }
+# end
 
-task :default => :test
+RSpec::Core::RakeTask.new(:spec)
+task :default => :spec

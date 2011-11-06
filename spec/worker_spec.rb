@@ -1,5 +1,7 @@
 # -*- encoding: utf-8 -*-
 
+require "helper"
+
 class Hive::SpawningJob
   def initialize
     redis.set("Hive::SpawningJob",Process.pid)
@@ -32,13 +34,13 @@ describe Hive::Worker do
     job    = ->(context={}) { count += 1; worker.quit! }
     worker = Hive::Worker.new({},job)
     worker.run
-    count.must_equal 1
+    count.should eq 1
   end
 
   it "should pass a context with a worker" do
     ok     = false
     worker = nil
-    job    = ->(context={}) { worker.must_equal context[:worker]; worker.quit! }
+    job    = ->(context={}) { worker.should eq context[:worker]; worker.quit! }
     worker = Hive::Worker.new({},job)
     worker.run
   end
@@ -50,7 +52,7 @@ describe Hive::Worker do
 
     Hive::Worker.spawn({},Hive::SpawningJob)
     Hive::Idler.wait_until { redis.get("Hive::SpawningJob").to_i != pid }
-    redis.get("Hive::SpawningJob").to_i.wont_equal pid
+    redis.get("Hive::SpawningJob").to_i.should_not eq(pid)
     redis.del "Hive::SpawningJob"
   end
 
@@ -61,11 +63,11 @@ describe Hive::Worker do
     Hive::Worker.spawn({},Hive::TermJob)
     Hive::Idler.wait_until { redis.get("Hive::TermJob").to_i != 0 }
     pid = redis.get("Hive::TermJob").to_i
-    Hive::Utilities::Process.alive?(pid).must_equal true
+    Hive::Utilities::Process.alive?(pid).should be_true
 
     Process.kill( "TERM", pid )
     Hive::Idler.wait_until { ! Hive::Utilities::Process.alive?(pid) }
-    Hive::Utilities::Process.alive?(pid).must_equal false
+    Hive::Utilities::Process.alive?(pid).should be_false
 
     redis.del "Hive::TermJob"
   end
