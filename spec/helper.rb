@@ -21,11 +21,10 @@ must_send              exp, act, msg = nil
 must_throw             sym, msg = nil
 =end
 
-require "bundler/setup"                                                               # load dependencies
+require "bundler/setup"                                                               # set up gem paths
 require "ruby-debug"                                                                  # because sometimes you need it
 require "minitest/autorun"                                                            # enable minitest
-require "minitest/pride"                                                              # …and fancy printing
-File.expand_path("../../spec", __FILE__).tap { |p| $:.push(p) unless $:.member?(p) }  # set path
+File.expand_path("../../spec", __FILE__).tap { |p| $:.push(p) unless $:.member?(p) }  # test path
 require "hive"                                                                        # load this gem
 
 REDIS = { :url => "redis://127.0.0.1:6379/1" }
