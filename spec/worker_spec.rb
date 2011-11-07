@@ -28,7 +28,7 @@ describe Hive::Worker do
     count  = 0
     worker = nil
     job    = ->(context={}) { count += 1; worker.quit! }
-    worker = Hive::Worker.new({},job)
+    worker = Hive::Worker.new( Hive::Policy.new, job )
     worker.run
     count.should eq 1
   end
@@ -37,7 +37,7 @@ describe Hive::Worker do
     ok     = false
     worker = nil
     job    = ->(context={}) { worker.should eq context[:worker]; worker.quit! }
-    worker = Hive::Worker.new({},job)
+    worker = Hive::Worker.new( Hive::Policy.new , job )
     worker.run
   end
 
