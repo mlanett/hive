@@ -14,7 +14,7 @@ class Hive::Pool
   attr :storage   # where to store worker details
   
   def initialize( kind, policy, storage = default_storage )
-    @kind      = class_by_scoped_name(kind)
+    @kind      = find_class(kind)
     @policy    = policy
     @storage   = storage
   end
@@ -32,7 +32,9 @@ class Hive::Pool
   # Utilities
   # ----------------------------------------------------------------------------
   
-  def class_by_scoped_name(c)
+  def find_class(c)
+    return c if c.kind_of?(Class)
+    c = c.to_s
     c.split(/::/).inject(Object) { |a,i| a.const_get(i) }
   end
   
