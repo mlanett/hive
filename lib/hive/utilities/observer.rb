@@ -23,7 +23,6 @@ module Hive::Utilities::Observer
     when String, Symbol
       realize(find_class(candidate))
     else
-      raise "Unknown kind of observer #{candidate.inspect}"
       return candidate # assume it supports the notifications natively
     end
   end
