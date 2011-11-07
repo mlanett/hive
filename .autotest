@@ -1,14 +1,6 @@
 # (this file is loaded automatically by autotest)
 # -*- encoding: utf-8 -*-
 
-# See https://www.relishapp.com/rspec/rspec-core/docs/autotest
+# Bundler support
+# @see https://www.relishapp.com/rspec/rspec-core/docs/autotest
 require "autotest/bundler"
-
-begin
-  require "autotest/growl"
-  Autotest::Growl::clear_terminal = false
-rescue
-end
-
-# ... add the following line after all other requires in your ~/.autotest:
-require "autotest/fsevent" rescue false
