@@ -18,6 +18,8 @@ module Hive::Utilities
   autoload :AirbrakeObserver, "hive/utilities/airbrake_observer"
   autoload :HoptoadObserver,  "hive/utilities/hoptoad_observer"
   autoload :LogObserver,      "hive/utilities/log_observer"
+  autoload :NullJob,          "hive/utilities/null_job"
+  autoload :NullObserver,     "hive/utilities/null_observer"
   autoload :Observeable,      "hive/utilities/observeable"
   autoload :Observer,         "hive/utilities/observer"
   autoload :Process,          "hive/utilities/process"
