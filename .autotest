@@ -4,3 +4,10 @@
 # Bundler support
 # @see https://www.relishapp.com/rspec/rspec-core/docs/autotest
 require "autotest/bundler"
+
+# ... add the following line after all other requires in your ~/.autotest:
+begin
+  require "autotest/fsevent"
+rescue LoadError => x
+  raise x if RUBY_PLATFORM =~ /darwin/
+end
