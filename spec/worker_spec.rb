@@ -47,7 +47,7 @@ describe Hive::Worker do
       pid   = Process.pid
       redis.set "Hive::SpawningJob", pid
 
-      Hive::Worker.spawn({},Hive::SpawningJob)
+      Hive::Worker.spawn( Hive::Policy.new ,Hive::SpawningJob )
       Hive::Idler.wait_until { redis.get("Hive::SpawningJob").to_i != pid }
       redis.get("Hive::SpawningJob").to_i.should_not eq(pid)
       redis.del "Hive::SpawningJob"
@@ -56,7 +56,7 @@ describe Hive::Worker do
     it "should respond to TERM" do
       redis.del "Hive::TermJob"
 
-      Hive::Worker.spawn({},Hive::TermJob)
+      Hive::Worker.spawn( Hive::Policy.new, Hive::TermJob )
       Hive::Idler.wait_until { redis.get("Hive::TermJob").to_i != 0 }
       pid = redis.get("Hive::TermJob").to_i
       Hive::Utilities::Process.alive?(pid).should be_true
