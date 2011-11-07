@@ -3,7 +3,12 @@
 
 # See https://www.relishapp.com/rspec/rspec-core/docs/autotest
 require "autotest/bundler"
-require "autotest/growl" rescue false
+
+begin
+  require "autotest/growl"
+  Autotest::Growl::clear_terminal = false
+rescue
+end
 
 # ... add the following line after all other requires in your ~/.autotest:
 require "autotest/fsevent" rescue false
