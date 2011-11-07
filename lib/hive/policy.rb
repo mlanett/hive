@@ -21,6 +21,10 @@ class Hive::Policy
     end
   end
 
+  def observers
+    @options[:observers] || []
+  end
+
   declare_i :pool_min_workers,      1
   declare_i :pool_max_workers,      10
   declare_f :worker_idle_max_sleep, 64

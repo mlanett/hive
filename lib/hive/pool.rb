@@ -23,7 +23,7 @@ class Hive::Pool
     # launch workers
     job = kind.respond_to?(:call) ? kind : kind.respond_to?(:new) ? kind.new : kind
     policy.pool_min_workers.times do
-      w = Hive::Worker.new( policy, job )
+      w = Hive::Worker.new( job, policy )
       # puts "launch"
     end
   end

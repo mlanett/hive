@@ -25,13 +25,22 @@ class Hive::Worker
   attr :job_with_idle
   attr :state
 
-  def initialize( policy, job, &callable_job )
+  def initialize( job, policy = Hive::Policy.new, &callable_job )
     job ||= callable_job
     if ! job.respond_to?(:call) then
       job = job.new
     end
     @policy        = policy
     @job_with_idle = Hive::Idler.new(job)
+
+    # set up observers
+    if policy.observers then
+      policy.observers.each do |observer|
+        o = Hive::Utilities::Observer.realize(observer)
+        add_observer(o)
+      end
+    end
+
     @state         = :running
     trap("TERM") { quit! }
   end
