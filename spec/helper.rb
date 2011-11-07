@@ -13,7 +13,7 @@ require "hive"                                                                  
 
 module RedisClient
   def redis
-    @redis ||= Redis.connect(REDIS)
+    @redis ||= ::Redis.connect(REDIS)
   end
 end
 

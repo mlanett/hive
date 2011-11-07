@@ -25,7 +25,7 @@ module Hive::Utilities
 end
 
 module Hive::Redis
-  autoload :Colony,         "hive/colony"
-  autoload :Observer,       "hive/observer"
-  autoload :Storage,        "hive/storage"
+  autoload :Colony,         "hive/redis/colony"
+  autoload :Observer,       "hive/redis/observer"
+  autoload :Storage,        "hive/redis/storage"
 end
