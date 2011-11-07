@@ -49,7 +49,7 @@ describe Hive::ProcessStorage do
     it "should be able to add to, enumerate, and remove from a list" do
       @it.set_add("foos","B")
       @it.set_size("foos").should eq 2
-      @it.set_members("foos").should be_include("B")
+      @it.set_get_all("foos").should be_include("B")
       @it.set_remove("foos","A")
       @it.set_size("foos").should eq 1
     end
@@ -76,11 +76,11 @@ describe Hive::ProcessStorage do
     end
     
     it "should add to the set" do
-      @it.map_get_all("food").size.should eq 2
+      @it.map_get_all_keys("food").size.should eq 2
     end
     
     it "should delete the set" do
-      @it.map_del("food")
+      @it.del("food")
       @it.map_size("food").should eq 0
     end
     
