@@ -9,7 +9,7 @@
 
 require "hoptoad_notifier"
 
-class Hive::Utilities::HoptoadFeedback
+class Hive::Utilities::HoptoadObserver
   
   include Hive::Utilities::Observer
 
@@ -25,4 +25,4 @@ class Hive::Utilities::HoptoadFeedback
     HoptoadNotifier.notify(x)
   end
 
-end # Hive::Utilities::HoptoadFeedback
+end # Hive::Utilities::HoptoadObserver

@@ -32,7 +32,8 @@ module Hive::Redis::Observer
   # ----------------------------------------------------------------------------
 
   def worker_key( name )
-    "#{name}-#{ Process.pid }@#{ `hostname`.chomp.strip }"
+    @hostname ||= `hostname`.chomp.strip
+    "%s-%i@%s" % [ name, Process.pid, @hostname ]
   end
   
 end

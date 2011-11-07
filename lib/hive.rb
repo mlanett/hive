@@ -15,9 +15,9 @@ module Hive
 end
 
 module Hive::Utilities
-  autoload :AirbrakeFeedback, "hive/utilities/airbrake_feedback"
-  autoload :HoptoadFeedback,  "hive/utilities/hoptoad_feedback"
-  autoload :LogFeedback,      "hive/utilities/log_feedback"
+  autoload :AirbrakeObserver, "hive/utilities/airbrake_observer"
+  autoload :HoptoadObserver,  "hive/utilities/hoptoad_observer"
+  autoload :LogObserver,      "hive/utilities/log_observer"
   autoload :Observeable,      "hive/utilities/observeable"
   autoload :Observer,         "hive/utilities/observer"
   autoload :Process,          "hive/utilities/process"

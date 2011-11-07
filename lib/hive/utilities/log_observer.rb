@@ -10,7 +10,7 @@
   
 =end
 
-class Hive::Utilities::LogFeedback
+class Hive::Utilities::LogObserver
   
   include Hive::Log
   include Hive::Utilities::Observer
@@ -39,4 +39,4 @@ class Hive::Utilities::LogFeedback
     log "Worker #{me} has stopped"
   end
 
-end # Hive::Utilities::LogFeedback
+end # Hive::Utilities::LogObserver

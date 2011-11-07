@@ -9,7 +9,7 @@
 
 require "airbrake"
 
-class Hive::Utilities::AirbrakeFeedback
+class Hive::Utilities::AirbrakeObserver
 
   include Hive::Utilities::Observer
 
@@ -25,4 +25,4 @@ class Hive::Utilities::AirbrakeFeedback
     Airbrake.notify(x)
   end
 
-end # Hive::Utilities::AirbrakeFeedback
+end # Hive::Utilities::AirbrakeObserver
