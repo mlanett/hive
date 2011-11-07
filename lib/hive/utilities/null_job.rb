@@ -6,10 +6,10 @@ require "hive"
 
 =end
 
-class Job1
+class Hive::Utilities::NullJob
 
   def call(context)
     true
   end
 
-end # Job1
+end # Hive::Utilities::NullJob
