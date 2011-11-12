@@ -82,12 +82,9 @@ describe Hive::Worker do
       Hive::Worker.spawn( Hive::SpawningJob )
       Hive::Idler.wait_until { redis.get("Hive::SpawningJob").to_i != pid }
       redis.get("Hive::SpawningJob").to_i.should_not eq(pid)
-      redis.del "Hive::SpawningJob"
     end
 
     it "should respond to TERM" do
-      redis.del "Hive::TermJob"
-
       Hive::Worker.spawn( Hive::TermJob )
       Hive::Idler.wait_until { redis.get("Hive::TermJob").to_i != 0 }
       pid = redis.get("Hive::TermJob").to_i
@@ -96,8 +93,6 @@ describe Hive::Worker do
       Process.kill( "TERM", pid )
       Hive::Idler.wait_until { ! Hive::Utilities::Process.alive?(pid) }
       Hive::Utilities::Process.alive?(pid).should be_false
-
-      redis.del "Hive::TermJob"
     end
 
   end
