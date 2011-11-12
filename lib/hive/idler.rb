@@ -11,40 +11,58 @@ The idler will sleep when there is nothing to do.
 
 class Hive::Idler
   
-  MIN_SLEEP = -3
-  MAX_SLEEP = 0
+  MIN_SLEEP = 0.125
+  MAX_SLEEP = 1.0
   
   attr :sleep
   
-  def initialize( callable = nil, &callable_block )
+  def initialize( callable = nil, options = {}, &callable_block )
     @callable = callable || callable_block
     raise unless @callable.respond_to?(:call)
-    @max_sleep = MAX_SLEEP
-    @min_sleep = MIN_SLEEP
+
+    @max_sleep = options[:max_sleep] || MAX_SLEEP
+    raise if @max_sleep <= 0
+
+    @min_sleep = options[:min_sleep] || MIN_SLEEP
+    raise if @min_sleep <= 0
+    raise if @max_sleep < @min_sleep
+
     @sleep     = nil
   end
   
   def call( *args, &block )
     
-    result = nil
+    result = call_with_wakefulness( @callable, *args, &block )
+
+    if result then
+      wake
+    else
+      sleep_more
+    end
+
+    return result
+  end
+
+  def call_with_wakefulness( callable, *args, &block )
     begin
-      result = @callable.call(*args,&block)
+      callable.call(*args,&block)
     rescue Exception                          # when errors occur,
       @sleep = @min_sleep                     # reduce sleeping almost all the way (but not to 0)
       raise                                   # do not consume any exceptions
     end
-    
-    if result then                            # We did something!
-      @sleep = nil                            # stop sleeping
+  end
+
+  def sleep_more
+    if @sleep then
+      @sleep = [ @sleep * 2, @max_sleep ].min
     else
-                                              # We haven't done anything
-                                              # don't actually sleep on first pass
-      Kernel.sleep(2**@sleep) if @sleep       # Interrupt will propogate through sleep().
-                                              # sleep longer next time
-      @sleep = @sleep ? [ @sleep+1, @max_sleep ].min : @min_sleep
+      @sleep = @min_sleep
     end
-    
-    return result
+    Kernel.sleep(@sleep) if @sleep          # Interrupt will propogate through sleep().
+  end
+
+  def wake
+    @sleep = nil
   end
 
   class << self
