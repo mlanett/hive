@@ -19,7 +19,9 @@ class Hive::Idler
   def initialize( callable = nil, &callable_block )
     @callable = callable || callable_block
     raise unless @callable.respond_to?(:call)
-    @sleep    = nil
+    @max_sleep = MAX_SLEEP
+    @min_sleep = MIN_SLEEP
+    @sleep     = nil
   end
   
   def call( *args, &block )
@@ -28,7 +30,7 @@ class Hive::Idler
     begin
       result = @callable.call(*args,&block)
     rescue Exception                          # when errors occur,
-      @sleep = MIN_SLEEP                      # reduce sleeping almost all the way (but not to 0)
+      @sleep = @min_sleep                     # reduce sleeping almost all the way (but not to 0)
       raise                                   # do not consume any exceptions
     end
     
@@ -39,7 +41,7 @@ class Hive::Idler
                                               # don't actually sleep on first pass
       Kernel.sleep(2**@sleep) if @sleep       # Interrupt will propogate through sleep().
                                               # sleep longer next time
-      @sleep = @sleep ? [ @sleep+1, MAX_SLEEP ].min : MIN_SLEEP
+      @sleep = @sleep ? [ @sleep+1, @max_sleep ].min : @min_sleep
     end
     
     return result
