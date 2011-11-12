@@ -21,9 +21,8 @@ class Hive::Pool
   
   def synchronize
     # launch workers
-    job = kind.respond_to?(:call) ? kind : kind.respond_to?(:new) ? kind.new : kind
     policy.pool_min_workers.times do
-      w = Hive::Worker.new( job, policy )
+      w = Hive::Worker.new( kind, policy )
       # puts "launch"
     end
   end
