@@ -40,22 +40,14 @@ class Hive::Worker
     end
 
     @state         = :running
+    @worker_jobs   = 0
     trap("TERM") { quit! }
   end
 
   def run()
-    worker_jobs   = 0
     notify :worker_started
-    context = { :worker => self }
     while state == :running do
-
-      call_job( context )
-
-      worker_jobs += 1
-      if policy.worker_max_jobs && worker_jobs >= policy.worker_max_jobs then
-        @state = :stopped
-      end
-
+      call_job_with_checks
     end
   ensure
     notify :worker_stopped
@@ -67,7 +59,15 @@ class Hive::Worker
 
   protected
 
-  def call_job( context )
+  def call_job_with_checks
+    call_job
+  ensure
+    @worker_jobs += 1
+    @state = :quitting if policy.worker_max_jobs <= @worker_jobs
+  end
+
+  def call_job
+    context = { :worker => self }
     begin
       job_with_idle.call( context )
     rescue => x
