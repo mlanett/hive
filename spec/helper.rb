@@ -41,3 +41,31 @@ RSpec.configure do |spec|
     with_clean_redis { example.run }
   end
 end
+
+class NullObserver
+
+  include Hive::Utilities::Observer
+
+  attr :notifications
+
+  def initialize
+    @notifications = []
+  end
+
+  def worker_started()
+    @notifications << :worker_started
+  end
+
+  def heartbeat()
+    @notifications << :heartbeat
+  end
+
+  def job_error(x)
+    @notifications << :job_error
+  end
+
+  def worker_stopped()
+    @notifications << :worker_stopped
+  end
+
+end # NullObserver

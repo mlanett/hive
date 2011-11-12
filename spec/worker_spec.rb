@@ -43,7 +43,7 @@ describe Hive::Worker do
 
   it "should use observers" do
     job     = ->(context) { context[:worker].quit! }
-    tracker = Hive::Utilities::NullObserver.new
+    tracker = NullObserver.new
     policy  = Hive::Policy.new({ :observers => [ tracker ] })
     worker  = Hive::Worker.new( job, policy )
 
