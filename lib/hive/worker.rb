@@ -22,13 +22,13 @@ class Hive::Worker
   end
 
   attr :policy
-  attr :job_with_idle
+  attr :job
   attr :state
 
   def initialize( job, policy = Hive::Policy.new, &callable_job )
-    job = resolve_job( job, &callable_job )
-    @policy        = policy
-    @job_with_idle = Hive::Idler.new(job)
+    job     = resolve_job( job, &callable_job )
+    @policy = policy
+    @job    = Hive::Idler.new( job, :min_sleep => policy.worker_idle_min_sleep, :max_sleep => policy.worker_idle_max_sleep )
 
     # set up observers
     policy.observers.each do |observer|
@@ -68,7 +68,7 @@ class Hive::Worker
   def call_job
     context = { :worker => self }
     begin
-      job_with_idle.call( context )
+      job.call( context )
     rescue => x
       notify :job_error, x
     ensure
