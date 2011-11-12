@@ -26,10 +26,7 @@ class Hive::Worker
   attr :state
 
   def initialize( job, policy = Hive::Policy.new, &callable_job )
-    job ||= callable_job
-    if ! job.respond_to?(:call) then
-      job = job.new
-    end
+    job = resolve_job( job, &callable_job )
     @policy        = policy
     @job_with_idle = Hive::Idler.new(job)
 
@@ -77,6 +74,16 @@ class Hive::Worker
     ensure
       notify :heartbeat
     end
+  end
+
+  def resolve_job( job, &callable_job )
+    raise if job && callable_job
+    job ||= callable_job
+    if ! job.respond_to?(:call) && job.respond_to?(:new) then
+      job = job.new
+    end
+    raise unless job.respond_to?(:call)
+    job
   end
 
 end # Hive::Worker
