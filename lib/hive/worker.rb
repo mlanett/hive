@@ -36,7 +36,7 @@ class Hive::Worker
     # set up observers
     if policy.observers then
       policy.observers.each do |observer|
-        o = Hive::Utilities::Observer.realize(observer)
+        o = Hive::Utilities::Observer.resolve(observer)
         add_observer(o)
       end
     end

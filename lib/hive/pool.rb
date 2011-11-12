@@ -14,7 +14,7 @@ class Hive::Pool
   attr :storage   # where to store worker details
   
   def initialize( kind, policy, storage = default_storage )
-    @kind      = find_kind(kind)
+    @kind      = resolve_kind(kind)
     @policy    = policy
     @storage   = storage
   end
@@ -32,12 +32,12 @@ class Hive::Pool
   # Utilities
   # ----------------------------------------------------------------------------
   
-  def find_kind(c)
+  def resolve_kind(c)
     case c
     when Class
       c
     when String, Symbol
-      find_class(c)
+      resolve_class(c.to_s)
     else
       # proc or lambda
       raise unless c.respond_to?(:call)
@@ -45,8 +45,8 @@ class Hive::Pool
     end
   end
 
-  def find_class(c)
-    c.to_s.split(/::/).inject(Object) { |a,i| a.const_get(i) }
+  def resolve_class(c)
+    c.split(/::/).inject(Object) { |a,i| a.const_get(i) }
   end
   
   # ----------------------------------------------------------------------------

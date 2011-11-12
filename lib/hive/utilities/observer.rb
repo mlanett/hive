@@ -12,23 +12,23 @@ module Hive::Utilities::Observer
     end
   end
 
-  def self.realize( candidate )
+  def self.resolve( candidate )
     case candidate
     when candidate.respond_to?(:notify)
       candidate
     when candidate.respond_to?(:call)
-      realize(candidate.call)
+      resolve(candidate.call)
     when Class
       candidate.new
     when String, Symbol
-      realize(find_class(candidate))
+      resolve(resolve_class(candidate.to_s))
     else
       return candidate # assume it supports the notifications natively
     end
   end
 
-  def self.find_class(c)
-    c.to_s.split(/::/).inject(Object) { |a,i| a.const_get(i) }
+  def self.resolve_class(c)
+    c.split(/::/).inject(Object) { |a,i| a.const_get(i) }
   end
 
 end
