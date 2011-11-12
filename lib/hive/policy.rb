@@ -3,7 +3,7 @@
 class Hive::Policy
 
   def initialize( options = {} )
-    @options = options
+    @options = Hash[ options.dup.map { |k,v| [ k.to_s, v ] } ]
   end
 
   class << self
