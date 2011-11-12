@@ -41,6 +41,7 @@ class Hive::Worker
 
     @state         = :running
     @worker_jobs   = 0
+    @worker_expire = Time.now + policy.worker_max_lifetime
     trap("TERM") { quit! }
   end
 
@@ -64,6 +65,7 @@ class Hive::Worker
   ensure
     @worker_jobs += 1
     @state = :quitting if policy.worker_max_jobs <= @worker_jobs
+    @state = :quitting if @worker_expire <= Time.now
   end
 
   def call_job
