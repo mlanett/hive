@@ -21,14 +21,10 @@ module Hive::Utilities::Observer
     when Class
       candidate.new
     when String, Symbol
-      resolve(resolve_class(candidate.to_s))
+      resolve(Hive.resolve_class(candidate.to_s))
     else
       return candidate # assume it supports the notifications natively
     end
-  end
-
-  def self.resolve_class(c)
-    c.split(/::/).inject(Object) { |a,i| a.const_get(i) }
   end
 
 end

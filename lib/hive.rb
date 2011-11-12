@@ -31,3 +31,13 @@ module Hive::Redis
   autoload :Observer,       "hive/redis/observer"
   autoload :Storage,        "hive/redis/storage"
 end
+
+module Hive
+  class << self
+    # @param classname
+    # @returns class object
+    def resolve_class(classname)
+      classname.split(/::/).inject(Object) { |a,i| a.const_get(i) }
+    end
+  end # class
+end

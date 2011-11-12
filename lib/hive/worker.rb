@@ -89,7 +89,7 @@ class Hive::Worker
     when Proc
       job
     when String, Symbol
-      resolve_job(resolve_class(job.to_s))
+      resolve_job(Hive.resolve_class(job.to_s))
     else
       case
       when job.respond_to?(:call)
@@ -100,10 +100,6 @@ class Hive::Worker
         raise "Unknown kind of job #{job.inspect}"
       end
     end
-  end
-
-  def resolve_class(c)
-    c.split(/::/).inject(Object) { |a,i| a.const_get(i) }
   end
 
 end # Hive::Worker

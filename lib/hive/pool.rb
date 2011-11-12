@@ -35,7 +35,7 @@ class Hive::Pool
     when Class
       c
     when String, Symbol
-      resolve_class(c.to_s)
+      Hive.resolve_class(c.to_s)
     else
       # proc or lambda
       raise unless c.respond_to?(:call)
@@ -43,10 +43,6 @@ class Hive::Pool
     end
   end
 
-  def resolve_class(c)
-    c.split(/::/).inject(Object) { |a,i| a.const_get(i) }
-  end
-  
   # ----------------------------------------------------------------------------
   # Configuration
   # ----------------------------------------------------------------------------
