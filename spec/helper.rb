@@ -25,12 +25,16 @@ module Timing
   def elapsed
     @finish - @start
   end
-  def time(&block)
+  def time_it(&block)
     # elapsed time should be known whether or not it raises an error
     start
     yield
   ensure
     finish
+  end
+  def time(&block)
+    time_it(&block)
+    elapsed
   end
 end
 
