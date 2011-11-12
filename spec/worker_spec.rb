@@ -102,4 +102,7 @@ describe Hive::Worker do
 
   end
 
+  it "should warn when it is running late"
+  it "should be killed when it is running late"
+
 end

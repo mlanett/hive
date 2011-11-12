@@ -31,4 +31,14 @@ describe Hive::Idler do
     count.should be <= 10
   end
 
+  describe "when dealing with sleep times", :time => true do
+
+    it "should not sleep after the first false"
+
+    it "should not sleep too long"
+
+    it "should sleep at least a little"
+
+  end
+
 end
