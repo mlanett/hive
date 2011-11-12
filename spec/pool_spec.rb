@@ -29,4 +29,12 @@ describe Hive::Pool do
 
   end
 
+  describe "when tracking how long workers run", :time => true do
+
+    it "should warn when a worker is running late"
+
+    it "should kill when a worker is running too late"
+
+  end
+
 end
