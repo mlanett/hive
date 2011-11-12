@@ -22,7 +22,7 @@ class Hive::Policy
   end
 
   def observers
-    @options[:observers] || []
+    @options["observers"] || []
   end
 
   declare_i :pool_min_workers,      1

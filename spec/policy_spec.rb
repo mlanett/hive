@@ -19,4 +19,10 @@ describe Hive::Policy do
     p.worker_max_jobs.should eq(5)
   end
 
+  it "should support observers" do
+    o = NullObserver.new
+    p = Hive::Policy.new :observers => [o]
+    p.observers.should eq([o])
+  end
+
 end
