@@ -27,7 +27,7 @@ class Hive::Utilities::LogObserver
     log "Worker #{me} has started"
   end
   
-  def heartbeat()
+  def worker_heartbeat()
     log "Worker #{me} is still alive"
   end
   

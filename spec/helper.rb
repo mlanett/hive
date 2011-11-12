@@ -80,8 +80,8 @@ class NullObserver
     @notifications << :worker_started
   end
 
-  def heartbeat()
-    @notifications << :heartbeat
+  def worker_heartbeat()
+    @notifications << :worker_heartbeat
   end
 
   def job_error(x)

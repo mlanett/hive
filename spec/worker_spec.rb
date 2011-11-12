@@ -48,7 +48,7 @@ describe Hive::Worker do
     worker  = Hive::Worker.new( job, policy )
 
     worker.run
-    tracker.notifications.should eq([:worker_started, :heartbeat, :worker_stopped])
+    tracker.notifications.should eq([:worker_started, :worker_heartbeat, :worker_stopped])
   end
 
   it "should exit when the policy says to run out (of jobs)" do

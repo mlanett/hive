@@ -72,7 +72,7 @@ class Hive::Worker
     rescue => x
       notify :job_error, x
     ensure
-      notify :heartbeat
+      notify :worker_heartbeat
     end
   end
 
