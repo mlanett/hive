@@ -44,15 +44,15 @@ class Hive::Worker
   end
 
   def run()
-    job_count = 0
+    worker_jobs   = 0
     notify :worker_started
     context = { :worker => self }
     while state == :running do
 
       call_job( context )
 
-      job_count += 1
-      if policy.worker_max_jobs && job_count >= policy.worker_max_jobs then
+      worker_jobs += 1
+      if policy.worker_max_jobs && worker_jobs >= policy.worker_max_jobs then
         @state = :stopped
       end
 
