@@ -13,7 +13,7 @@ class Hive::Pool
   attr :policy
   attr :storage   # where to store worker details
   
-  def initialize( kind, policy, storage = default_storage )
+  def initialize( kind, policy = Hive::Policy.new, storage = default_storage )
     @kind      = resolve_kind(kind)
     @policy    = policy
     @storage   = storage
@@ -22,8 +22,7 @@ class Hive::Pool
   def synchronize
     # launch workers
     policy.pool_min_workers.times do
-      w = Hive::Worker.new( kind, policy )
-      # puts "launch"
+      Hive::Worker.spawn( kind, policy )
     end
   end
   
