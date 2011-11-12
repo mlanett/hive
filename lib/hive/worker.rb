@@ -24,6 +24,8 @@ class Hive::Worker
   attr :policy
   attr :job
   attr :state
+  attr :worker_jobs
+  attr :worker_expire
 
   def initialize( job, policy = Hive::Policy.new, &callable_job )
     job     = resolve_job( job, &callable_job )
@@ -61,8 +63,8 @@ class Hive::Worker
     call_job
   ensure
     @worker_jobs += 1
-    @state = :quitting if policy.worker_max_jobs <= @worker_jobs
-    @state = :quitting if @worker_expire <= Time.now
+    quit! if policy.worker_max_jobs <= worker_jobs
+    quit! if worker_expire <= Time.now
   end
 
   def call_job
