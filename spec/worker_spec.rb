@@ -2,16 +2,6 @@
 
 require "helper"
 
-class Hive::SpawningJob
-  include RedisClient
-  def initialize
-    redis.set("Hive::SpawningJob",Process.pid)
-  end
-  def call( context = {} )
-    context[:worker].quit!
-  end
-end
-
 class Hive::TermJob
   include RedisClient
   def initialize
@@ -77,11 +67,11 @@ describe Hive::Worker do
 
     it "should spawn a new process" do
       pid   = Process.pid
-      redis.set "Hive::SpawningJob", pid
+      redis.set "SpawningJob", pid
 
-      Hive::Worker.spawn( Hive::SpawningJob )
-      Hive::Idler.wait_until { redis.get("Hive::SpawningJob").to_i != pid }
-      redis.get("Hive::SpawningJob").to_i.should_not eq(pid)
+      Hive::Worker.spawn( SpawningJob )
+      Hive::Idler.wait_until { redis.get("SpawningJob").to_i != pid }
+      redis.get("SpawningJob").to_i.should_not eq(pid)
     end
 
     it "should respond to TERM" do

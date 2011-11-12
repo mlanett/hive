@@ -99,3 +99,13 @@ class NullJob
     true
   end
 end
+
+class SpawningJob
+  include RedisClient
+  def initialize
+    redis.set("SpawningJob",Process.pid)
+  end
+  def call( context = {} )
+    context[:worker].quit!
+  end
+end
