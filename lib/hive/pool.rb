@@ -30,16 +30,16 @@ class Hive::Pool
   # Utilities
   # ----------------------------------------------------------------------------
   
-  def resolve_kind(c)
-    case c
+  def resolve_kind(kind)
+    case kind
     when Class
-      c
+      kind
     when String, Symbol
-      Hive.resolve_class(c.to_s)
+      Hive.resolve_class(kind.to_s)
     else
       # proc or lambda
-      raise unless c.respond_to?(:call)
-      c
+      raise unless kind.respond_to?(:call)
+      kind
     end
   end
 

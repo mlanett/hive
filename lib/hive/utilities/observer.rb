@@ -14,16 +14,19 @@ module Hive::Utilities::Observer
 
   def self.resolve( candidate )
     case candidate
-    when candidate.respond_to?(:notify)
-      candidate
-    when candidate.respond_to?(:call)
-      resolve(candidate.call)
     when Class
       candidate.new
     when String, Symbol
       resolve(Hive.resolve_class(candidate.to_s))
     else
-      return candidate # assume it supports the notifications natively
+      case
+      when candidate.respond_to?(:notify)
+        candidate
+      when candidate.respond_to?(:call)
+        resolve(candidate.call)
+      else
+        return candidate # assume it supports the notifications natively
+      end
     end
   end
 
