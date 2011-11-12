@@ -24,12 +24,12 @@ describe Hive::Worker do
   end
 
   it "should run with a classname" do
-    worker = Hive::Worker.new "SingleJob"
+    worker = Hive::Worker.new "QuitJob"
     expect { worker.run }.should_not raise_error
   end
 
   it "should run with a class" do
-    worker = Hive::Worker.new(SingleJob)
+    worker = Hive::Worker.new(QuitJob)
     expect { worker.run }.should_not raise_error
   end
 
@@ -88,11 +88,11 @@ describe Hive::Worker do
 
     it "should spawn a new process" do
       pid   = Process.pid
-      redis.set "SpawningJob", pid
+      redis.set "SpawnQuitJob", pid
 
-      Hive::Worker.spawn( SpawningJob )
-      Hive::Idler.wait_until { redis.get("SpawningJob").to_i != pid }
-      redis.get("SpawningJob").to_i.should_not eq(pid)
+      Hive::Worker.spawn( SpawnQuitJob )
+      Hive::Idler.wait_until { redis.get("SpawnQuitJob").to_i != pid }
+      redis.get("SpawnQuitJob").to_i.should_not eq(pid)
     end
 
     it "should respond to TERM" do

@@ -94,7 +94,7 @@ class NullObserver
 
 end # NullObserver
 
-class SingleJob
+class QuitJob
   def call( context = {} )
     context[:worker].quit!
   end
@@ -106,10 +106,10 @@ class NullJob
   end
 end
 
-class SpawningJob
+class SpawnQuitJob
   include RedisClient
   def initialize
-    redis.set("SpawningJob",Process.pid)
+    redis.set("SpawnQuitJob",Process.pid)
   end
   def call( context = {} )
     context[:worker].quit!
