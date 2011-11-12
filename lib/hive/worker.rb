@@ -34,11 +34,9 @@ class Hive::Worker
     @job_with_idle = Hive::Idler.new(job)
 
     # set up observers
-    if policy.observers then
-      policy.observers.each do |observer|
-        o = Hive::Utilities::Observer.resolve(observer)
-        add_observer(o)
-      end
+    policy.observers.each do |observer|
+      o = Hive::Utilities::Observer.resolve(observer)
+      add_observer(o)
     end
 
     @state         = :running
