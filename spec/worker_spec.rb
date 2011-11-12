@@ -23,6 +23,27 @@ describe Hive::Worker do
     count.should eq 1
   end
 
+  it "should run with a classname" do
+    worker = Hive::Worker.new "SingleJob"
+    expect { worker.run }.should_not raise_error
+  end
+
+  it "should run with a class" do
+    worker = Hive::Worker.new(SingleJob)
+    expect { worker.run }.should_not raise_error
+  end
+
+  it "should run with a lambda" do
+    job    = ->(context) { context[:worker].quit! }
+    worker = Hive::Worker.new( job )
+    expect { worker.run }.should_not raise_error
+  end
+
+  it "should run with a proc" do
+    worker = Hive::Worker.new() { |context| context[:worker].quit! }
+    expect { worker.run }.should_not raise_error
+  end
+
   it "should pass a context with a worker" do
     ok     = false
     worker = nil

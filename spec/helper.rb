@@ -94,6 +94,12 @@ class NullObserver
 
 end # NullObserver
 
+class SingleJob
+  def call( context = {} )
+    context[:worker].quit!
+  end
+end
+
 class NullJob
   def call
     true

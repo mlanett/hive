@@ -27,7 +27,7 @@ class Hive::Worker
   attr :worker_jobs
   attr :worker_expire
 
-  def initialize( job, policy = Hive::Policy.new, &callable_job )
+  def initialize( job = nil, policy = Hive::Policy.new, &callable_job )
     job     = resolve_job( job, &callable_job )
     @policy = policy
     @job    = Hive::Idler.new( job, :min_sleep => policy.worker_idle_min_sleep, :max_sleep => policy.worker_idle_max_sleep )
@@ -57,7 +57,9 @@ class Hive::Worker
     @state = :quitting
   end
 
+  # ----------------------------------------------------------------------------
   protected
+  # ----------------------------------------------------------------------------
 
   def call_job_with_checks
     call_job
@@ -81,11 +83,27 @@ class Hive::Worker
   def resolve_job( job, &callable_job )
     raise if job && callable_job
     job ||= callable_job
-    if ! job.respond_to?(:call) && job.respond_to?(:new) then
-      job = job.new
+    raise if ! job
+
+    case job
+    when Proc
+      job
+    when String, Symbol
+      resolve_job(resolve_class(job.to_s))
+    else
+      case
+      when job.respond_to?(:call)
+        job
+      when job.respond_to?(:new)
+        resolve_job(job.new)
+      else
+        raise "Unknown kind of job #{job.inspect}"
+      end
     end
-    raise unless job.respond_to?(:call)
-    job
+  end
+
+  def resolve_class(c)
+    c.split(/::/).inject(Object) { |a,i| a.const_get(i) }
   end
 
 end # Hive::Worker
