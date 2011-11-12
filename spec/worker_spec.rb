@@ -51,6 +51,15 @@ describe Hive::Worker do
     tracker.notifications.should eq([:worker_started, :heartbeat, :worker_stopped])
   end
 
+  it "should exit when the policy says to run out" do
+    count  = 0
+    job    = ->(context) { count += 1; true }
+    policy = Hive::Policy.new({ "worker_max_jobs" => 5 })
+    worker = Hive::Worker.new( job, policy )
+    worker.run
+    count.should be <= 5
+  end
+
   describe "when spawning a process", :redis => true do
 
     it "should spawn a new process" do

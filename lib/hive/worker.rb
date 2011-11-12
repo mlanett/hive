@@ -46,17 +46,16 @@ class Hive::Worker
   end
 
   def run()
+    job_count = 0
     notify :worker_started
     context = { :worker => self }
     while state == :running do
 
-      begin
-        job_with_idle.call( context )
-      rescue => x
-        notify :job_error, x
-        # consume this exception
-      ensure
-        notify :heartbeat
+      call_job( context )
+
+      job_count += 1
+      if policy.worker_max_jobs && job_count >= policy.worker_max_jobs then
+        @state = :stopped
       end
 
     end
@@ -66,6 +65,18 @@ class Hive::Worker
 
   def quit!()
     @state = :quitting
+  end
+
+  protected
+
+  def call_job( context )
+    begin
+      job_with_idle.call( context )
+    rescue => x
+      notify :job_error, x
+    ensure
+      notify :heartbeat
+    end
   end
 
 end # Hive::Worker
