@@ -69,3 +69,9 @@ class NullObserver
   end
 
 end # NullObserver
+
+class NullJob
+  def call
+    true
+  end
+end

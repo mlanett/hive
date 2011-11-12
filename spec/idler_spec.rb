@@ -4,6 +4,27 @@ require "helper"
 
 describe Hive::Idler do
 
+  it "should accept a proc" do
+    idler = Hive::Idler.new() { true }
+    expect { idler.call }.to_not raise_error
+  end
+
+  it "should accept a lambda" do
+    job = ->() { true }
+    idler = Hive::Idler.new(job)
+    expect { idler.call }.to_not raise_error
+  end
+
+  it "should accept an object with an interface" do
+    idler = Hive::Idler.new( NullJob.new )
+    expect { idler.call }.to_not raise_error
+  end
+
+  it "should refuse non-callable jobs" do
+    fake_job = Object.new
+    expect { Hive::Idler.new(fake_job) }.to raise_error
+  end
+
   it "should not run idle tasks too much" do
     count  = 0
     Hive::Idler.wait_until { count += 1; false }

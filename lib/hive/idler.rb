@@ -18,6 +18,7 @@ class Hive::Idler
   
   def initialize( callable = nil, &callable_block )
     @callable = callable || callable_block
+    raise unless @callable.respond_to?(:call)
     @sleep    = nil
   end
   
