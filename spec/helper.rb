@@ -15,7 +15,7 @@ require "redis"                                                                 
 
 REDIS = { :url => "redis://127.0.0.1:6379/1" }
 
-module Benchmarking
+module Timing
   def start
     @start = Time.now.to_f
   end
@@ -25,7 +25,7 @@ module Benchmarking
   def elapsed
     @finish - @start
   end
-  def bench(&block)
+  def time(&block)
     # elapsed time should be known whether or not it raises an error
     start
     yield
@@ -53,7 +53,7 @@ end
 RSpec.configure do |spec|
   # @see https://www.relishapp.com/rspec/rspec-core/docs/helper-methods/define-helper-methods-in-a-module
   spec.include RedisClient, :redis => true
-  spec.include Benchmarking, :bench => true
+  spec.include Timing, :time => true
 
   # nuke the Redis database around each run
   # @see https://www.relishapp.com/rspec/rspec-core/docs/hooks/around-hooks

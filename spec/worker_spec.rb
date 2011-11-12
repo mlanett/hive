@@ -60,15 +60,16 @@ describe Hive::Worker do
     count.should be <= 5
   end
 
-  describe "when testing time", :bench => true do
+  describe "when testing lifetime", :time => true do
     it "should exit when the policy says to run out (of time)" do
-      count  = 0
-      job    = ->(context) { count += 1; true }
-      policy = Hive::Policy.new({ "worker_max_lifetime" => 1, :worker_max_jobs => 1e9 })
-      worker = Hive::Worker.new( job, policy )
-      bench { worker.run }
-      elapsed.should be <= 2.0 # need to allow for overhead
-      puts count
+      overhead = 1
+      lifetime = 2
+      count    = 0
+      job      = ->(context) { count += 1; true }
+      policy   = Hive::Policy.new({ "worker_max_lifetime" => lifetime, :worker_max_jobs => 1e9 })
+      worker   = Hive::Worker.new( job, policy )
+      time { worker.run }
+      elapsed.should be <= lifetime + overhead
     end
   end
 
