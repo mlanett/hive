@@ -3,6 +3,7 @@
 module Hive::Utilities::Observeable
 
   def add_observer(o)
+    o.focus(self)
     (@observers ||= []).push(o)
   end
 

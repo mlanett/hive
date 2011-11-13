@@ -2,10 +2,17 @@
 
 class Hive::Utilities::ObserverBase
 
-  # can implement notify( observeable, *details )
+  attr :subject
+
+  # can implement notify( subject, *details )
   # or can use this implementation
 
-  def notify( observeable, *details )
+  # It is possible but unlikely that I would want an observer to observe multiple subjects.
+  def focus( subject )
+    @subject = subject
+  end
+
+  def notify( subject, *details )
     if self.respond_to?(details.first) then
       details = details.dup
       self.send( details.shift, *details )
