@@ -9,6 +9,7 @@ module Hive
   autoload :PollingColony,  "hive/polling_colony"
   autoload :Pool,           "hive/pool"
   autoload :ProcessStorage, "hive/process_storage"
+  autoload :Registry,       "hive/registry"
   autoload :SimpleColony,   "hive/simple_colony"
   autoload :ThreadedColony, "hive/threaded_colony"
   autoload :Worker,         "hive/worker"
