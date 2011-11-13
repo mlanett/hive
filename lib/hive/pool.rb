@@ -13,7 +13,7 @@ class Hive::Pool
   attr :policy
   attr :storage   # where to store worker details
   
-  def initialize( kind, policy = Hive::Policy.new, storage = default_storage )
+  def initialize( kind, policy = Hive::Policy.new, storage = Hive.default_storage )
     @kind      = resolve_kind(kind)
     @policy    = policy
     @storage   = storage
@@ -47,16 +47,4 @@ class Hive::Pool
     end
   end
 
-  # ----------------------------------------------------------------------------
-  # Configuration
-  # ----------------------------------------------------------------------------
-  
-  def default_storage
-    Hive::Pool.default_storage ||= Hive::ProcessStorage.new
-  end
-  
-  class << self
-    attr :default_storage, true
-  end # class
-  
 end # Hive::Pool

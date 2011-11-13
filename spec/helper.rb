@@ -13,6 +13,8 @@ require "ruby-debug"          # because sometimes you need it
 require "hive"                # load this gem
 require "redis"               # required by RedisClient
 
+Hive.default_storage = Hive::ProcessStorage.new
+
 REDIS = { :url => "redis://127.0.0.1:6379/1" }
 
 module Timing

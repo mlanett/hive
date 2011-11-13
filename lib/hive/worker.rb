@@ -22,15 +22,17 @@ class Hive::Worker
   end
 
   attr :policy
+  attr :registry
   attr :job
   attr :state
   attr :worker_jobs
   attr :worker_expire
 
-  def initialize( job = nil, policy = Hive::Policy.new )
-    job     = resolve_job( job )
-    @policy = policy
-    @job    = Hive::Idler.new( job, :min_sleep => policy.worker_idle_min_sleep, :max_sleep => policy.worker_idle_max_sleep )
+  def initialize( job = nil, policy = Hive::Policy.new, registry = nil )
+    job       = resolve_job( job )
+    @policy   = policy
+    @registry = registry || Hive::Registry.new( Hive.default_storage )
+    @job      = Hive::Idler.new( job, :min_sleep => policy.worker_idle_min_sleep, :max_sleep => policy.worker_idle_max_sleep )
 
     # set up observers
     policy.observers.each do |observer|

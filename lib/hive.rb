@@ -35,10 +35,23 @@ end
 
 module Hive
   class << self
+
     # @param classname
     # @returns class object
     def resolve_class(classname)
       classname.split(/::/).inject(Object) { |a,i| a.const_get(i) }
     end
+
+    attr :default_storage
+
+    def default_storage
+      @default_storage ||= Hive::Redis::Storage.new
+    end
+
+    def default_storage=(default_storage)
+      raise if @default_storage
+      @default_storage = default_storage
+    end
+
   end # class
 end
