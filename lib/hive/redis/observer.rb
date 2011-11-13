@@ -1,8 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-class Hive::Redis::Observer
-
-  include Hive::Utilities::ObserverBase
+class Hive::Redis::Observer < Hive::Utilities::ObserverBase
 
   def notify_started
     @ro_workers = "hive:workers"

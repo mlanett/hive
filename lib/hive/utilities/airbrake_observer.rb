@@ -9,9 +9,7 @@
 
 require "airbrake"
 
-class Hive::Utilities::AirbrakeObserver
-
-  include Hive::Utilities::ObserverBase
+class Hive::Utilities::AirbrakeObserver < Hive::Utilities::ObserverBase
 
   attr :it # job
   attr :me # worker

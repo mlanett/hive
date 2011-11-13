@@ -74,9 +74,7 @@ RSpec.configure do |spec|
   end
 end
 
-class NullObserver
-
-  include Hive::Utilities::ObserverBase
+class NullObserver < Hive::Utilities::ObserverBase
 
   attr :notifications
 

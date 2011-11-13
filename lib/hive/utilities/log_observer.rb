@@ -10,10 +10,9 @@
   
 =end
 
-class Hive::Utilities::LogObserver
+class Hive::Utilities::LogObserver < Hive::Utilities::ObserverBase
   
   include Hive::Log
-  include Hive::Utilities::ObserverBase
 
   attr :it # job
   attr :me # worker
