@@ -17,6 +17,7 @@ describe Hive::Registry do
     registry = Hive::Registry.new(storage)
     worker   = double("Worker")
     registry.register(worker)
+    registry.workers.should be_include(worker)
     registry.unregister(worker)
     registry.workers.should_not be_include(worker)
   end

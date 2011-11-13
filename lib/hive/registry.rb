@@ -13,7 +13,7 @@ class Hive::Registry
 
   attr :storage
 
-  def initialize( storage )
+  def initialize( storage = Hive.default_storage )
     @storage = storage
   end
 

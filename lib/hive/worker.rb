@@ -28,10 +28,10 @@ class Hive::Worker
   attr :worker_jobs
   attr :worker_expire
 
-  def initialize( job = nil, policy = Hive::Policy.new, registry = nil )
+  def initialize( job = nil, policy = Hive::Policy.new, registry = Hive::Registry.new )
     job       = resolve_job( job )
     @policy   = policy
-    @registry = registry || Hive::Registry.new( Hive.default_storage )
+    @registry = registry
     @job      = Hive::Idler.new( job, :min_sleep => policy.worker_idle_min_sleep, :max_sleep => policy.worker_idle_max_sleep )
 
     # set up observers
