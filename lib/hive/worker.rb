@@ -48,9 +48,9 @@ class Hive::Worker
 
   def run()
     context = { :worker => self }
-    with_lifetime do
-      while state == :running do
-        with_lifetime_checks do
+    with_start_and_stop do
+      while running? do
+        with_quitting_checks do
           with_heartbeat do
             job.call(context)
           end
@@ -63,22 +63,26 @@ class Hive::Worker
     @state = :quitting
   end
 
+  def running?
+    state == :running
+  end
+
   # ----------------------------------------------------------------------------
   protected
   # ----------------------------------------------------------------------------
 
-  def with_lifetime(&block)
-    registry.with_registration(self.key) do
-      notify :worker_started
-      begin
-        yield
-      ensure
-        notify :worker_stopped
-      end
+  def with_start_and_stop(&block)
+    registry.register(self.key)
+    notify :worker_started
+    begin
+      yield
+    ensure
+      notify :worker_stopped
+      registry.unregister(self.key)
     end
   end
 
-  def with_lifetime_checks(&block)
+  def with_quitting_checks(&block)
     yield
   ensure
     @worker_jobs += 1

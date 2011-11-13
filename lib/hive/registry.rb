@@ -40,15 +40,6 @@ class Hive::Registry
     workers.each(&block)
   end
 
-  def with_registration( key, &block )
-    register(key)
-    begin
-      yield
-    ensure
-      unregister(key)
-    end
-  end
-
   protected
 
   def workers_key
