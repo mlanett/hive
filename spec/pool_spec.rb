@@ -15,17 +15,48 @@ describe Hive::Pool do
 
   describe "when spawning proceses", :redis => true do
 
-    it "should spin up a worker" do
-      pool_pid = Process.pid
-      redis.set "SpawnQuitJob", pool_pid
-
-      pool = Hive::Pool.new( SpawnQuitJob )
+    it "should spawn a worker" do
+      job  = ->(context) {}
+      pool = Hive::Pool.new(job)
+      pool.stub(:spawn) {}
       pool.synchronize
-
-      Hive::Idler.wait_until { redis.get("SpawnQuitJob").to_i != pool_pid }
-      redis.get("SpawnQuitJob").to_i.should_not eq(pool_pid)
-
     end
+
+    it "should spin up a worker" #do
+    #  pool_pid = Process.pid
+    #  redis.set "SpawnQuitJob", pool_pid
+    #
+    #  pool = Hive::Pool.new( SpawnQuitJob )
+    #  pool.synchronize
+    #
+    #  Hive::Idler.wait_until { redis.get("SpawnQuitJob").to_i != pool_pid }
+    #  redis.get("SpawnQuitJob").to_i.should_not eq(pool_pid)
+    #end
+
+    it "works" do
+    end
+
+    it "spins up a worker only once" #do
+    #  index   = 0
+    #  storage = Hive::ProcessStorage.new
+    #  policy  = Hive::Policy.new :worker_max_lifetime => 10
+    #  pool    = Hive::Pool.new( SpawnWaitQuitJob, policy, storage )
+    #  pool.stub(:spawn) {}
+    #end
+
+    it "does not spin up the worker twice" #do
+    #  policy = Hive::Policy.new :worker_max_lifetime => 10
+    #  pool = Hive::Pool.new( SpawnWaitQuitJob )
+    #  pool.synchronize
+    #  Hive::Idler.wait_until { redis.get("SpawnWaitQuitJob").to_i != 0 }
+    #  pid_first = redis.get("SpawnWaitQuitJob").to_i
+    #
+    #  pool.synchronize
+    #  Hive::Idler.wait_until { redis.get("SpawnWaitQuitJob").to_i != pid_first }
+    #  redis.get("SpawnWaitQuitJob").to_i.should eq(pid_first)
+    #
+    #  redis.set("SpawnWaitQuitJob",0)
+    #end
 
     it "should spin up two workers"
     # do
