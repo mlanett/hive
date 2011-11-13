@@ -10,25 +10,24 @@
 class Hive::Worker
 
   include Hive::Utilities::Observeable
-  extend Hive::Utilities::Process
 
   # forks a new process
   # creates a new instance of the job class
   # runs a loop which calls the job
   def self.spawn( *arguments, &proc )
-    fork_and_detach do
+    Hive::Utilities::Process.fork_and_detach do
       worker = new( *arguments, &proc )
       trap("TERM") { worker.quit! }
       worker.run
     end
   end
 
+  attr :job
   attr :policy
   attr :registry
-  attr :job
   attr :state
-  attr :worker_jobs
   attr :worker_expire
+  attr :worker_jobs
 
   def initialize( job = nil, policy = Hive::Policy.new, registry = Hive::Registry.new )
     job       = resolve_job( job )
@@ -48,14 +47,14 @@ class Hive::Worker
   end
 
   def run()
-    registry.with_registration(self.key) do
-      notify :worker_started
-      begin
-        while state == :running do
-          call_job_with_checks
+    context = { :worker => self }
+    with_lifetime do
+      while state == :running do
+        with_lifetime_checks do
+          with_heartbeat do
+            job.call(context)
+          end
         end
-      ensure
-        notify :worker_stopped
       end
     end
   end
@@ -68,22 +67,33 @@ class Hive::Worker
   protected
   # ----------------------------------------------------------------------------
 
-  def call_job_with_checks
-    call_job
+  def with_lifetime(&block)
+    registry.with_registration(self.key) do
+      notify :worker_started
+      begin
+        yield
+      ensure
+        notify :worker_stopped
+      end
+    end
+  end
+
+  def with_lifetime_checks(&block)
+    yield
   ensure
     @worker_jobs += 1
     quit! if policy.worker_max_jobs <= worker_jobs
     quit! if worker_expire <= Time.now
   end
 
-  def call_job
-    context = { :worker => self }
+  def with_heartbeat(&block)
     begin
-      job.call( context )
+      yield
     rescue => x
       notify :job_error, x
     ensure
       notify :worker_heartbeat
+      registry.update(self.key)
     end
   end
 
