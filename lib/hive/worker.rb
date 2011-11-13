@@ -47,12 +47,16 @@ class Hive::Worker
   end
 
   def run()
-    notify :worker_started
-    while state == :running do
-      call_job_with_checks
+    registry.with_registration(self) do
+      notify :worker_started
+      begin
+        while state == :running do
+          call_job_with_checks
+        end
+      ensure
+        notify :worker_stopped
+      end
     end
-  ensure
-    notify :worker_stopped
   end
 
   def quit!()

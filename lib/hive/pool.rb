@@ -16,6 +16,7 @@ class Hive::Pool
   def initialize( kind, policy = Hive::Policy.new, storage = Hive.default_storage )
     @kind      = resolve_kind(kind)
     @policy    = policy
+    @registry  = Hive::Registry.new(storage)
     @storage   = storage
   end
   

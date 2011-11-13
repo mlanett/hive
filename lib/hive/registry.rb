@@ -31,4 +31,13 @@ class Hive::Registry
     workers.each(&block)
   end
 
+  def with_registration( worker, &block )
+    register(worker)
+    begin
+      yield
+    ensure
+      unregister(worker)
+    end
+  end
+
 end # Hive::Registry
