@@ -53,13 +53,16 @@ describe Hive::Worker do
   end
 
   it "should use observers" do
+    obsrvr  = Hive::Utilities::ObserverBase.new
+    obsrvr.should_receive(:notify).with(anything,:worker_started).ordered
+    obsrvr.should_receive(:notify).with(anything,:worker_heartbeat).ordered
+    obsrvr.should_receive(:notify).with(anything,:worker_stopped).ordered
+
     job     = ->(context) { context[:worker].quit! }
-    tracker = NullObserver.new
-    policy  = Hive::Policy.new({ :observers => [ tracker ] })
+    policy  = Hive::Policy.new({ :observers => [ obsrvr ] })
     worker  = Hive::Worker.new( job, policy )
 
     worker.run
-    tracker.notifications.should eq([:worker_started, :worker_heartbeat, :worker_stopped])
   end
 
   it "should exit when the policy says to run out (of jobs)" do
