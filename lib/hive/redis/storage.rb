@@ -38,6 +38,10 @@ class Hive::Redis::Storage
     redis.smembers( set_name )
   end
 
+  def set_member?( set_name, value )
+    redis.sismember( set_name, value )
+  end
+
   # Maps
 
   def map_set( map_name, key, value )

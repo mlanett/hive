@@ -53,7 +53,12 @@ describe Hive::ProcessStorage do
       @it.set_remove("foos","A")
       @it.set_size("foos").should eq 1
     end
-    
+
+    it "can detect membership in a list" do
+      @it.set_add("foos","A")
+      @it.set_member?("foos","A").should be_true
+    end
+
   end # lists
   
   describe "maps" do

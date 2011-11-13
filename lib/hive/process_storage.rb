@@ -34,7 +34,11 @@ class Hive::ProcessStorage
   def set_remove( key, value )
     (@storage[key] || [] ).delete( value )
   end
-  
+
+  def set_member?( key, value )
+    (@storage[key] || []).member?( value )
+  end
+
   def set_get_all( key )
     @storage[key] || []
   end
