@@ -7,4 +7,28 @@
 =end
 
 class Hive::Registry
+
+  class Entry < Struct.new :pid, :key
+  end
+
+  attr :storage
+
+  def initialize( storage )
+    @storage = storage
+  end
+
+  def register( worker )
+  end
+
+  def unregister( worker )
+  end
+
+  def workers
+    []
+  end
+
+  def live_workers( &block )
+    workers.each(&block)
+  end
+
 end # Hive::Registry
