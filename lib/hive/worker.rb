@@ -47,7 +47,7 @@ class Hive::Worker
   end
 
   def run()
-    registry.with_registration(self) do
+    registry.with_registration(self.key) do
       notify :worker_started
       begin
         while state == :running do
@@ -104,6 +104,21 @@ class Hive::Worker
         raise "Unknown kind of job #{job.inspect}"
       end
     end
+  end
+
+  # the key is a non-changing string which uniquely identifies this worker
+  def key
+    @key ||= begin
+      name     = :unknown
+      pid      = Process.pid
+      hostname = `hostname`.chomp.strip    # e.g. foo.example.com
+      "%s-%i@%s" % [ name, pid, hostname ] # e.g. processor-1234@foo.example.com
+    end
+  end
+
+  def key=( key )
+    raise if @key
+    @key = key
   end
 
 end # Hive::Worker
