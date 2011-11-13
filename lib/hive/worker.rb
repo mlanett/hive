@@ -17,7 +17,9 @@ class Hive::Worker
   # runs a loop which calls the job
   def self.spawn( *arguments, &proc )
     fork_and_detach do
-      new( *arguments, &proc ).run
+      worker = new( *arguments, &proc )
+      trap("TERM") { worker.quit! }
+      worker.run
     end
   end
 
@@ -43,7 +45,6 @@ class Hive::Worker
     @state         = :running
     @worker_jobs   = 0
     @worker_expire = Time.now + policy.worker_max_lifetime
-    trap("TERM") { quit! }
   end
 
   def run()
