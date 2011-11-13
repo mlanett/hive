@@ -6,26 +6,22 @@ class Hive::Redis::Observer < Hive::Utilities::ObserverBase
     @workers = "hive:workers"
     @worker  = "#{self.class.name}:#{Process.pid}"
     @status  = "hive:status:#{@worker}"
-    redis.sadd( @workers, @worker )
-    redis.set( @status, Time.now )
+    storage.set_add( @workers, @worker )
+    storage.set( @status, Time.now )
   end
   
   def worker_heartbeat( upcount = 0 )
-    redis.set( @status, Time.now )
+    storage.set( @status, Time.now )
   end
   
   def worker_stopped
-    redis.del( @status )
-    redis.srem( @workers, @worker )
+    storage.set_remove( @status )
+    storage.srem( @workers, @worker )
   end
   
-  def redis
-    @redis ||= Hive::Redis::Observer.default_redis
+  def storage
+    @storage ||= Hive.default_storage
   end
-  
-  class << self
-    attr :default_redis, true
-  end # class
   
   # ----------------------------------------------------------------------------
   protected
