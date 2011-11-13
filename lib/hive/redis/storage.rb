@@ -2,7 +2,7 @@
 
 class Hive::Redis::Storage
 
-  def initialize( redis  )
+  def initialize( redis = nil )
     @redis = redis
   end
 

@@ -22,10 +22,14 @@ class Hive::Pool
   def synchronize
     # launch workers
     policy.pool_min_workers.times do
-      Hive::Worker.spawn( kind, policy )
+      spawn
     end
   end
-  
+
+  def spawn()
+    Hive::Worker.spawn( kind, policy )
+  end
+
   # ----------------------------------------------------------------------------
   # Utilities
   # ----------------------------------------------------------------------------

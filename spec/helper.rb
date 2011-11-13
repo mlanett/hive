@@ -16,27 +16,35 @@ require "redis"                                                                 
 REDIS = { :url => "redis://127.0.0.1:6379/1" }
 
 module Timing
+
+  def time(&block)
+    _time(&block)
+    elapsed
+  end
+
+  protected
+
   def start
     @start = Time.now.to_f
   end
+
   def finish
     @finish = Time.now.to_f
   end
+
   def elapsed
     @finish - @start
   end
-  def time_it(&block)
+
+  def _time(&block)
     # elapsed time should be known whether or not it raises an error
     start
     yield
   ensure
     finish
   end
-  def time(&block)
-    time_it(&block)
-    elapsed
-  end
-end
+
+end # Timing
 
 module RedisClient
   def redis
