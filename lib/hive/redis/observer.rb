@@ -7,11 +7,11 @@ class Hive::Redis::Observer < Hive::Utilities::ObserverBase
     @worker  = "#{self.class.name}:#{Process.pid}"
     @status  = "hive:status:#{@worker}"
     storage.set_add( @workers, @worker )
-    storage.set( @status, Time.now )
+    storage.put( @status, Time.now )
   end
   
   def worker_heartbeat( upcount = 0 )
-    storage.set( @status, Time.now )
+    storage.put( @status, Time.now )
   end
   
   def worker_stopped
