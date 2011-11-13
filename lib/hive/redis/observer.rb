@@ -1,7 +1,9 @@
 # -*- encoding: utf-8 -*-
 
-module Hive::Redis::Observer
-  
+class Hive::Redis::Observer
+
+  include Hive::Utilities::ObserverBase
+
   def notify_started
     @ro_workers = "hive:workers"
     @ro_worker  = "#{self.class.name}:#{Process.pid}"
@@ -36,4 +38,4 @@ module Hive::Redis::Observer
     "%s-%i@%s" % [ name, Process.pid, @hostname ]
   end
   
-end
+end # Hive::Redis::Observer
