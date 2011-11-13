@@ -80,9 +80,7 @@ class Hive::Worker
     end
   end
 
-  def resolve_job( job, &callable_job )
-    raise if job && callable_job
-    job ||= callable_job
+  def resolve_job( job )
     raise if ! job
 
     case job
