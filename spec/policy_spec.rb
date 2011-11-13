@@ -20,7 +20,7 @@ describe Hive::Policy do
   end
 
   it "should support observers" do
-    o = NullObserver.new
+    o = Hive::Utilities::ObserverBase.new
     p = Hive::Policy.new :observers => [o]
     p.observers.should eq([o])
   end

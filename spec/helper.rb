@@ -76,32 +76,6 @@ RSpec.configure do |spec|
   end
 end
 
-class NullObserver < Hive::Utilities::ObserverBase
-
-  attr :notifications
-
-  def initialize
-    @notifications = []
-  end
-
-  def worker_started()
-    @notifications << :worker_started
-  end
-
-  def worker_heartbeat()
-    @notifications << :worker_heartbeat
-  end
-
-  def job_error(x)
-    @notifications << :job_error
-  end
-
-  def worker_stopped()
-    @notifications << :worker_stopped
-  end
-
-end # NullObserver
-
 class QuitJob
   def call( context = {} )
     context[:worker].quit!
