@@ -41,6 +41,9 @@ class Hive::Worker
       add_observer(o)
     end
 
+    # manage the registry via an observer
+    add_observer( Hive::LifecycleObserver.new( key, registry ) )
+
     @state         = :running
     @worker_jobs   = 0
     @worker_expire = Time.now + policy.worker_max_lifetime
@@ -72,13 +75,11 @@ class Hive::Worker
   # ----------------------------------------------------------------------------
 
   def with_start_and_stop(&block)
-    registry.register(self.key)
     notify :worker_started
     begin
       yield
     ensure
       notify :worker_stopped
-      registry.unregister(self.key)
     end
   end
 
@@ -97,7 +98,6 @@ class Hive::Worker
       notify :job_error, x
     ensure
       notify :worker_heartbeat
-      registry.update(self.key)
     end
   end
 
@@ -121,7 +121,7 @@ class Hive::Worker
     end
   end
 
-  # the key is a non-changing string which uniquely identifies this worker
+  # the key is a constant string which uniquely identifies this worker
   def key
     @key ||= begin
       name     = :unknown
