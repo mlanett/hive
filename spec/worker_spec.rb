@@ -39,11 +39,6 @@ describe Hive::Worker do
     expect { worker.run }.should_not raise_error
   end
 
-  it "should run with a proc" do
-    worker = Hive::Worker.new() { |context| context[:worker].quit! }
-    expect { worker.run }.should_not raise_error
-  end
-
   it "should pass a context with a worker" do
     ok     = false
     worker = nil

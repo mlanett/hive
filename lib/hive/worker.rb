@@ -27,8 +27,8 @@ class Hive::Worker
   attr :worker_jobs
   attr :worker_expire
 
-  def initialize( job = nil, policy = Hive::Policy.new, &callable_job )
-    job     = resolve_job( job, &callable_job )
+  def initialize( job = nil, policy = Hive::Policy.new )
+    job     = resolve_job( job )
     @policy = policy
     @job    = Hive::Idler.new( job, :min_sleep => policy.worker_idle_min_sleep, :max_sleep => policy.worker_idle_max_sleep )
 
@@ -80,9 +80,7 @@ class Hive::Worker
     end
   end
 
-  def resolve_job( job, &callable_job )
-    raise if job && callable_job
-    job ||= callable_job
+  def resolve_job( job )
     raise if ! job
 
     case job
