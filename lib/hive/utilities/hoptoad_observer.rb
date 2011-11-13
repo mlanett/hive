@@ -11,7 +11,7 @@ require "hoptoad_notifier"
 
 class Hive::Utilities::HoptoadObserver
   
-  include Hive::Utilities::Observer
+  include Hive::Utilities::ObserverBase
 
   attr :it # job
   attr :me # worker

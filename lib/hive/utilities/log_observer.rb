@@ -13,7 +13,7 @@
 class Hive::Utilities::LogObserver
   
   include Hive::Log
-  include Hive::Utilities::Observer
+  include Hive::Utilities::ObserverBase
 
   attr :it # job
   attr :me # worker

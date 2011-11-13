@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-module Hive::Utilities::Observer
+module Hive::Utilities::ObserverBase
 
   # can implement notify( observeable, *details )
   # or can use this implementation

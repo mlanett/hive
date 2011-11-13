@@ -76,7 +76,7 @@ end
 
 class NullObserver
 
-  include Hive::Utilities::Observer
+  include Hive::Utilities::ObserverBase
 
   attr :notifications
 

@@ -21,7 +21,7 @@ module Hive::Utilities
   autoload :NullJob,          "hive/utilities/null_job"
   autoload :NullObserver,     "hive/utilities/null_observer"
   autoload :Observeable,      "hive/utilities/observeable"
-  autoload :Observer,         "hive/utilities/observer"
+  autoload :ObserverBase,     "hive/utilities/observer_base"
   autoload :Process,          "hive/utilities/process"
   autoload :SignalHook,       "hive/utilities/signal_hook"
 end
