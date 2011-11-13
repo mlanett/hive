@@ -2,29 +2,29 @@
 
 class Hive::Redis::Observer < Hive::Utilities::ObserverBase
 
-  def notify_started
-    @ro_workers = "hive:workers"
-    @ro_worker  = "#{self.class.name}:#{Process.pid}"
-    @ro_status  = "hive:status:#{@ro_worker}"
-    redis.sadd( @ro_workers, @ro_worker )
-    notify_alive
+  def worker_started
+    @workers = "hive:workers"
+    @worker  = "#{self.class.name}:#{Process.pid}"
+    @status  = "hive:status:#{@worker}"
+    redis.sadd( @workers, @worker )
+    redis.set( @status, Time.now )
   end
   
-  def notify_alive( upcount = 0 )
-    redis.set( @ro_status, Time.now )
+  def worker_heartbeat( upcount = 0 )
+    redis.set( @status, Time.now )
   end
   
-  def notify_stopped
-    redis.del( @ro_status )
-    redis.srem( @ro_workers, @ro_worker )
+  def worker_stopped
+    redis.del( @status )
+    redis.srem( @workers, @worker )
   end
   
   def redis
-    Hive::Redis::Observer.redis
+    @redis ||= Hive::Redis::Observer.default_redis
   end
   
   class << self
-    attr :redis, true
+    attr :default_redis, true
   end # class
   
   # ----------------------------------------------------------------------------
