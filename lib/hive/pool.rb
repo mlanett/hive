@@ -13,7 +13,7 @@ class Hive::Pool
   attr :policy
   attr :storage   # where to store worker details
   
-  def initialize( kind, policy = Hive::Policy.new, storage = Hive.default_storage )
+  def initialize( kind, policy = Hive::Policy.policy, storage = Hive.default_storage )
     @kind      = resolve_kind(kind)
     @policy    = policy
     @registry  = Hive::Registry.new(storage)
