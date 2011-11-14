@@ -19,9 +19,19 @@ class Hive::Policy
       observers:              []
     }
 
-    def policy( options = {} )
-      options = Hash[ options.map { |k,v| [ k.to_sym, v ] } ] # poor man's symbolize keys
-      OpenStruct.new( DEFAULTS.merge( options ) )
+    def policy( options = nil )
+      case options
+      when nil
+        OpenStruct.new( DEFAULTS )
+      when Hash
+        options = Hash[ options.map { |k,v| [ k.to_sym, v ] } ] # poor man's symbolize keys
+        OpenStruct.new( DEFAULTS.merge( options ) )
+      when OpenStruct
+        # We COULD write the defaults into here or we could assume we got it this way already.
+        options.dup
+      else
+        raise "Unable to make policy"
+      end
     end
 
   end # class

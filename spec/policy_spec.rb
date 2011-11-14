@@ -25,4 +25,13 @@ describe Hive::Policy do
     p.observers.should eq([o])
   end
 
+  it "is copied from another policy" do
+    p1 = Hive::Policy.policy :worker_max_jobs => 12
+    p2 = Hive::Policy.policy(p1)
+    p2.worker_max_jobs.should eq(p1.worker_max_jobs)
+
+    p1.worker_max_jobs = 7
+    p2.worker_max_jobs.should eq(12)
+  end
+
 end
