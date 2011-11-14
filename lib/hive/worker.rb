@@ -14,9 +14,9 @@ class Hive::Worker
   # forks a new process
   # creates a new instance of the job class
   # runs a loop which calls the job
-  def self.spawn( *arguments, &proc )
+  def self.spawn( *arguments )
     Hive::Utilities::Process.fork_and_detach do
-      worker = new( *arguments, &proc )
+      worker = new( *arguments )
       trap("TERM") { worker.quit! }
       worker.run
     end
