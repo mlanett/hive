@@ -13,11 +13,12 @@ class Hive::Pool
   attr :policy
   attr :storage   # where to store worker details
   
-  def initialize( kind, policy = Hive::Policy.policy, storage = Hive.default_storage )
-    @kind      = resolve_kind(kind)
-    @policy    = policy
-    @registry  = Hive::Registry.new(storage)
-    @storage   = storage
+  def initialize( kind, policy = {}, storage = Hive.default_storage )
+    @kind     = resolve_kind(kind)
+    @policy   = Hive::Policy.policy(policy)
+    @name     = @policy.name || @kind.name or raise "Pool or Job must have a name"
+    @registry = Hive::Registry.new(storage)
+    @storage  = storage
   end
   
   def synchronize
@@ -34,7 +35,11 @@ class Hive::Pool
   # ----------------------------------------------------------------------------
   # Utilities
   # ----------------------------------------------------------------------------
-  
+
+  # A kind is a job factory.
+  # It could be a proc, which is cloneable. A proc has no name.
+  # It could be a class, which can be instantiated.
+  # It could be an instance, which is cloneable. An instance could have a constant #name.
   def resolve_kind(kind)
     case kind
     when Class

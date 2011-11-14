@@ -17,7 +17,7 @@ describe Hive::Pool do
 
     it "should spawn a worker" do
       job  = ->(context) {}
-      pool = Hive::Pool.new(job)
+      pool = Hive::Pool.new( job, :name => "Test" )
       pool.stub(:spawn) {}
       pool.synchronize
     end
@@ -32,9 +32,6 @@ describe Hive::Pool do
     #  Hive::Idler.wait_until { redis.get("SpawnQuitJob").to_i != pool_pid }
     #  redis.get("SpawnQuitJob").to_i.should_not eq(pool_pid)
     #end
-
-    it "works" do
-    end
 
     it "spins up a worker only once" #do
     #  index   = 0
