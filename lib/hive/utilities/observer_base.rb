@@ -19,20 +19,24 @@ class Hive::Utilities::ObserverBase
     end
   end
 
-  def self.resolve( candidate )
-    case candidate
-    when Class
-      candidate.new
-    when String, Symbol
-      resolve(Hive.resolve_class(candidate.to_s))
+  # factory_or_observer can be something which responds to #notify
+  # or a block which responds to #call and can return a factory_or_observer
+  # or a class which can be instantiated
+  # or a string which can be resolved to a class
+  def self.resolve( factory_or_observer )
+    case
+    when factory_or_observer.respond_to?(:notify)
+      factory_or_observer
+    when factory_or_observer.respond_to?(:call)
+      resolve(factory_or_observer.call)
     else
-      case
-      when candidate.respond_to?(:notify)
-        candidate
-      when candidate.respond_to?(:call)
-        resolve(candidate.call)
+      case factory_or_observer
+      when Class
+        factory_or_observer.new
+      when String, Symbol
+        resolve(Hive.resolve_class(factory_or_observer.to_s))
       else
-        return candidate # assume it supports the notifications natively
+        return factory_or_observer # assume it supports the notifications natively
       end
     end
   end
