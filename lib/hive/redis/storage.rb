@@ -1,5 +1,7 @@
 # -*- encoding: utf-8 -*-
 
+require "redis"
+
 class Hive::Redis::Storage
 
   def initialize( redis = nil )
