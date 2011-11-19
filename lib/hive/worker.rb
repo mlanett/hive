@@ -15,7 +15,8 @@ class Hive::Worker
   # creates a new instance of the job class
   # runs a loop which calls the job
   def self.spawn( *arguments )
-    Hive::Utilities::Process.fork_and_detach do
+    stdout = "/tmp/debug.log"
+    Hive::Utilities::Process.fork_and_detach( stdout: stdout ) do
       worker = new( *arguments )
       trap("TERM") { worker.quit! }
       worker.run
