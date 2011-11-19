@@ -1,6 +1,11 @@
 module Hive::Log
   
-  def log( *stuffs )
+  def log( *args )
+    STDOUT.print(log_message(*args))
+    STDOUT.flush
+  end
+
+  def log_message( *args )
     message = [
       #(Time.now.strftime "%Y%m%d%H%M%S"),
       Time.now.to_i,
@@ -8,11 +13,9 @@ module Hive::Log
       Process.pid,
       (Thread.current[:name] || Thread.current.object_id unless Thread.current == Thread.main),
       "] ",
-      stuffs.join(", "),
+      args.join(", "),
       "\n"
     ].compact.join
-    STDOUT.print(message)
-    STDOUT.flush
   end
-  
+
 end # Hive::Log
