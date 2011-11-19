@@ -29,7 +29,7 @@ class Hive::Worker
   attr :worker_expire
   attr :worker_jobs
 
-  def initialize( job = nil, policy = Hive::Policy.policy, registry = Hive::Registry.new )
+  def initialize( job = nil, policy = Hive::Policy.resolve, registry = Hive::Registry.new )
     job       = resolve_job( job )
     @policy   = policy
     @registry = registry

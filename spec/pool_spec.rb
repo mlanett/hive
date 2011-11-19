@@ -36,13 +36,13 @@ describe Hive::Pool do
     it "spins up a worker only once" #do
     #  index   = 0
     #  storage = Hive::ProcessStorage.new
-    #  policy  = Hive::Policy.policy :worker_max_lifetime => 10
+    #  policy  = Hive::Policy.resolve :worker_max_lifetime => 10
     #  pool    = Hive::Pool.new( SpawnWaitQuitJob, policy, storage )
     #  pool.stub(:spawn) {}
     #end
 
     it "does not spin up the worker twice" #do
-    #  policy = Hive::Policy.policy :worker_max_lifetime => 10
+    #  policy = Hive::Policy.resolve :worker_max_lifetime => 10
     #  pool = Hive::Pool.new( SpawnWaitQuitJob )
     #  pool.synchronize
     #  Hive::Idler.wait_until { redis.get("SpawnWaitQuitJob").to_i != 0 }
@@ -59,7 +59,7 @@ describe Hive::Pool do
     # do
     #  redis.del "Hive::SpecJob"
     #
-    #  it = Hive::Pool.new( "Hive::SpecJob", Hive::Policy.policy(:pool_min_workers => 2, :worker_max_jobs => 1) )
+    #  it = Hive::Pool.new( "Hive::SpecJob", Hive::Policy.resolve(:pool_min_workers => 2, :worker_max_jobs => 1) )
     #  it.synchronize
     #  Hive::Idler.wait_until { redis.scard("Hive::SpecJob") == 2 }
     #

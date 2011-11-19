@@ -19,7 +19,7 @@ class Hive::Policy
       observers:              []
     }
 
-    def policy( options = nil )
+    def resolve( options = nil )
       case options
       when nil
         OpenStruct.new( DEFAULTS )
