@@ -14,28 +14,20 @@ class Hive::Utilities::LogObserver < Hive::Utilities::ObserverBase
   
   include Hive::Log
 
-  attr :it # job
-  attr :me # worker
-  
-  def initialize( observed, callable = nil, &callable_block )
-    @it = callable || callable_block
-    @me = observed
+  def worker_started( *args )
+    log "Worker #{subject} has started"
   end
   
-  def worker_started()
-    log "Worker #{me} has started"
-  end
-  
-  def worker_heartbeat()
-    log "Worker #{me} is still alive"
+  def worker_heartbeat( *args )
+    log "Worker #{subject} is still alive"
   end
   
   def job_error(x)
-    log "Warning: Worker #{me} experienced a job failure due to an error:#{x.inspect}; job was #{it}"
+    log "Warning: Worker #{subject} experienced a job failure due to an error:#{x.inspect}"
   end
   
-  def worker_stopped()
-    log "Worker #{me} has stopped"
+  def worker_stopped( *args )
+    log "Worker #{subject} has stopped"
   end
 
 end # Hive::Utilities::LogObserver
