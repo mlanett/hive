@@ -30,6 +30,7 @@ class Hive::Worker
   attr :worker_jobs
 
   def initialize( job = nil, policy = Hive::Policy.resolve, registry = Hive::Registry.new )
+    @job_name = job.to_s
     job       = resolve_job( job )
     @policy   = policy
     @registry = registry
@@ -68,6 +69,10 @@ class Hive::Worker
 
   def running?
     state == :running
+  end
+
+  def to_s
+    %Q[Worker(#{Process.pid}-#{@job_name})]
   end
 
   # ----------------------------------------------------------------------------
