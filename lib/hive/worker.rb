@@ -48,13 +48,13 @@ class Hive::Worker
 
     # manage the registry via an observer
     add_observer( Hive::LifecycleObserver.new( key, registry ) )
-
-    @state         = :running
-    @worker_jobs   = 0
-    @worker_expire = Time.now + policy.worker_max_lifetime
   end
 
   def run()
+    @state         = :running
+    @worker_jobs   = 0
+    @worker_expire = Time.now + policy.worker_max_lifetime
+
     context = { :worker => self }
     with_start_and_stop do
       while running? do
