@@ -68,14 +68,8 @@ class Hive::Registry
     end
 
     def parse_key(key)
-      at       = key.rindex("@")
-      name_pid = key[ 0 .. at-1 ]
-      host     = key[ at+1 .. -1 ]
-      dash     = name_pid.rindex("-")
-      name     = name_pid[ 0 .. dash-1 ]
-      pid      = name_pid[ dash+1 .. -1 ]
-
-      Entry.new( name, pid, host )
+      key =~ /^(.*)-([0-9]+)@([^@]+)$/ or raise "Malformed Key"
+      Entry.new( $1, $2, $3 )
     end
 
     # @returns something like foo.example.com
