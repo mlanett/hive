@@ -37,6 +37,10 @@ class Hive::Registry
     storage.set_remove( workers_key, key )
   end
 
+  # ----------------------------------------------------------------------------
+  # Query API
+  # ----------------------------------------------------------------------------
+
   # @returns an array of key strings
   # NOTICE this will include keys for workers on all hosts
   def workers
@@ -67,6 +71,10 @@ class Hive::Registry
     end
   end
 
+  # ----------------------------------------------------------------------------
+  protected
+  # ----------------------------------------------------------------------------
+
   def heartbeat_status( policy, heartbeat )
     if heartbeat > 0 then
       age = now - heartbeat.to_i
@@ -85,10 +93,6 @@ class Hive::Registry
   def now
     Time.now.to_i
   end
-
-  # ----------------------------------------------------------------------------
-  protected
-  # ----------------------------------------------------------------------------
 
   def policy
     @policy ||= Hive::Policy.resolve
