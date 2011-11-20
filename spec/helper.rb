@@ -71,6 +71,7 @@ RSpec.configure do |spec|
   # @see https://www.relishapp.com/rspec/rspec-core/docs/helper-methods/define-helper-methods-in-a-module
   spec.include RedisClient, :redis => true
   spec.include Timing, :time => true
+  spec.include Hive::Idler::Utilities
 
   # nuke the Redis database around each run
   # @see https://www.relishapp.com/rspec/rspec-core/docs/hooks/around-hooks

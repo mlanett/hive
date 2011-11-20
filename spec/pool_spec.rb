@@ -36,11 +36,11 @@ describe Hive::Pool do
     #  policy = Hive::Policy.resolve :worker_max_lifetime => 10
     #  pool = Hive::Pool.new( SpawnWaitQuitJob )
     #  pool.synchronize
-    #  Hive::Idler.wait_until { redis.get("SpawnWaitQuitJob").to_i != 0 }
+    #  wait_until { redis.get("SpawnWaitQuitJob").to_i != 0 }
     #  pid_first = redis.get("SpawnWaitQuitJob").to_i
     #
     #  pool.synchronize
-    #  Hive::Idler.wait_until { redis.get("SpawnWaitQuitJob").to_i != pid_first }
+    #  wait_until { redis.get("SpawnWaitQuitJob").to_i != pid_first }
     #  redis.get("SpawnWaitQuitJob").to_i.should eq(pid_first)
     #
     #  redis.set("SpawnWaitQuitJob",0)
@@ -52,7 +52,7 @@ describe Hive::Pool do
     #
     #  it = Hive::Pool.new( "Hive::SpecJob", Hive::Policy.resolve(:pool_min_workers => 2, :worker_max_jobs => 1) )
     #  it.synchronize
-    #  Hive::Idler.wait_until { redis.scard("Hive::SpecJob") == 2 }
+    #  wait_until { redis.scard("Hive::SpecJob") == 2 }
     #
     #  redis.scard("Hive::SpecJob").should eq 2
     #  redis.del "Hive::SpecJob"

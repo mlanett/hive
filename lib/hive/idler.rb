@@ -65,15 +65,16 @@ class Hive::Idler
     @sleep = nil
   end
 
-  class << self
+  module Utilities
     def wait_until( timeout = 1, &test )
-      tester = new(test)
+      tester = Hive::Idler.new(test)
       finish = Time.now.to_f + timeout
       loop do
         break if tester.call
         break if finish < Time.now.to_f
       end
     end
-  end # class
+  end
+  extend Utilities
 
 end # Hive::Idler
