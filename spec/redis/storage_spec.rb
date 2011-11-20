@@ -91,5 +91,43 @@ describe Hive::Redis::Storage, :redis => true do
     end
     
   end # maps
-  
+
+  describe "priority queues" do
+
+    it "can add items and remove them in order" do
+      @it.queue_add "foo", "A", 1
+      @it.queue_add "foo", "C", 3
+      @it.queue_add "foo", "B", 2
+      @it.queue_pop("foo",0).should eq(nil)
+      @it.queue_pop("foo",9).should eq("A")
+      @it.queue_pop("foo",9).should eq("B")
+      @it.queue_pop("foo",9).should eq("C")
+    end
+
+    it "can handle some load" do
+      # expect 1..1000 in the queue
+      # write our 1..1000 in two separate processes
+      # plus some extra just to mess us up
+
+      Hive::Utilities::Process.fork_and_detach do
+        redis.client.reconnect
+        q = Hive::Redis::Storage.new(redis)
+        (1..2000).each { |i| q.queue_add( "foo", i.to_s, i ) if i % 2 == 0 }
+      end
+
+      Hive::Utilities::Process.fork_and_detach do
+        redis.client.reconnect
+        q = Hive::Redis::Storage.new(redis)
+        (1..2000).each { |i| q.queue_add( "foo", i.to_s, i ) if i % 2 == 1 }
+      end
+
+      (1..1000).each do |i|
+        i2 = @it.queue_pop_sync( "foo", i, :timeout => 10 )
+        i2.should eq(i.to_s)
+      end
+
+    end
+
+  end
+
 end

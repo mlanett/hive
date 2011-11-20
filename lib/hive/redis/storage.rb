@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 
 require "redis"
+require "timeout"
 
 class Hive::Redis::Storage
 
@@ -42,6 +43,44 @@ class Hive::Redis::Storage
 
   def set_member?( set_name, value )
     redis.sismember( set_name, value )
+  end
+
+  # Priority Queue
+
+  def queue_add( queue_name, item, score )
+    redis.zadd( queue_name, score, item )
+  end
+
+  # pop the lowest item from the queue IFF it scores <= max_score
+  def queue_pop( queue_name, max_score )
+    # Option 1: zrange, check score, accept or discard
+    # Option 2: zrangebyscore with limit, then zremrangebyrank
+
+    redis.watch( queue_name )
+    it = redis.zrangebyscore( queue_name, 0, max_score, :limit => [0,1] ).first
+    if it then
+      ok = redis.multi { |r| r.zremrangebyrank( queue_name, 0, 0 ) }
+      it = nil if ! ok
+    else
+      redis.unwatch
+    end
+    it
+  end
+
+  def queue_pop_sync( queue_name, max_score, options = {} )
+    timeout  = options[:timeout] || 1
+    deadline = Time.now.to_f + timeout
+
+    loop do
+      result = queue_pop( queue_name, max_score )
+      return result if result
+
+      raise Timeout::Error if Time.now.to_f > deadline
+    end
+  end
+
+  def queue_del( queue_name )
+    redis.del( queue_name )
   end
 
   # Maps
