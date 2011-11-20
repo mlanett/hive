@@ -22,17 +22,6 @@ describe Hive::Pool do
       pool.synchronize
     end
 
-    it "should spin up a worker" #do
-    #  pool_pid = Process.pid
-    #  redis.set "SpawnQuitJob", pool_pid
-    #
-    #  pool = Hive::Pool.new( SpawnQuitJob )
-    #  pool.synchronize
-    #
-    #  Hive::Idler.wait_until { redis.get("SpawnQuitJob").to_i != pool_pid }
-    #  redis.get("SpawnQuitJob").to_i.should_not eq(pool_pid)
-    #end
-
     it "spins up a worker only once" #do
     #  index   = 0
     #  storage = Hive::ProcessStorage.new
