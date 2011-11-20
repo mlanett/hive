@@ -18,12 +18,12 @@ class Hive::Registry
 
   def register( key )
     storage.set_add( workers_key, key )
-    storage.put( status_key(key), Time.now )
+    storage.put( status_key(key), Time.now.to_i )
   end
 
   def update( key )
     storage.set_add( workers_key, key ) if ! storage.set_member?( workers_key, key )
-    storage.put( status_key(key), Time.now )
+    storage.put( status_key(key), Time.now.to_i )
   end
 
   def unregister( key )
