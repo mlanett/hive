@@ -112,4 +112,20 @@ describe Hive::Worker do
 
   end
 
+  describe "keys" do
+
+    it "can make keys" do
+      name = "processor"
+      pid  = 1234
+      host = "foo.example.com"
+      Hive::Worker.make_key( name, pid, host ).should eq("processor-1234@foo.example.com")
+    end
+
+    it "can parse keys" do
+      Hive::Worker.parse_key("processor-1234@foo.example.com").should eq([ "processor", "1234", "foo.example.com" ])
+      Hive::Worker.parse_key("test-job-1234@foo.example.com").should eq([ "test-job", "1234", "foo.example.com" ])
+    end
+
+  end
+
 end
