@@ -42,16 +42,17 @@ class Hive::Registry
 
   # This method can be slow so it takes a block for incremental processing.
   def late_workers( liveliness = 100 )
-    raise "Incomplete"
+    check_workers( liveliness ) do |entry, status|
+    end
   end
 
   # This method can be slow so it takes a block for incremental processing.
   # @param liveliness should ~ equal Policy.worker_idle_max_sleep + expected job run time
-  # @param block takes key, status in [ :live, :hung, :dead ]
+  # @param block takes entry, status in [ :live, :hung, :dead ]
   def check_workers( liveliness = 100, &block )
+    raise "Incomplete"
     workers.each do |key|
       name, pid, host = parse_key(key)
-      raise "Incomplete"
     end
   end
 
