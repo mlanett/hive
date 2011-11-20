@@ -80,7 +80,7 @@ class Hive::Worker
   end
 
   def to_s
-    %Q[Worker(#{Process.pid}-#{name})]
+    %Q[Worker(#{key})]
   end
 
   # the key is a constant string which uniquely identifies this worker
