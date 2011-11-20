@@ -100,3 +100,11 @@ class SpawnQuitJob
     context[:worker].quit!
   end
 end
+
+class ForeverJob
+  include RedisClient
+  def call( context = {} )
+    redis.set("ForeverJob",Process.pid)
+    false
+  end
+end

@@ -2,14 +2,6 @@
 
 require "helper"
 
-class Hive::TermJob
-  include RedisClient
-  def call( context = {} )
-    redis.set "Hive::TermJob", Process.pid
-    false
-  end
-end
-
 describe Hive::Worker do
   
   it "should run once" do
@@ -92,10 +84,10 @@ describe Hive::Worker do
     end
 
     it "should respond to TERM" do
-      Hive::Worker.spawn( Hive::TermJob )
+      Hive::Worker.spawn( ForeverJob )
 
-      Hive::Idler.wait_until { redis.get("Hive::TermJob").to_i != 0 }
-      pid = redis.get("Hive::TermJob").to_i
+      Hive::Idler.wait_until { redis.get("ForeverJob").to_i != 0 }
+      pid = redis.get("ForeverJob").to_i
       Hive::Utilities::Process.alive?(pid).should be_true
 
       Process.kill( "TERM", pid )
