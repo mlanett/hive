@@ -2,10 +2,10 @@
 
 require "helper"
 
-describe Hive::ProcessStorage do
+describe Hive::Mocks::Storage do
   
   before do
-    @it = Hive::ProcessStorage.new
+    @it = Hive::Mocks::Storage.new
   end
   
   it "should be concrete" do

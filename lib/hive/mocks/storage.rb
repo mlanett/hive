@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-class Hive::ProcessStorage
+class Hive::Mocks::Storage
   
   def initialize
     @storage = {}
@@ -66,4 +66,4 @@ class Hive::ProcessStorage
     @storage.delete( key )
   end
   
-end # Hive::ProcessStorage
+end # Hive::Mocks::Storage

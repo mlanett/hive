@@ -26,7 +26,7 @@ describe Hive::Pool do
 
     it "spins up a worker only once" #do
     #  index   = 0
-    #  storage = Hive::ProcessStorage.new
+    #  storage = Hive::Mocks::Storage.new
     #  policy  = Hive::Policy.resolve :worker_max_lifetime => 10
     #  pool    = Hive::Pool.new( SpawnWaitQuitJob, policy, storage )
     #  pool.stub(:spawn) {}

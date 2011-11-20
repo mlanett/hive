@@ -5,7 +5,7 @@ require "helper"
 describe Hive::Registry do
 
   it "can register a worker" do
-    storage  = Hive::ProcessStorage.new
+    storage  = Hive::Mocks::Storage.new
     registry = Hive::Registry.new(storage)
     worker   = double("Worker")
     registry.register(worker)
@@ -13,7 +13,7 @@ describe Hive::Registry do
   end
 
   it "can unregister a worker" do
-    storage  = Hive::ProcessStorage.new
+    storage  = Hive::Mocks::Storage.new
     registry = Hive::Registry.new(storage)
     worker   = double("Worker")
     registry.register(worker)
