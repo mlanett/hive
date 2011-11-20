@@ -13,6 +13,18 @@ end
 
 describe Hive::Pool do
 
+  describe "the name" do
+    it "needs a name for a proc" do
+      job  = ->(context) { false }
+      expect { pool = Hive::Pool.new( job ) }.to raise_error
+      expect { pool = Hive::Pool.new( job, :name => "Test" ) }.to_not raise_error
+    end
+    it "does not need a name for a class" do
+      job = TrueJob
+      expect { pool = Hive::Pool.new( job ) }.to_not raise_error
+    end
+  end
+
   describe "when spawning proceses", :redis => true do
 
     it "should spawn a worker" do
