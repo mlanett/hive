@@ -23,8 +23,8 @@ class Hive::Key < Struct.new :name, :pid, :host
     "%s-%i@%s" % [ name, pid, host ]
   end
 
-  def self.parse(key)
-    key =~ /^(.*)-([0-9]+)@([^@]+)$/ or raise "Malformed Key"
+  def self.parse(key_string)
+    key_string =~ /^(.*)-([0-9]+)@([^@]+)$/ or raise "Malformed Key (#{key_string})"
     new( $1, $2, $3 )
   end
 
