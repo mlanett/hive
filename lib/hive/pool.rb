@@ -17,7 +17,7 @@ class Hive::Pool
 
   def initialize( kind, policy = {}, storage = Hive.default_storage )
     @kind     = resolve_kind(kind)
-    @policy   = Hive::Policy.resolve(policy)
+    @policy   = policy = Hive::Policy.resolve(policy)
     @name     = @policy.name || @kind.name or raise "Pool or Job must have a name"
     @registry = Hive::Registry.new( name, storage )
     @storage  = storage
