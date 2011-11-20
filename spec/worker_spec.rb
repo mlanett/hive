@@ -93,6 +93,7 @@ describe Hive::Worker do
 
     it "should respond to TERM" do
       Hive::Worker.spawn( Hive::TermJob )
+
       Hive::Idler.wait_until { redis.get("Hive::TermJob").to_i != 0 }
       pid = redis.get("Hive::TermJob").to_i
       Hive::Utilities::Process.alive?(pid).should be_true

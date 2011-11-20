@@ -18,7 +18,9 @@ describe Hive::Pool do
     it "should spawn a worker" do
       job  = ->(context) {}
       pool = Hive::Pool.new( job, :name => "Test" )
+
       pool.stub(:spawn) {}
+
       pool.synchronize
     end
 
