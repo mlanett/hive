@@ -8,9 +8,6 @@
 
 class Hive::Registry
 
-  class Entry < Struct.new :pid, :key
-  end
-
   attr :name
   attr :storage
 
@@ -66,7 +63,7 @@ class Hive::Registry
   module Utilities
 
     # e.g. processor-1234@foo.example.com
-    def make_key( name, pid, host )
+    def make_key( name, pid, host = local_host )
       "%s-%i@%s" % [ name, pid, host ]
     end
 
@@ -80,18 +77,26 @@ class Hive::Registry
       [ name, pid, host ]
     end
 
+    # @returns something like foo.example.com
+    def local_host
+      @local_host ||= `local_host`.chomp.strip
+    end
+
   end # Utilities
 
   extend Utilities
 
   # ----------------------------------------------------------------------------
-  protected
+  # Unique identifier of name + pid + host for a Worker
   # ----------------------------------------------------------------------------
 
-  # @returns something like foo.example.com
-  def hostname
-    @hostname ||= `hostname`.chomp.strip
+  class Entry < Struct.new :name, :pid, :host
+    extend Utilities
   end
+
+  # ----------------------------------------------------------------------------
+  protected
+  # ----------------------------------------------------------------------------
 
   def workers_key
     @workers_key ||= "hive:#{name}:workers"
