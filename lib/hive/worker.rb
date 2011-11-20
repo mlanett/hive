@@ -37,7 +37,7 @@ class Hive::Worker
   def initialize( prototype_job, options = nil )
     @registry = options && options[:registry] || Hive::Registry.new("Mock",Hive::ProcessStorage.new)
     @policy   = options && options[:policy] || Hive::Policy.resolve
-    @name     = options[:name] || policy.name || prototype_job.to_s
+    @name     = options && options[:name] || policy.name || prototype_job.to_s
     @job      = Hive::Idler.new( resolve_job( prototype_job ), :min_sleep => policy.worker_idle_min_sleep, :max_sleep => policy.worker_idle_max_sleep )
 
     # type checks
