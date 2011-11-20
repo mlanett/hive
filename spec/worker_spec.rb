@@ -103,6 +103,7 @@ describe Hive::Worker do
 
       wait_until { registry.workers.size > 0 }
       registry.workers.size.should eq(1)
+      # ["unknown-7119@mark.local"]
 
       redis.set("ForeverUntilQuitJob",true)
       wait_until { registry.workers.size == 0 }
