@@ -76,18 +76,18 @@ describe Hive::Worker do
 
     it "should spawn a new process" do
       pid   = Process.pid
-      redis.set "SpawnQuitJob", pid
+      redis.set "QuitJobWithSet", pid
 
-      Hive::Worker.spawn( SpawnQuitJob )
-      Hive::Idler.wait_until { redis.get("SpawnQuitJob").to_i != pid }
-      redis.get("SpawnQuitJob").to_i.should_not eq(pid)
+      Hive::Worker.spawn( QuitJobWithSet )
+      Hive::Idler.wait_until { redis.get("QuitJobWithSet").to_i != pid }
+      redis.get("QuitJobWithSet").to_i.should_not eq(pid)
     end
 
     it "should respond to TERM" do
-      Hive::Worker.spawn( ForeverJob )
+      Hive::Worker.spawn( ForeverJobWithSet )
 
-      Hive::Idler.wait_until { redis.get("ForeverJob").to_i != 0 }
-      pid = redis.get("ForeverJob").to_i
+      Hive::Idler.wait_until { redis.get("ForeverJobWithSet").to_i != 0 }
+      pid = redis.get("ForeverJobWithSet").to_i
       Hive::Utilities::Process.alive?(pid).should be_true
 
       Process.kill( "TERM", pid )

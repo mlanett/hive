@@ -16,7 +16,7 @@ describe Hive::Idler do
   end
 
   it "should accept an object with an interface" do
-    idler = Hive::Idler.new( NullJob.new )
+    idler = Hive::Idler.new( TrueJob.new )
     expect { idler.call }.to_not raise_error
   end
 

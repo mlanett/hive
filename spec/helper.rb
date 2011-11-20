@@ -85,26 +85,26 @@ class QuitJob
   end
 end
 
-class NullJob
+class TrueJob
   def call
     true
   end
 end
 
-class SpawnQuitJob
+class QuitJobWithSet
   include RedisClient
   def initialize
-    redis.set("SpawnQuitJob",Process.pid)
+    redis.set("QuitJobWithSet",Process.pid)
   end
   def call( context = {} )
     context[:worker].quit!
   end
 end
 
-class ForeverJob
+class ForeverJobWithSet
   include RedisClient
   def call( context = {} )
-    redis.set("ForeverJob",Process.pid)
+    redis.set("ForeverJobWithSet",Process.pid)
     false
   end
 end
