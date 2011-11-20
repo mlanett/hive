@@ -66,7 +66,9 @@ class Hive::Redis::Storage
     redis.hdel( map_name, key )
   end
 
+  # ----------------------------------------------------------------------------
   # Redis
+  # ----------------------------------------------------------------------------
 
   # @param redis_client can only be set once
   def redis=(redis_client)

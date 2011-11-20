@@ -12,14 +12,19 @@ class Hive::Pool
   attr :kind      # job class
   attr :name
   attr :policy
+  attr :registry
   attr :storage   # where to store worker details
 
   def initialize( kind, policy = {}, storage = Hive.default_storage )
     @kind     = resolve_kind(kind)
     @policy   = Hive::Policy.resolve(policy)
     @name     = @policy.name || @kind.name or raise "Pool or Job must have a name"
-    @registry = Hive::Registry.new(storage)
+    @registry = Hive::Registry.new( name, storage )
     @storage  = storage
+
+    # type checks
+    policy.pool_min_workers
+    registry.workers
   end
   
   def synchronize
@@ -65,12 +70,6 @@ class Hive::Pool
       # proc or lambda
       raise unless kind.respond_to?(:call)
       kind
-    end
-  end
-
-  def registry
-    @registry ||= begin
-      Hive::Registry.new( name, storage )
     end
   end
 
