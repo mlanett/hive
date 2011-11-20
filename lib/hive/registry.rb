@@ -57,41 +57,7 @@ class Hive::Registry
   end
 
   # ----------------------------------------------------------------------------
-  # Utilities
-  # key format
-  # ----------------------------------------------------------------------------
-
-  module Utilities
-
-    # e.g. processor-1234@foo.example.com
-    def make_key( name, pid, host = local_host )
-      "%s-%i@%s" % [ name, pid, host ]
-    end
-
-    def parse_key(key)
-      key =~ /^(.*)-([0-9]+)@([^@]+)$/ or raise "Malformed Key"
-      Entry.new( $1, $2, $3 )
-    end
-
-    # @returns something like foo.example.com
-    def local_host
-      @local_host ||= `hostname`.chomp.strip
-    end
-
-  end # Utilities
-
-  extend Utilities
-
-  # ----------------------------------------------------------------------------
-  # Unique identifier of name + pid + host for a Worker
-  # ----------------------------------------------------------------------------
-
-  class Entry < Struct.new :name, :pid, :host
-    extend Utilities
-  end
-
-  # ----------------------------------------------------------------------------
-  protected
+    protected
   # ----------------------------------------------------------------------------
 
   def workers_key

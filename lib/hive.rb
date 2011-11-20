@@ -4,6 +4,7 @@ module Hive
   autoload :Configuration,    "hive/configuration"
   autoload :Daemon,           "hive/daemon"
   autoload :Idler,            "hive/idler"
+  autoload :Key,              "hive/key"
   autoload :LifecycleObserver,"hive/lifecycle_observer"
   autoload :Log,              "hive/log"
   autoload :Policy,           "hive/policy"

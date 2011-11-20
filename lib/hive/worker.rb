@@ -134,12 +134,15 @@ class Hive::Worker
     end
   end
 
+  # ----------------------------------------------------------------------------
+    private
+  # ----------------------------------------------------------------------------
+
   # the key is a constant string which uniquely identifies this worker
   # WARNING this would be invalidated if we forked or set this before forking
   def key
     @key ||= begin
-      pid = Process.pid
-      Hive::Registry.make_key( name, pid )
+      Hive::Key.new( name, Process.pid )
     end
   end
 

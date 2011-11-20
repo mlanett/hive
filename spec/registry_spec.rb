@@ -28,20 +28,4 @@ describe Hive::Registry do
 
   it "can find dead workers"
 
-  describe "keys" do
-
-    it "can make keys" do
-      name = "processor"
-      pid  = 1234
-      host = "foo.example.com"
-      Hive::Registry.make_key( name, pid, host ).should eq("processor-1234@foo.example.com")
-    end
-
-    it "can parse keys" do
-      Hive::Registry.parse_key("processor-1234@foo.example.com").should eq(Hive::Registry::Entry.new( "processor", "1234", "foo.example.com" ))
-      Hive::Registry.parse_key("test-job-1234@foo.example.com").should eq(Hive::Registry::Entry.new( "test-job", "1234", "foo.example.com" ))
-    end
-
-  end
-
 end
