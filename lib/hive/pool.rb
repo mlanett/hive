@@ -23,10 +23,24 @@ class Hive::Pool
   end
   
   def synchronize
+
+    check_dead_workers
+
+    # we should have between pool_min_workers and pool_max_workers workers
+    running  = check_live_workers
+    expected = policy.pool_min_workers
+
     # launch workers
-    policy.pool_min_workers.times do
+    (expected - running).times do
       spawn
     end
+  end
+
+  def check_dead_workers
+  end
+
+  def check_live_workers
+    0
   end
 
   def spawn()
