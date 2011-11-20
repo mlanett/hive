@@ -11,8 +11,8 @@
 require "bundler/setup"       # set up gem paths
 require "ruby-debug"          # because sometimes you need it
 
-require "simplecov"           # code coverage
-SimpleCov.start               # must be loaded before our own code
+#require "simplecov"           # code coverage
+#SimpleCov.start               # must be loaded before our own code
 
 require "hive"                # load this gem
 require "redis"               # required by RedisClient
