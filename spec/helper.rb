@@ -53,11 +53,13 @@ module Timing
 end # Timing
 
 module RedisClient
+
   def redis
     @redis ||= begin
       ::Redis.connect(REDIS)
     end
   end
+
   def with_clean_redis(&block)
     redis.flushall
     yield
@@ -65,7 +67,8 @@ module RedisClient
     redis.flushall
     redis.quit
   end
-end
+
+end # RedisClient
 
 RSpec.configure do |spec|
   # @see https://www.relishapp.com/rspec/rspec-core/docs/helper-methods/define-helper-methods-in-a-module
