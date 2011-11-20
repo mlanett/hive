@@ -11,10 +11,11 @@ class Hive::Registry
   class Entry < Struct.new :pid, :key
   end
 
+  attr :name
   attr :storage
 
-  def initialize( pool, storage = Hive.default_storage )
-    @pool    = pool
+  def initialize( name, storage = Hive.default_storage )
+    @name    = name
     @storage = storage
   end
 
@@ -93,11 +94,11 @@ class Hive::Registry
   end
 
   def workers_key
-    @workers_key ||= "hive:#{@pool}:workers"
+    @workers_key ||= "hive:#{name}:workers"
   end
 
   def status_key( key )
-    "hive:#{@pool}:worker:#{key}"
+    "hive:#{name}:worker:#{key}"
   end
 
 end # Hive::Registry
