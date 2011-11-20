@@ -13,7 +13,8 @@ class Hive::Registry
 
   attr :storage
 
-  def initialize( storage = Hive.default_storage )
+  def initialize( pool, storage = Hive.default_storage )
+    @pool    = pool
     @storage = storage
   end
 
@@ -43,11 +44,11 @@ class Hive::Registry
   protected
 
   def workers_key
-    "hive:workers"
+    @workers_key ||= "hive:#{@pool}:workers"
   end
 
   def status_key( key )
-    "hive:status:#{key}"
+    "hive:#{@pool}:worker:#{key}"
   end
 
 end # Hive::Registry

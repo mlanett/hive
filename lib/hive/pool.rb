@@ -10,6 +10,7 @@
 class Hive::Pool
 
   attr :kind      # job class
+  attr :name
   attr :policy
   attr :storage   # where to store worker details
   
