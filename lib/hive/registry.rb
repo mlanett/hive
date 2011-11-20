@@ -80,7 +80,7 @@ class Hive::Registry
 
     # @returns something like foo.example.com
     def local_host
-      @local_host ||= `local_host`.chomp.strip
+      @local_host ||= `hostname`.chomp.strip
     end
 
   end # Utilities
