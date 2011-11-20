@@ -4,10 +4,8 @@ require "helper"
 
 class Hive::TermJob
   include RedisClient
-  def initialize
-    redis.set "Hive::TermJob", Process.pid
-  end
   def call( context = {} )
+    redis.set "Hive::TermJob", Process.pid
     false
   end
 end
