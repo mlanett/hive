@@ -24,16 +24,20 @@ class Hive::Worker
   end
 
   attr :job
+  attr :name
   attr :policy
   attr :registry
   attr :state
   attr :worker_expire
   attr :worker_jobs
 
+  # @param options[:name] is optional
+  # @param options[:policy] is optional
+  # @param options[:registry] is optional
   def initialize( prototype_job, options = nil )
     @registry = options && options[:registry] || Hive::Registry.new("Mock",Hive::ProcessStorage.new)
     @policy   = options && options[:policy] || Hive::Policy.resolve
-    @job_name = prototype_job.to_s
+    @name     = options[:name] || policy.name || prototype_job.to_s
     @job      = Hive::Idler.new( resolve_job( prototype_job ), :min_sleep => policy.worker_idle_min_sleep, :max_sleep => policy.worker_idle_max_sleep )
 
     # type checks
@@ -76,7 +80,7 @@ class Hive::Worker
   end
 
   def to_s
-    %Q[Worker(#{Process.pid}-#{@job_name})]
+    %Q[Worker(#{Process.pid}-#{name})]
   end
 
   # ----------------------------------------------------------------------------
@@ -134,10 +138,8 @@ class Hive::Worker
   # WARNING this would be invalidated if we forked or set this before forking
   def key
     @key ||= begin
-      name     = @job_name
-      pid      = Process.pid
-      hostname = `hostname`.chomp.strip    # e.g. foo.example.com
-      Hive::Registry.make_key( name, pid, hostname )
+      pid = Process.pid
+      Hive::Registry.make_key( name, pid )
     end
   end
 
