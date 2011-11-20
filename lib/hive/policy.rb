@@ -3,21 +3,22 @@
 require "ostruct"
 
 class Hive::Policy
-  class << self
 
-    DEFAULTS = {
-      pool_min_workers:       1,
-      pool_max_workers:       10,
-      worker_idle_max_sleep:  64.0,
-      worker_idle_min_sleep:  0.125,
-      worker_idle_spin_down:  900,
-      worker_none_spin_up:    86400,
-      worker_max_jobs:        100,    # a worker should automatically exit after this many jobs
-      worker_max_lifetime:    1000,   # a worker should automatically exit after this time
-      worker_late_warn:       10,     # a worker is overdue after this time with no heartbeat
-      worker_late_kill:       100,    # a worker must be killed after this time
-      observers:              []
-    }
+  DEFAULTS = {
+    pool_min_workers:       1,
+    pool_max_workers:       10,
+    worker_idle_max_sleep:  64.0,
+    worker_idle_min_sleep:  0.125,
+    worker_idle_spin_down:  900,
+    worker_none_spin_up:    86400,
+    worker_max_jobs:        100,    # a worker should automatically exit after this many jobs
+    worker_max_lifetime:    1000,   # a worker should automatically exit after this time
+    worker_late_warn:       10,     # a worker is overdue after this time with no heartbeat
+    worker_late_kill:       100,    # a worker must be killed after this time
+    observers:              []
+  }
+
+  class << self
 
     def resolve( options = nil )
       case options
