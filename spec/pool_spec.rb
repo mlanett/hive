@@ -3,14 +3,6 @@
 require "helper"
 require "redis"
 
-class Hive::SpecJob
-  include RedisClient
-  def call
-    redis.sadd "Hive::SpecJob", Process.pid
-    false
-  end
-end
-
 describe Hive::Pool do
 
   describe "the name" do
