@@ -114,22 +114,22 @@ class Hive::Worker
     end
   end
 
-  def resolve_job( job )
-    raise if ! job
+  def resolve_job( job_prototype )
+    raise if ! job_prototype
 
-    case job
+    case job_prototype
     when Proc
-      job
+      job_prototype
     when String, Symbol
-      resolve_job(Hive.resolve_class(job.to_s))
+      resolve_job(Hive.resolve_class(job_prototype.to_s))
     else
       case
-      when job.respond_to?(:call)
-        job
-      when job.respond_to?(:new)
-        resolve_job(job.new)
+      when job_prototype.respond_to?(:call)
+        job_prototype
+      when job_prototype.respond_to?(:new)
+        resolve_job(job_prototype.new)
       else
-        raise "Unknown kind of job #{job.inspect}"
+        raise "Unknown kind of job #{job_prototype.inspect}"
       end
     end
   end
