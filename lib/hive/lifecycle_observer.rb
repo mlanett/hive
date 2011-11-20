@@ -5,9 +5,9 @@ class Hive::LifecycleObserver < Hive::Utilities::ObserverBase
   attr :key
   attr :registry
 
-  def initialize( key, registry = nil )
+  def initialize( key, registry )
     @key      = key
-    @registry = registry || Hive::Registry.new(Hive.default_storage)
+    @registry = registry
   end
 
   def worker_started
