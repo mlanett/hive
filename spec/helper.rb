@@ -93,10 +93,8 @@ end
 
 class QuitJobWithSet
   include RedisClient
-  def initialize
-    redis.set("QuitJobWithSet",Process.pid)
-  end
   def call( context = {} )
+    redis.set("QuitJobWithSet",Process.pid)
     context[:worker].quit!
   end
 end

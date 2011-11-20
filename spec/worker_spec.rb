@@ -75,12 +75,9 @@ describe Hive::Worker do
   describe "when spawning a process", :redis => true do
 
     it "should spawn a new process" do
-      pid   = Process.pid
-      redis.set "QuitJobWithSet", pid
-
       Hive::Worker.spawn( QuitJobWithSet )
-      Hive::Idler.wait_until { redis.get("QuitJobWithSet").to_i != pid }
-      redis.get("QuitJobWithSet").to_i.should_not eq(pid)
+      Hive::Idler.wait_until { redis.get("QuitJobWithSet").to_i > 0 }
+      redis.get("QuitJobWithSet").to_i.should be > 0
     end
 
     it "should respond to TERM" do
