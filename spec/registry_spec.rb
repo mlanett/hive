@@ -5,21 +5,22 @@ require "helper"
 describe Hive::Registry do
 
   it "can register a worker" do
-    storage  = Hive::Mocks::Storage.new
-    registry = Hive::Registry.new(storage)
-    worker   = double("Worker")
-    registry.register(worker)
-    registry.workers.should be_include(worker)
+    registry = Hive::Registry.new( "Test" )
+    worker   = Hive::Worker.new( TrueJob, registry: registry )
+
+    registry.register( worker.key )
+    registry.workers.should be_include( worker.key )
   end
 
   it "can unregister a worker" do
-    storage  = Hive::Mocks::Storage.new
-    registry = Hive::Registry.new(storage)
-    worker   = double("Worker")
-    registry.register(worker)
-    registry.workers.should be_include(worker)
-    registry.unregister(worker)
-    registry.workers.should_not be_include(worker)
+    registry = Hive::Registry.new( "Test" )
+    worker   = Hive::Worker.new( TrueJob, registry: registry )
+
+    registry.register( worker.key )
+    registry.workers.should be_include( worker.key )
+
+    registry.unregister( worker.key )
+    registry.workers.should_not be_include( worker.key )
   end
 
   it "can find live workers"

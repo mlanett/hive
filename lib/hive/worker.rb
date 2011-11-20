@@ -83,6 +83,14 @@ class Hive::Worker
     %Q[Worker(#{Process.pid}-#{name})]
   end
 
+  # the key is a constant string which uniquely identifies this worker
+  # WARNING this would be invalidated if we forked or set this before forking
+  def key
+    @key ||= begin
+      Hive::Key.new( name, Process.pid )
+    end
+  end
+
   # ----------------------------------------------------------------------------
   protected
   # ----------------------------------------------------------------------------
@@ -132,23 +140,6 @@ class Hive::Worker
         raise "Unknown kind of job #{job_prototype.inspect}"
       end
     end
-  end
-
-  # ----------------------------------------------------------------------------
-    private
-  # ----------------------------------------------------------------------------
-
-  # the key is a constant string which uniquely identifies this worker
-  # WARNING this would be invalidated if we forked or set this before forking
-  def key
-    @key ||= begin
-      Hive::Key.new( name, Process.pid )
-    end
-  end
-
-  def key=( key )
-    raise if @key
-    @key = key
   end
 
 end # Hive::Worker
