@@ -12,7 +12,7 @@ class Hive::Key
   attr :pid
   attr :host
 
-  def initialize( name, pid, host = local_host )
+  def initialize( name, pid, host = Hive::Key.local_host )
     @name = name
     @pid  = pid.to_i
     @host = host
@@ -38,7 +38,7 @@ class Hive::Key
   # ----------------------------------------------------------------------------
 
   # @returns something like foo.example.com
-  def local_host
+  def self.local_host
     @local_host ||= `hostname`.chomp.strip
   end
 
