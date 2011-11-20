@@ -37,8 +37,24 @@ class Hive::Registry
     storage.set_get_all( workers_key )
   end
 
-  def live_workers( &block )
+  def live_workers( liveliness = 100, &block )
     workers.each(&block)
+    raise "Incomplete"
+  end
+
+  # This method can be slow so it takes a block for incremental processing.
+  def late_workers( liveliness = 100 )
+    raise "Incomplete"
+  end
+
+  # This method can be slow so it takes a block for incremental processing.
+  # @param liveliness should ~ equal Policy.worker_idle_max_sleep + expected job run time
+  # @param block takes key, status in [ :live, :hung, :dead ]
+  def check_workers( liveliness = 100, &block )
+    workers.each do |key|
+      name, pid, host = parse_key(key)
+      raise "Incomplete"
+    end
   end
 
   # ----------------------------------------------------------------------------
@@ -70,6 +86,11 @@ class Hive::Registry
   # ----------------------------------------------------------------------------
   protected
   # ----------------------------------------------------------------------------
+
+  # @returns something like foo.example.com
+  def hostname
+    @hostname ||= `hostname`.chomp.strip
+  end
 
   def workers_key
     @workers_key ||= "hive:#{@pool}:workers"

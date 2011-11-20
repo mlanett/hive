@@ -24,6 +24,10 @@ describe Hive::Registry do
 
   it "can find live workers"
 
+  it "can find late workers"
+
+  it "can find dead workers"
+
   describe "keys" do
 
     it "can make keys" do
