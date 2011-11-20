@@ -79,27 +79,6 @@ class Hive::Worker
     %Q[Worker(#{Process.pid}-#{@job_name})]
   end
 
-  module Utilities
-
-    # e.g. processor-1234@foo.example.com
-    def make_key( name, pid, host )
-      "%s-%i@%s" % [ name, pid, host ]
-    end
-
-    def parse_key(key)
-      at       = key.rindex("@")
-      name_pid = key[ 0 .. at-1 ]
-      host     = key[ at+1 .. -1 ]
-      dash     = name_pid.rindex("-")
-      name     = name_pid[ 0 .. dash-1 ]
-      pid      = name_pid[ dash+1 .. -1 ]
-      [ name, pid, host ]
-    end
-
-  end # Utilities
-
-  extend Utilities
-
   # ----------------------------------------------------------------------------
   protected
   # ----------------------------------------------------------------------------
@@ -158,7 +137,7 @@ class Hive::Worker
       name     = @job_name
       pid      = Process.pid
       hostname = `hostname`.chomp.strip    # e.g. foo.example.com
-      Hive::Worker.make_key( name, pid, hostname )
+      Hive::Registry.make_key( name, pid, hostname )
     end
   end
 

@@ -41,7 +41,35 @@ class Hive::Registry
     workers.each(&block)
   end
 
+  # ----------------------------------------------------------------------------
+  # Utilities
+  # key format
+  # ----------------------------------------------------------------------------
+
+  module Utilities
+
+    # e.g. processor-1234@foo.example.com
+    def make_key( name, pid, host )
+      "%s-%i@%s" % [ name, pid, host ]
+    end
+
+    def parse_key(key)
+      at       = key.rindex("@")
+      name_pid = key[ 0 .. at-1 ]
+      host     = key[ at+1 .. -1 ]
+      dash     = name_pid.rindex("-")
+      name     = name_pid[ 0 .. dash-1 ]
+      pid      = name_pid[ dash+1 .. -1 ]
+      [ name, pid, host ]
+    end
+
+  end # Utilities
+
+  extend Utilities
+
+  # ----------------------------------------------------------------------------
   protected
+  # ----------------------------------------------------------------------------
 
   def workers_key
     @workers_key ||= "hive:#{@pool}:workers"
