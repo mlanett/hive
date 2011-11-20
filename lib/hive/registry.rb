@@ -31,19 +31,18 @@ class Hive::Registry
     storage.set_remove( workers_key, key )
   end
 
+  # @returns an array of key strings
   def workers
-    storage.set_get_all( workers_key )
+    storage.set_get_all( workers_key ).map { |key_string| Hive::Key.parse(key) }
   end
 
-  def live_workers( liveliness = 100, &block )
-    workers.each(&block)
+  def live_workers( liveliness = 100 )
     raise "Incomplete"
   end
 
   # This method can be slow so it takes a block for incremental processing.
   def late_workers( liveliness = 100 )
-    check_workers( liveliness ) do |entry, status|
-    end
+    raise "Incomplete"
   end
 
   # This method can be slow so it takes a block for incremental processing.
@@ -52,7 +51,7 @@ class Hive::Registry
   def check_workers( liveliness = 100, &block )
     raise "Incomplete"
     workers.each do |key|
-      name, pid, host = parse_key(key)
+      yield( key, :wtf )
     end
   end
 
