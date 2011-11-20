@@ -55,7 +55,6 @@ end # Timing
 module RedisClient
   def redis
     @redis ||= begin
-      # debugger
       ::Redis.connect(REDIS)
     end
   end
