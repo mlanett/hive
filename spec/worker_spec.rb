@@ -97,13 +97,18 @@ describe Hive::Worker do
     end
 
     it "uses the registry" do
-      registry = Hive::Registry.new( "Test-#{Process.pid}" )
+      job       = ForeverUntilQuitJob
+      registry  = Hive::Registry.new( job.to_s )
       registry.workers.size.should eq(0)
+
       Hive::Worker.spawn ForeverUntilQuitJob, registry: registry, policy: @default_policy
 
       wait_until { registry.workers.size > 0 }
       registry.workers.size.should eq(1)
-      # ["unknown-7119@mark.local"]
+
+      key = registry.workers.first
+      name, pid, host = Hive::Registry.parse_key(key)
+      name.should eq(job.to_s)
 
       redis.set("ForeverUntilQuitJob",true)
       wait_until { registry.workers.size == 0 }
