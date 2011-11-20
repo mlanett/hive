@@ -29,7 +29,7 @@ class Hive::Pool
   end
 
   def spawn()
-    Hive::Worker.spawn( kind, policy )
+    Hive::Worker.spawn( kind, registry, policy )
   end
 
   # ----------------------------------------------------------------------------
@@ -50,6 +50,12 @@ class Hive::Pool
       # proc or lambda
       raise unless kind.respond_to?(:call)
       kind
+    end
+  end
+
+  def registry
+    @registry ||= begin
+      Hive::Registry.new( name, storage )
     end
   end
 

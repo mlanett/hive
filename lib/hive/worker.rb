@@ -25,16 +25,19 @@ class Hive::Worker
 
   attr :job
   attr :policy
-  attr :registry
   attr :state
   attr :worker_expire
   attr :worker_jobs
 
-  def initialize( job = nil, policy = Hive::Policy.resolve, registry = Hive::Registry.new )
+  def initialize( job, options = nil )
+    registry = options && options[:registry]
+    policy   = options && options[:policy] || Hive::Policy.resolve
+    policy.pool_min_workers # type check
+    registry.workers if registry # type check
+
     @job_name = job.to_s
     job       = resolve_job( job )
     @policy   = policy
-    @registry = registry
     @job      = Hive::Idler.new( job, :min_sleep => policy.worker_idle_min_sleep, :max_sleep => policy.worker_idle_max_sleep )
 
     # set up observers
@@ -43,8 +46,8 @@ class Hive::Worker
       add_observer(o)
     end
 
-    # manage the registry via an observer
-    add_observer( Hive::LifecycleObserver.new( key, registry ) )
+    # manage the registry via an observer - if not given, we don't track the worker
+    add_observer( Hive::LifecycleObserver.new( key, registry ) ) if registry
 
     @state         = :running
     @worker_jobs   = 0
