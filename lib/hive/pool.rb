@@ -15,9 +15,9 @@ class Hive::Pool
   attr :registry
   attr :storage   # where to store worker details
 
-  def initialize( kind, policy = {}, storage = Hive.default_storage )
+  def initialize( kind, policy_prototype = nil, storage = Hive.default_storage )
     @kind     = resolve_kind(kind)
-    @policy   = policy = Hive::Policy.resolve(policy)
+    @policy   = Hive::Policy.resolve(policy_prototype)
     @name     = @policy.name || @kind.name or raise "Pool or Job must have a name"
     @registry = Hive::Registry.new( name, storage )
     @storage  = storage
