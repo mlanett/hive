@@ -18,7 +18,7 @@ class Hive::Pool
   def initialize( kind, policy_prototype = nil, storage = Hive.default_storage )
     @kind     = kind # resolve_kind(kind)
     @policy   = Hive::Policy.resolve(policy_prototype)
-    @name     = @policy.name || @kind.name or raise "Pool or Job must have a name"
+    @name     = @policy.name || @kind.name or raise Hive::ConfigurationError, "Pool or Job must have a name"
     @registry = Hive::Registry.new( name, storage )
     @storage  = storage
 
@@ -68,7 +68,7 @@ class Hive::Pool
       Hive.resolve_class(kind.to_s)
     else
       # proc or lambda
-      raise unless kind.respond_to?(:call)
+      raise Hive::ConfigurationError unless kind.respond_to?(:call)
       kind
     end
   end

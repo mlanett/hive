@@ -57,3 +57,6 @@ module Hive
 
   end # class
 end
+
+class Hive::ConfigurationError < Exception
+end

@@ -72,7 +72,7 @@ class Hive::Redis::Storage
 
   # @param redis_client can only be set once
   def redis=(redis_client)
-    raise if @redis
+    raise Hive::ConfigurationError if @redis
     @redis = redis_client
   end
 
