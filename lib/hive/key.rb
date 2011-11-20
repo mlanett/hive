@@ -6,7 +6,7 @@
 
 =end
 
-class Hive::Key < Struct.new :name, :pid, :host
+class Hive::Key
 
   attr :name
   attr :pid
@@ -14,8 +14,13 @@ class Hive::Key < Struct.new :name, :pid, :host
 
   def initialize( name, pid, host = local_host )
     @name = name
-    @pid  = pid
+    @pid  = pid.to_i
     @host = host
+  end
+
+  def ==(other)
+    self.equal?(other) ||
+    ( name == other.name && pid == other.pid && host == other.host )
   end
 
   # e.g. processor-1234@foo.example.com

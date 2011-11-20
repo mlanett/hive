@@ -16,4 +16,26 @@ describe Hive::Key do
     Hive::Key.parse("test-job-1234@foo.example.com").should eq(Hive::Key.new( "test-job", "1234", "foo.example.com" ))
   end
 
+  it "can compare to another key" do
+    key1 = Hive::Key.new "Alpha", 1234, "example.com"
+    key2 = Hive::Key.new "Alpha", 1234, "example.com"
+    key1.should eq(key2)
+
+    key1 = Hive::Key.new "Alpha", 1234, "example.com"
+    key2 = Hive::Key.new "Alpha", "1234", "example.com"
+    key1.should eq(key2)
+
+    key1 = Hive::Key.new "Alpha", 1234, "example.com"
+    key2 = Hive::Key.new "Beta", 1234, "example.com"
+    key1.should_not eq(key2)
+
+    key1 = Hive::Key.new "Alpha", 1234, "example.com"
+    key2 = Hive::Key.new "Alpha", 2345, "example.com"
+    key1.should_not eq(key2)
+
+    key1 = Hive::Key.new "Alpha", 1234, "example.com"
+    key2 = Hive::Key.new "Alpha", 1234, "example.org"
+    key1.should_not eq(key2)
+  end
+
 end
