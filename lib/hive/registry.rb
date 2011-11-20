@@ -74,7 +74,8 @@ class Hive::Registry
       dash     = name_pid.rindex("-")
       name     = name_pid[ 0 .. dash-1 ]
       pid      = name_pid[ dash+1 .. -1 ]
-      [ name, pid, host ]
+
+      Entry.new( name, pid, host )
     end
 
     # @returns something like foo.example.com

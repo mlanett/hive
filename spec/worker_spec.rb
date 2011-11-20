@@ -107,8 +107,8 @@ describe Hive::Worker do
       registry.workers.size.should eq(1)
 
       key = registry.workers.first
-      name, pid, host = Hive::Registry.parse_key(key)
-      name.should eq(job.to_s)
+      entry = Hive::Registry.parse_key(key)
+      entry.name.should eq(job.to_s)
 
       redis.set("ForeverUntilQuitJob",true)
       wait_until { registry.workers.size == 0 }

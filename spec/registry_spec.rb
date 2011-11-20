@@ -38,8 +38,8 @@ describe Hive::Registry do
     end
 
     it "can parse keys" do
-      Hive::Registry.parse_key("processor-1234@foo.example.com").should eq([ "processor", "1234", "foo.example.com" ])
-      Hive::Registry.parse_key("test-job-1234@foo.example.com").should eq([ "test-job", "1234", "foo.example.com" ])
+      Hive::Registry.parse_key("processor-1234@foo.example.com").should eq(Hive::Registry::Entry.new( "processor", "1234", "foo.example.com" ))
+      Hive::Registry.parse_key("test-job-1234@foo.example.com").should eq(Hive::Registry::Entry.new( "test-job", "1234", "foo.example.com" ))
     end
 
   end
