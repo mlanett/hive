@@ -14,26 +14,33 @@ class Hive::Registry
   def initialize( name, storage = Hive.default_storage )
     @name    = name
     @storage = storage
+
+    # type checking
+    name.encoding
   end
 
   def register( key )
+    key = key.to_s
     storage.set_add( workers_key, key )
     storage.put( status_key(key), Time.now.to_i )
   end
 
   def update( key )
+    key = key.to_s
     storage.set_add( workers_key, key ) if ! storage.set_member?( workers_key, key )
     storage.put( status_key(key), Time.now.to_i )
   end
 
   def unregister( key )
+    key = key.to_s
     storage.del( status_key(key) )
     storage.set_remove( workers_key, key )
   end
 
   # @returns an array of key strings
   def workers
-    storage.set_get_all( workers_key ).map { |key_string| Hive::Key.parse(key) }
+    all = storage.set_get_all( workers_key )
+    all.map { |key_string| Hive::Key.parse(key_string) }
   end
 
   def live_workers( liveliness = 100 )
