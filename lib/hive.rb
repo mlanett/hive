@@ -48,7 +48,6 @@ module Hive
     end
 
     def default_storage=(default_storage)
-      raise if @default_storage
       @default_storage = default_storage
     end
 

@@ -68,6 +68,13 @@ module RedisClient
     redis.quit
   end
 
+  def with_default_client( before_default_storage = Hive.default_storage, &block)
+    Hive.default_storage = Hive::Redis::Storage.new
+    yield
+  ensure
+    Hive.default_storage = before_default_storage
+  end
+
 end # RedisClient
 
 RSpec.configure do |spec|
@@ -79,7 +86,7 @@ RSpec.configure do |spec|
   # nuke the Redis database around each run
   # @see https://www.relishapp.com/rspec/rspec-core/docs/hooks/around-hooks
   spec.around( :each, :redis => true ) do |example|
-    with_clean_redis { example.run }
+    with_default_client { with_clean_redis { example.run } }
   end
 end
 
