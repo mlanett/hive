@@ -3,7 +3,11 @@
 require "helper"
 
 describe Hive::Worker do
-  
+
+  before do
+    @default_policy = Hive::Policy.resolve worker_max_lifetime: 10, worker_max_jobs: 100
+  end
+
   it "should run once" do
     count  = 0
     worker = nil
@@ -90,6 +94,19 @@ describe Hive::Worker do
       Process.kill( "TERM", pid )
       wait_until { ! Hive::Utilities::Process.alive?(pid) }
       Hive::Utilities::Process.alive?(pid).should be_false
+    end
+
+    it "uses the registry" do
+      registry = Hive::Registry.new( "Test-#{Process.pid}" )
+      registry.workers.size.should eq(0)
+      Hive::Worker.spawn ForeverUntilQuitJob, registry: registry, policy: @default_policy
+
+      wait_until { registry.workers.size > 0 }
+      registry.workers.size.should eq(1)
+
+      redis.set("ForeverUntilQuitJob",true)
+      wait_until { registry.workers.size == 0 }
+      registry.workers.size.should eq(0)
     end
 
   end

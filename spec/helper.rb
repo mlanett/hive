@@ -117,3 +117,14 @@ class ForeverJobWithSet
     false
   end
 end
+
+class ForeverUntilQuitJob
+  include RedisClient
+  def call( context = {} )
+    if redis.get("ForeverUntilQuitJob") then
+      context[:worker].quit!
+    else
+      false
+    end
+  end
+end
