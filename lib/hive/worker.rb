@@ -131,9 +131,10 @@ class Hive::Worker
   end
 
   # the key is a constant string which uniquely identifies this worker
+  # WARNING this would be invalidated if we forked or set this before forking
   def key
     @key ||= begin
-      name     = :unknown
+      name     = @job_name
       pid      = Process.pid
       hostname = `hostname`.chomp.strip    # e.g. foo.example.com
       "%s-%i@%s" % [ name, pid, hostname ] # e.g. processor-1234@foo.example.com
