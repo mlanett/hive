@@ -7,6 +7,7 @@ module Hive
   autoload :Key,              "hive/key"
   autoload :LifecycleObserver,"hive/lifecycle_observer"
   autoload :Log,              "hive/log"
+  autoload :Messager,         "hive/messager"
   autoload :Policy,           "hive/policy"
   autoload :PollingColony,    "hive/polling_colony"
   autoload :Pool,             "hive/pool"
