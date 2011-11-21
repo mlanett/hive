@@ -91,4 +91,18 @@ describe Hive::Mocks::Storage do
     
   end # maps
   
+  describe "priority queues" do
+
+    it "can add items and remove them in order" do
+      @it.queue_add "foo", "A", 1
+      @it.queue_add "foo", "C", 3
+      @it.queue_add "foo", "B", 2
+      @it.queue_pop("foo",0).should eq(nil)
+      @it.queue_pop("foo",9).should eq("A")
+      @it.queue_pop("foo",9).should eq("B")
+      @it.queue_pop("foo",9).should eq("C")
+    end
+
+  end
+
 end

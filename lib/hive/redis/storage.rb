@@ -52,7 +52,7 @@ class Hive::Redis::Storage
   end
 
   # pop the lowest item from the queue IFF it scores <= max_score
-  def queue_pop( queue_name, max_score )
+  def queue_pop( queue_name, max_score = Time.now.to_i )
     # Option 1: zrange, check score, accept or discard
     # Option 2: zrangebyscore with limit, then zremrangebyrank
 
@@ -67,7 +67,7 @@ class Hive::Redis::Storage
     it
   end
 
-  def queue_pop_sync( queue_name, max_score, options = {} )
+  def queue_pop_sync( queue_name, max_score = Time.now.to_i, options = {} )
     timeout  = options[:timeout] || 1
     deadline = Time.now.to_f + timeout
 

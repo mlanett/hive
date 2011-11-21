@@ -65,5 +65,40 @@ class Hive::Mocks::Storage
   def map_del( key )
     @storage.delete( key )
   end
+
+  # Priority Queue
+
+  def queue_add( queue_name, item, score )
+    queue = @storage[queue_name] ||= []
+    queue << [ item, score ]
+    queue.sort_by! { |it| it.last }
+  end
+
+  # pop the lowest item from the queue IFF it scores <= max_score
+  def queue_pop( queue_name, max_score = Time.now.to_i )
+    queue = @storage[queue_name] || []
+    return nil if queue.size == 0
+    if queue.first.last <= max_score then
+      queue.shift.first
+    else
+      nil
+    end
+  end
+
+  def queue_pop_sync( queue_name, max_score = Time.now.to_i, options = {} )
+    timeout  = options[:timeout] || 1
+    deadline = Time.now.to_f + timeout
+
+    loop do
+      result = queue_pop( queue_name, max_score )
+      return result if result
+
+      raise Timeout::Error if Time.now.to_f > deadline
+    end
+  end
+
+  def queue_del( queue_name )
+    @storage.delete( queue_name )
+  end
   
 end # Hive::Mocks::Storage
