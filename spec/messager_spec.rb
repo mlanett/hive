@@ -68,9 +68,10 @@ describe Hive::Messager, :redis => true do
     a.send "Hello", to: @b
 
     b = Hive::Messager.new( storage, my_address: @b )
-    b.receive do |headers, body|
-      #
-    end
+    callback = double("callback")
+    callback.should_receive(:call).with("Hello",anything)
+
+    b.receive() { |*args| callback.call(*args) }
   end
 
   it "can expect responses" do
