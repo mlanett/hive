@@ -46,6 +46,17 @@ class Hive::Messager
   def receive( options = {}, &block )
     now  = Time.now.to_i
     blob = storage.queue_pop( queue_name, now )
+    if blob then
+      body, headers = decapsulate( blob )
+      id = headers["id"]
+      if callback = callbacks[id] then
+        callbacks.delete(id)
+        callback.call( body, headers )
+      else
+        block.call( body, headers )
+      end
+    end
+    self
   end
 
   # ----------------------------------------------------------------------------
