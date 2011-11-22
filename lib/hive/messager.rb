@@ -16,10 +16,12 @@ class Hive::Messager
   attr :my_address
   attr :to_address
   attr :queue_name
+  attr :callbacks
 
   # @param options[:to_address] is optional
   # @param options[:my_address] is required
   def initialize( storage, options = {} )
+    @callbacks  = {}
     @storage    = storage
     @to_address = options[:to_address]
     @my_address = options[:my_address] or raise "must specify my address"
@@ -39,6 +41,11 @@ class Hive::Messager
     id
   end
 
+  # register a handler for a given id
+  # the handler is removed when it is called
+  def expect( id, &block )
+    callbacks[id] = block
+    self
   end
 
   # read from my queue
