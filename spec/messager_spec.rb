@@ -74,7 +74,7 @@ describe Hive::Messager, :redis => true do
     a = Hive::Messager.new( storage, my_address: @a )
     id = a.send "Hello", to: @b
 
-    a.expect(id) {}
+    a.expect(id) { |body,headers| }
 
     b = Hive::Messager.new( storage, my_address: @b )
     b.receive do |headers, body|
