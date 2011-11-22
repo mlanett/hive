@@ -39,9 +39,11 @@ describe Hive::Messager, :redis => true do
     end
   end if false
 
-  it "bases the message id on the content and timestamp" do
+  describe "the message id" do
+  it "bases the message id on the source, content and timestamp" do
     storage = Hive::Mocks::Storage.new
     a       = Hive::Messager.new( storage, my_address: @a, to_address: @b )
+    b       = Hive::Messager.new( storage, my_address: @b, to_address: @a )
     now     = 1234567890
 
     id1     = a.send "Hello", at: now
@@ -53,19 +55,10 @@ describe Hive::Messager, :redis => true do
 
     id4     = a.send "Goodbye", at: now
     id4.should_not eq(id1)
+
+    id5     = b.send "Hello", at: now
+    id5.should_not eq(id1)
   end
-
-  it "can return id or pass id to a block" do
-    storage = Hive::Mocks::Storage.new
-    a       = Hive::Messager.new( storage, my_address: @a )
-    now     = 1234567890
-
-    id      = a.send "Hello", to: @b, at: now
-    id.should_not be_nil
-
-    callback = double("callback")
-    callback.should_receive(:call).with(id)
-    a.send( "Hello", to: @b, at: now ) { |id| callback.call(id) }
   end
 
   it "can send and receive messages" do
