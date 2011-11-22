@@ -33,7 +33,7 @@ class Hive::Messager
   # @returns an id
   def send( body, options = {}, &id_block )
     to        = to_address || options[:to] or raise "must specify to address"
-    now       = Time.now
+    now       = options[:at] || Time.now
     blob, id  = encapsulate body, at: now
 
     storage.queue_add( queue_name(to), blob, now.to_i )
