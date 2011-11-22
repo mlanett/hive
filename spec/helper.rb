@@ -85,7 +85,7 @@ RSpec.configure do |spec|
 
   # nuke the Redis database around each run
   # @see https://www.relishapp.com/rspec/rspec-core/docs/hooks/around-hooks
-  spec.around( :each, :redis => true ) do |example|
+  spec.around( :each, redis: true ) do |example|
     with_default_client { with_clean_redis { example.run } }
   end
 end
