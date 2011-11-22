@@ -9,19 +9,15 @@ describe Hive::Messager, :redis => true do
     @b = "you@example.com"
   end
 
-  it "can take my_address originally" do
+  it "can take to_address initially or per message" do
     storage = Hive::Mocks::Storage.new
 
     a = Hive::Messager.new( storage, my_address: @a )
+    expect { a.send "Hello" }.to raise_exception
     expect { a.send "Hello", to: @b }.to_not raise_exception
 
     b = Hive::Messager.new( storage, my_address: @a, to_address: @b )
     expect { b.send "Hello" }.to_not raise_exception
-
-    c = Hive::Messager.new( storage, my_address: @a )
-    expect { c.send "Hello" }.to raise_exception
-  end
-
   end
 
   describe "implementation" do
