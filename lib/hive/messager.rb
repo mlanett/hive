@@ -29,7 +29,6 @@ class Hive::Messager
 
   # write to another queue
   # @param options[:to] is required if :to_address was not given
-  # @param id_block is optional; it takes (id)
   # @returns an id
   def send( body, options = {}, &id_block )
     to        = to_address || options[:to] or raise "must specify to address"
@@ -37,13 +36,9 @@ class Hive::Messager
     blob, id  = encapsulate body, at: now
 
     storage.queue_add( queue_name(to), blob, now.to_i )
+    id
+  end
 
-    if id_block then
-      id_block.call(id)
-      self
-    else
-      id
-    end
   end
 
   # read from my queue
