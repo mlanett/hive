@@ -48,8 +48,9 @@ class Hive::Messager
     blob = storage.queue_pop( queue_name, now )
   end
 
-  def expect( id, &block )
-  end
+  # ----------------------------------------------------------------------------
+  protected
+  # ----------------------------------------------------------------------------
 
   # @param headers[:at] is optional; defaults to Time.now
   # @param headers[:from] is optional; defaults to my_address
@@ -70,10 +71,6 @@ class Hive::Messager
     body    = message.delete("body")
     [ body, message ]
   end
-
-  # ----------------------------------------------------------------------------
-  protected
-  # ----------------------------------------------------------------------------
 
   def queue_name( other_address = nil )
     if other_address then
