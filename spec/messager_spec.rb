@@ -68,18 +68,37 @@ describe Hive::Messager, :redis => true do
     b.receive() { |*args| callback.call(*args) }
   end
 
+  it "can reply to questions" do
+    storage = Hive::Mocks::Storage.new
+
+    a = Hive::Messager.new( storage, my_address: @a )
+    id = a.send "What do you hear?", to: @b
+
+    b = Hive::Messager.new( storage, my_address: @b )
+    b.receive do |headers, body|
+      b.reply "Nothing but the rain, sir."
+    end
+
+    callback = double("callback")
+    callback.should_receive(:call).with("Nothing but the rain, sir.",anything)
+    a.receive() { |*args| callback.call(*args) }
+  end
+
   it "can expect responses" do
     storage = Hive::Mocks::Storage.new
 
     a = Hive::Messager.new( storage, my_address: @a )
-    id = a.send "Hello", to: @b
-
-    a.expect(id) { |body,headers| }
+    id = a.send "What do you hear?", to: @b
 
     b = Hive::Messager.new( storage, my_address: @b )
     b.receive do |headers, body|
-      b.send "Ok", to: @a
+      b.reply "Nothing but the rain, sir."
     end
+
+    callback = double("callback")
+    callback.should_receive(:call).with("Nothing but the rain, sir.",anything)
+    a.expect_reply(id) { |body,headers| callback.call(body,headers) }
+
   end
 
   it "can send a message between processes" do
