@@ -39,8 +39,6 @@ class Hive::Messager
     id
   end
 
-  end
-
   # read from my queue
   # @param block takes (respond_to_address, body)
   def receive( options = {}, &block )
