@@ -1,7 +1,4 @@
-*.gem
 *.log
 *.pid
 .bundle
 coverage
-Gemfile.lock
-pkg/*
