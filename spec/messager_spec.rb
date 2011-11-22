@@ -39,26 +39,20 @@ describe Hive::Messager, :redis => true do
     end
   end if false
 
-  describe "the message id" do
-  it "bases the message id on the source, content and timestamp" do
+  it "the message id varies with the source, content and timestamp" do
     storage = Hive::Mocks::Storage.new
     a       = Hive::Messager.new( storage, my_address: @a, to_address: @b )
     b       = Hive::Messager.new( storage, my_address: @b, to_address: @a )
     now     = 1234567890
 
     id1     = a.send "Hello", at: now
-    id2     = a.send "Hello", at: now
-    id1.should eq(id2)
-
     id3     = a.send "Hello", at: now+1
-    id3.should_not eq(id1)
-
     id4     = a.send "Goodbye", at: now
-    id4.should_not eq(id1)
-
     id5     = b.send "Hello", at: now
+
+    id3.should_not eq(id1)
+    id4.should_not eq(id1)
     id5.should_not eq(id1)
-  end
   end
 
   it "can send and receive messages" do
