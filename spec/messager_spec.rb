@@ -76,7 +76,7 @@ describe Hive::Messager, :redis => true do
 
     b = Hive::Messager.new( storage, my_address: @b )
     b.receive do |headers, body|
-      b.reply "Nothing but the rain, sir."
+      b.reply "Nothing but the rain, sir.", to: headers
     end
 
     callback = double("callback")
@@ -92,7 +92,7 @@ describe Hive::Messager, :redis => true do
 
     b = Hive::Messager.new( storage, my_address: @b )
     b.receive do |headers, body|
-      b.reply "Nothing but the rain, sir."
+      b.reply "Nothing but the rain, sir.", to: headers
     end
 
     callback = double("callback")
