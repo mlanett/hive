@@ -101,8 +101,6 @@ describe Hive::Messager, :redis => true do
 
   end
 
-  it "can send a message between processes" do
-    storage = Hive::Redis::Storage.new
-  end
+  it "can send a message between processes"
 
 end
