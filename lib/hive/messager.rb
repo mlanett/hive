@@ -48,6 +48,17 @@ class Hive::Messager
     self
   end
 
+  # shortcut for send body, reply_to: first_message_headers[:id]
+  def reply( body, options )
+    src_message = options[:to] or raise "must reply to: headers"
+    reply_to_id = src_message[:id]
+    send( body, reply_to: reply_to_id )
+  end
+
+  # @param reply_block takes (body, headers)
+  def expect_reply( src_id, &reply_block )
+  end
+
   # read from my queue
   # @param block takes (respond_to_address, body)
   def receive( options = {}, &block )
