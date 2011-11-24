@@ -32,7 +32,7 @@ class Hive::Messager
   # write to another queue
   # @param options[:to] is required if :to_address was not given
   # @returns an id
-  def send( body, options = {}, &id_block )
+  def send( body, options = {} )
     to        = to_address || options[:to] or raise "must specify to address"
     now       = options[:at] || Time.now
     blob, id  = encapsulate body, at: now
