@@ -20,25 +20,6 @@ describe Hive::Messager, :redis => true do
     expect { b.send "Hello" }.to_not raise_exception
   end
 
-  describe "implementation" do
-    it "can encapsulate various messages" do
-      storage  = Hive::Mocks::Storage.new
-      it       = Hive::Messager.new( storage, my_address: @a )
-      blob, id = it.encapsulate( "This is the message", at: 1234567890, from: "me@example" )
-      # e.g. "{\"at\":1234567890,\"from\":\"me@example\",\"body\":\"This is the message\",\"id\":\"8ad1e3a0a27d88258df6c9646f6e0d0d\"}"
-      blob.should match(/This is the message/)
-      blob.should match(/me@example/)
-    end
-    it "can decapsulate a message" do
-      storage       = Hive::Mocks::Storage.new
-      a             = Hive::Messager.new( storage, my_address: @a )
-      blob          = "{\"at\":1234567890,\"from\":\"me@example\",\"body\":\"This is the message\",\"id\":\"8ad1e3a0a27d88258df6c9646f6e0d0d\"}"
-      body, headers = a.decapsulate(blob)
-      body.should match(/^This is the message$/)
-      headers.should eq({ "at" => 1234567890, "from" => "me@example", "id" => "8ad1e3a0a27d88258df6c9646f6e0d0d" })
-    end
-  end if false
-
   it "the message id varies with the source, content and timestamp" do
     storage = Hive::Mocks::Storage.new
     a       = Hive::Messager.new( storage, my_address: @a, to_address: @b )
