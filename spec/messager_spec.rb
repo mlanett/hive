@@ -38,6 +38,35 @@ describe Hive::Messager, redis: true do
 
   describe "sending and receiving messages" do
 
+    it "can match against a string" do
+      storage = Hive::Mocks::Storage.new
+      a = Hive::Messager.new( storage, my_address: @a )
+      b = Hive::Messager.new( storage, my_address: @b )
+      b.expect("Hello") { |body,message| false }
+      a.send "Hello", to: @b
+      expect { b.receive }.to_not raise_exception
+    end
+
+    it "can match against a regexp" do
+      storage = Hive::Mocks::Storage.new
+      a = Hive::Messager.new( storage, my_address: @a )
+      b = Hive::Messager.new( storage, my_address: @b )
+      b.expect(/ello/) { |body,message| false }
+      a.send "Hello", to: @b
+      expect { b.receive }.to_not raise_exception
+    end
+
+    it "returns true if it got a message" do
+      storage = Hive::Mocks::Storage.new
+      a = Hive::Messager.new( storage, my_address: @a )
+      b = Hive::Messager.new( storage, my_address: @b )
+      b.expect(//) { |body,message| false }
+      a.receive.should eq(false)
+      a.send "Hello", to: @b
+      b.receive.should eq(true)
+      b.receive.should eq(false)
+    end
+
     it "can send and receive messages" do
       storage = Hive::Mocks::Storage.new
       a = Hive::Messager.new( storage, my_address: @a )

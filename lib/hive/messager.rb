@@ -185,7 +185,7 @@ class Hive::Messager
 
   def compare_match( message, match, counter )
     case match
-    when String
+    when String, Regexp
       compare( message.body, match, counter )
     when Hash
       compare( message.to_hash, match, counter )
