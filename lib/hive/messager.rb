@@ -64,6 +64,7 @@ class Hive::Messager
 
   # read from my queue
   # check to see if there are any messages, and dispatch them
+  # @returns true if processed a message, false otherwise
   def receive()
     now  = Time.now.to_i
     json = storage.queue_pop( queue_name, now )
@@ -71,6 +72,9 @@ class Hive::Messager
       message  = Message.parse(json)
       callback = find_callback( message )
       callback.call( message.body, message )
+      true
+    else
+      false
     end
   end
 
