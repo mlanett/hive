@@ -49,7 +49,7 @@ class Hive::Pool
   end
 
   def spawn()
-    Hive::Worker.spawn( kind, registry, policy )
+    Hive::Worker.spawn kind, registry: registry, policy: policy, name: name
   end
 
   # ----------------------------------------------------------------------------
