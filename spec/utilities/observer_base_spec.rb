@@ -28,6 +28,11 @@ describe Hive::Utilities::ObserverBase do
     o.beta.should eq(2)
   end
 
+  it "can instaniate from a symbol" do
+    o = Hive::Utilities::ObserverBase.resolve :log
+    o.should be_instance_of Hive::Utilities::LogObserver
+  end
+
   it "can instaniate from a block" do
     o = Hive::Utilities::ObserverBase.resolve (->() { TestObserver.new })
     o.should be_instance_of TestObserver

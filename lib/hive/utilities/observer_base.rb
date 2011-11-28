@@ -32,10 +32,16 @@ class Hive::Utilities::ObserverBase
       resolve(factory_or_observer.call(*args))
     else
       case factory_or_observer
+      when :airbrake
+        resolve(Hive::Utilities::AirbrakeObserver,*args)
+      when :hoptoad
+        resolve(Hive::Utilities::HoptoadObserver,*args)
+      when :log
+        resolve(Hive::Utilities::LogObserver,*args)
       when Class
         factory_or_observer.new(*args)
-      when String, Symbol
-        resolve(Hive.resolve_class(factory_or_observer.to_s))
+      when String
+        resolve(Hive.resolve_class(factory_or_observer.to_s),*args)
       when Array
         args = factory_or_observer.dup
         fobs = args.shift
@@ -44,6 +50,10 @@ class Hive::Utilities::ObserverBase
         return factory_or_observer # assume it supports the notifications natively
       end
     end
+  end
+
+  def self.camelize(s)
+    s.to_s.gsub(/(?:^|_|\s)(.)/) { $1.upcase }
   end
 
 end # Hive::Utilities::ObserverBase
