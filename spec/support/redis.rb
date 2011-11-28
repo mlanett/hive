@@ -14,6 +14,7 @@ module RedisClient
 
   def with_clean_redis(&block)
     redis.flushall
+    redis.client.disconnect # auto connect after fork
     yield
   ensure
     redis.flushall
