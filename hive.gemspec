@@ -20,4 +20,5 @@ Gem::Specification.new do |s|
   
   s.add_dependency "daemon-spawn"
   s.add_dependency "redis"
+  s.add_dependency "redis-namespace"
 end

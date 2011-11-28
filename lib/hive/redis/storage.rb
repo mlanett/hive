@@ -1,12 +1,13 @@
 # -*- encoding: utf-8 -*-
 
 require "redis"
+require "redis-namespace"
 require "timeout"
 
 class Hive::Redis::Storage
 
   def initialize( redis = nil )
-    @redis = redis
+    self.redis = redis if redis
   end
 
   # Simple values
@@ -110,9 +111,18 @@ class Hive::Redis::Storage
   # ----------------------------------------------------------------------------
 
   # @param redis_client can only be set once
-  def redis=(redis_client)
+  def redis=( redis_or_options )
     raise Hive::ConfigurationError if @redis
-    @redis = redis_client
+
+    case redis_or_options
+    when Hash
+      options   = redis_or_options.dup
+      namespace = options.delete(:namespace)
+      @redis    = Redis.connect(options)
+      @redis    = Redis::Namespace.new( namespace, redis: @redis ) if namespace
+    else
+      @redis    = redis_or_options
+    end
   end
 
   def redis
