@@ -111,6 +111,7 @@ describe Hive::Messager, redis: true do
       end
 
       Hive::Utilities::Process.fork_and_detach do
+        redis.client.disconnect
         me = Hive::Messager.new( storage, my_address: @b )
         ok = false
         me.expect("Hello") do |body,message|
