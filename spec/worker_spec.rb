@@ -48,7 +48,7 @@ describe Hive::Worker do
     obsrvr.should_receive(:notify).with(anything,:worker_stopped).ordered
 
     job     = ->(context) { context[:worker].quit! }
-    policy  = Hive::Policy.resolve({ :observers => [ obsrvr ] })
+    policy  = Hive::Policy.resolve({ observers: [ obsrvr ] })
     worker  = Hive::Worker.new job, policy: policy
 
     worker.run
@@ -57,26 +57,26 @@ describe Hive::Worker do
   it "should exit when the policy says to run out (of jobs)" do
     count  = 0
     job    = ->(context) { count += 1; true }
-    policy = Hive::Policy.resolve({ "worker_max_jobs" => 5 })
+    policy = Hive::Policy.resolve({ worker_max_jobs: 5 })
     worker = Hive::Worker.new job, policy: policy
     worker.run
     count.should be <= 5
   end
 
-  describe "when testing lifetime", :time => true do
+  describe "when testing lifetime", time: true do
     it "should exit when the policy says to run out (of time)" do
       overhead = 1
       lifetime = 2
       count    = 0
       job      = ->(context) { count += 1; true }
-      policy   = Hive::Policy.resolve({ "worker_max_lifetime" => lifetime, :worker_max_jobs => 1e9 })
+      policy   = Hive::Policy.resolve worker_max_lifetime: lifetime, worker_max_jobs: 1e9
       worker   = Hive::Worker.new job, policy: policy
       time { worker.run }
       elapsed.should be <= lifetime + overhead
     end
   end
 
-  describe "when spawning a process", :redis => true do
+  describe "when spawning a process", redis: true do
 
     it "should spawn a new process" do
       Hive::Worker.spawn( QuitJobWithSet )

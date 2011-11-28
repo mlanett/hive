@@ -2,7 +2,7 @@
 
 require "helper"
 
-describe Hive::Messager, :redis => true do
+describe Hive::Messager, redis: true do
 
   before do
     @a = "me@example.com"
@@ -70,7 +70,7 @@ describe Hive::Messager, :redis => true do
 
   end
 
-  describe "when working with multiple processes", :redis => true do
+  describe "when working with multiple processes", redis: true do
 
     it "can send a message between processes" do
       storage = Hive::Redis::Storage.new(redis)

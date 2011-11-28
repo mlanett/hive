@@ -38,7 +38,7 @@ class Hive::Worker
     @registry = options && options[:registry] || Hive::Registry.new("Mock")
     @policy   = options && options[:policy] || Hive::Policy.resolve
     @name     = options && options[:name] || policy.name || prototype_job.to_s
-    @job      = Hive::Idler.new( resolve_job( prototype_job ), :min_sleep => policy.worker_idle_min_sleep, :max_sleep => policy.worker_idle_max_sleep )
+    @job      = Hive::Idler.new( resolve_job( prototype_job ), min_sleep: policy.worker_idle_min_sleep, max_sleep: policy.worker_idle_max_sleep )
 
     # type checks
     policy.pool_min_workers
@@ -59,7 +59,7 @@ class Hive::Worker
     @worker_jobs   = 0
     @worker_expire = Time.now + policy.worker_max_lifetime
 
-    context = { :worker => self }
+    context = { worker: self }
     with_start_and_stop do
       while running? do
         with_quitting_checks do

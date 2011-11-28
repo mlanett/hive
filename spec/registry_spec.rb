@@ -2,7 +2,7 @@
 
 require "helper"
 
-describe Hive::Registry, :redis => true do
+describe Hive::Registry, redis: true do
 
   it "can register a worker" do
     registry = Hive::Registry.new( "Test" )

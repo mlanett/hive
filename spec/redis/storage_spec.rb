@@ -2,7 +2,7 @@
 
 require "helper"
 
-describe Hive::Redis::Storage, :redis => true do
+describe Hive::Redis::Storage, redis: true do
   
   before do
     @it = Hive::Redis::Storage.new(redis)
@@ -122,7 +122,7 @@ describe Hive::Redis::Storage, :redis => true do
       end
 
       (1..1000).each do |i|
-        i2 = @it.queue_pop_sync( "foo", i, :timeout => 10 )
+        i2 = @it.queue_pop_sync( "foo", i, timeout: 10 )
         i2.should eq(i.to_s)
       end
 

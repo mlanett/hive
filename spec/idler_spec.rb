@@ -25,7 +25,7 @@ describe Hive::Idler do
     expect { Hive::Idler.new(fake_job) }.to raise_error
   end
 
-  describe "when dealing with sleep times", :time => true do
+  describe "when dealing with sleep times", time: true do
 
     it "should not run idle tasks too much" do
       count  = 0
@@ -35,21 +35,21 @@ describe Hive::Idler do
 
     it "should sleep after a failure" do
       job = ->() { false }
-      idler = Hive::Idler.new( job, :min_sleep => 0.125 )
+      idler = Hive::Idler.new( job, min_sleep: 0.125 )
       time { idler.call }.should be >= 0.125
     end
 
     it "should not sleep after a success" do
       result = false
       job    = ->() { result }
-      idler  = Hive::Idler.new( job, :min_sleep => 0.125 )
+      idler  = Hive::Idler.new( job, min_sleep: 0.125 )
       idler.call
       time { result = true; idler.call }.should be < 0.1
     end
 
     it "should not sleep too long" do
       job    = ->() { false }
-      idler  = Hive::Idler.new( job, :min_sleep => 0.125 )
+      idler  = Hive::Idler.new( job, min_sleep: 0.125 )
       time { idler.call }.should be < 0.25
     end
 

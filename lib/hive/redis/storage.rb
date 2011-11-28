@@ -58,7 +58,7 @@ class Hive::Redis::Storage
     # Option 2: zrangebyscore with limit, then zremrangebyrank
 
     redis.watch( queue_name )
-    it = redis.zrangebyscore( queue_name, 0, max_score, :limit => [0,1] ).first
+    it = redis.zrangebyscore( queue_name, 0, max_score, limit: [0,1] ).first
     if it then
       ok = redis.multi { |r| r.zremrangebyrank( queue_name, 0, 0 ) }
       it = nil if ! ok
@@ -126,7 +126,7 @@ class Hive::Redis::Storage
   end
 
   def redis
-    @redis ||= ::Redis.connect( :url => "redis://127.0.0.1:6379/1" )
+    @redis ||= ::Redis.connect( url: "redis://127.0.0.1:6379/1" )
   end
 
 end # Hive::Redis::Storage

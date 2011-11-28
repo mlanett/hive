@@ -59,7 +59,7 @@ class Hive::Registry
 
   # This method can be slow so it takes a block for incremental processing.
   # @param block takes entry, status in [ :live, :late_warn, :late_kill, :dead ]
-  # @param options[:all] => true to get keys across all hosts
+  # @param options[:all] = true to get keys across all hosts
   def check_workers( policy, options = nil, &block )
     all = options && options[:all]
     workers.each do |key|
