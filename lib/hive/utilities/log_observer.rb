@@ -14,6 +14,12 @@ class Hive::Utilities::LogObserver < Hive::Utilities::ObserverBase
   
   include Hive::Log
 
+  def initialize( filename = nil )
+    if filename then
+      @log_io = File.open(filename,"w")
+    end
+  end
+
   def worker_started( *args )
     log "#{subject} has started"
   end
