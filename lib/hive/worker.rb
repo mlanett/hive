@@ -129,7 +129,8 @@ class Hive::Worker
     when job_factory.respond_to?(:call)
       job_factory
     when job_factory.respond_to?(:new)
-      resolve_job(job_factory.new)
+      context = { worker: self }
+      resolve_job(job_factory.new(context))
     else
       case job_factory
       when String, Symbol
