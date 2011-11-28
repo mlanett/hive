@@ -24,12 +24,13 @@ describe Hive::Pool do
   describe "when spawning proceses", redis: true do
 
     it "should spawn a worker" do
+      name    = "#{ described_class || 'Test' }::#{example.description}"
       job    = ->(context) {}
-      policy = { name: "Test" }
+      policy = { name: name, worker_max_lifetime: 10 }
       storage = Hive::Redis::Storage.new(redis)
       pool   = Hive::Pool.new( job, policy, storage )
 
-      pool.stub(:spawn) {}
+      pool.stub(:spawn) {} # must be called at least once
 
       pool.synchronize
     end
