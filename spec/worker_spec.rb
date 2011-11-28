@@ -5,7 +5,7 @@ require "helper"
 describe Hive::Worker do
 
   before do
-    @default_policy = Hive::Policy.resolve worker_max_lifetime: 10, worker_max_jobs: 100
+    @default_policy = Hive::Policy.resolve worker_max_lifetime: 4, worker_max_jobs: 100
   end
 
   it "should run once" do

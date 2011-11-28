@@ -25,10 +25,10 @@ describe Hive::Pool do
 
     it "should spawn a worker" do
       name    = "#{ described_class || 'Test' }::#{example.description}"
-      job    = ->(context) {}
-      policy = { name: name, worker_max_lifetime: 10 }
+      policy  = { name: name, worker_max_lifetime: 4 }
+      job     = ->(context) {}
       storage = Hive::Redis::Storage.new(redis)
-      pool   = Hive::Pool.new( job, policy, storage )
+      pool    = Hive::Pool.new( job, policy, storage )
 
       pool.stub(:spawn) {} # must be called at least once
 
@@ -38,13 +38,13 @@ describe Hive::Pool do
     it "spins up a worker only once" #do
     #  index   = 0
     #  storage = Hive::Mocks::Storage.new
-    #  policy  = Hive::Policy.resolve worker_max_lifetime: 10
+    #  policy  = Hive::Policy.resolve worker_max_lifetime: 4
     #  pool    = Hive::Pool.new( SpawnWaitQuitJob, policy, storage )
     #  pool.stub(:spawn) {}
     #end
 
     it "does not spin up the worker twice" #do
-    #  policy = Hive::Policy.resolve worker_max_lifetime: 10
+    #  policy = Hive::Policy.resolve worker_max_lifetime: 4
     #  pool = Hive::Pool.new( SpawnWaitQuitJob )
     #  pool.synchronize
     #  wait_until { redis.get("SpawnWaitQuitJob").to_i != 0 }
