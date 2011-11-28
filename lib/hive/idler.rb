@@ -66,6 +66,7 @@ class Hive::Idler
   end
 
   module Utilities
+    # execute test repeatedly, until timeout, or until test returns true
     def wait_until( timeout = 1, &test )
       tester = Hive::Idler.new(test)
       finish = Time.now.to_f + timeout
