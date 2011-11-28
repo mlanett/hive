@@ -35,6 +35,27 @@ describe Hive::Pool do
       pool.synchronize
     end
 
+    it "spins up an actual worker" do
+      name    = "#{ described_class || 'Test' }::#{example.description}"
+      policy  = { name: name, observers: [ [ :log, "/tmp/debug.log" ] ], worker_max_lifetime: 4 }
+      factory = ->() { ListenerJob.new() }
+      storage = Hive::Redis::Storage.new(redis)
+      pool    = Hive::Pool.new( ListenerJob, policy, storage )
+
+      pool.registry.workers.size.should be == 0
+
+      pool.synchronize
+      wait_until { pool.registry.workers.size > 0 }
+      pool.registry.workers.size.should be > 0
+      other = pool.registry.workers.first
+
+      me = Hive::Messager.new storage, my_address: "Pool-me@localhost"
+      me.expect(/State/) { |body,message| puts body }
+      me.send "State?", to: other
+      me.receive
+      me.send "Quit", to: other
+    end
+
     it "spins up a worker only once" #do
     #  index   = 0
     #  storage = Hive::Mocks::Storage.new
