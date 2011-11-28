@@ -36,52 +36,66 @@ describe Hive::Messager, :redis => true do
     id5.should_not eq(id1)
   end
 
-  it "can send and receive messages" do
-    storage = Hive::Mocks::Storage.new
+  describe "sending and receiving messages" do
 
-    a = Hive::Messager.new( storage, my_address: @a )
-    a.send "Hello", to: @b
+    it "can send and receive messages" do
+      storage = Hive::Mocks::Storage.new
+      a = Hive::Messager.new( storage, my_address: @a )
+      b = Hive::Messager.new( storage, my_address: @b )
 
-    b = Hive::Messager.new( storage, my_address: @b )
-    callback = double("callback")
-    callback.should_receive(:call).with("Hello",anything)
+      callback = double("callback")
+      callback.should_receive(:call).with("Goodbye",anything)
 
-    b.receive() { |*args| callback.call(*args) }
-  end
+      reply_to_id = nil
 
-  it "can reply to questions" do
-    storage = Hive::Mocks::Storage.new
+      b.expect("Hello") { |body,message|
+        body.should eq("Hello")
+        message.from.should eq(@a)
+        reply_to_id = message.id
+        b.reply( "Goodbye", to: message )
+      }
 
-    a = Hive::Messager.new( storage, my_address: @a )
-    id = a.send "What do you hear?", to: @b
+      a.expect("Goodbye") { |body,message|
+        body.should eq("Goodbye")
+        message.from.should eq(@b)
+        message.id.should_not be_nil
+        message.reply_to_id.should eq(reply_to_id)
+        callback.call(body,message)
+      }
 
-    b = Hive::Messager.new( storage, my_address: @b )
-    b.receive do |headers, body|
-      b.reply "Nothing but the rain, sir.", to: headers
+      a.send "Hello", to: @b
+      b.receive
+      a.receive
     end
 
-    callback = double("callback")
-    callback.should_receive(:call).with("Nothing but the rain, sir.",anything)
-    a.receive() { |*args| callback.call(*args) }
   end
 
-  it "can expect responses" do
-    storage = Hive::Mocks::Storage.new
+  describe "when working with multiple processes", :redis => true do
 
-    a = Hive::Messager.new( storage, my_address: @a )
-    id = a.send "What do you hear?", to: @b
+    it "can send a message between processes" do
+      storage = Hive::Redis::Storage.new(redis)
+      me = Hive::Messager.new( storage, my_address: @a )
 
-    b = Hive::Messager.new( storage, my_address: @b )
-    b.receive do |headers, body|
-      b.reply "Nothing but the rain, sir.", to: headers
+      ok = false
+      me.expect("Goodbye") do |body,message|
+        ok = true
+      end
+
+      Hive::Utilities::Process.fork_and_detach do
+        me = Hive::Messager.new( storage, my_address: @b )
+        ok = false
+        me.expect("Hello") do |body,message|
+          me.reply "Goodbye", to: message
+          ok = true
+        end
+        wait_until { me.receive; ok }
+      end
+
+      me.send "Hello", to: @b
+      wait_until { me.receive }
+      ok.should be_true
     end
 
-    callback = double("callback")
-    callback.should_receive(:call).with("Nothing but the rain, sir.",anything)
-    a.expect_reply(id) { |body,headers| callback.call(body,headers) }
-
   end
-
-  it "can send a message between processes"
 
 end
