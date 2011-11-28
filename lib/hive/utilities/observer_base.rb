@@ -23,18 +23,23 @@ class Hive::Utilities::ObserverBase
   # or a block which responds to #call and can return a factory_or_observer
   # or a class which can be instantiated
   # or a string which can be resolved to a class
-  def self.resolve( factory_or_observer )
+  # or an array which can be resolved to a class with parameters
+  def self.resolve( factory_or_observer, *args )
     case
     when factory_or_observer.respond_to?(:notify)
       factory_or_observer
     when factory_or_observer.respond_to?(:call)
-      resolve(factory_or_observer.call)
+      resolve(factory_or_observer.call(*args))
     else
       case factory_or_observer
       when Class
-        factory_or_observer.new
+        factory_or_observer.new(*args)
       when String, Symbol
         resolve(Hive.resolve_class(factory_or_observer.to_s))
+      when Array
+        args = factory_or_observer.dup
+        fobs = args.shift
+        factory = resolve( fobs, *args )
       else
         return factory_or_observer # assume it supports the notifications natively
       end
