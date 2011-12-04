@@ -21,7 +21,7 @@ set_defaults(
   killtime:         100,
   batchsize:        100,
   lifetime:         3600,
-  observers:        [ :redis ]
+  observers:        []
 )
 
 add_pool Job1,
