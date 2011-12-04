@@ -31,50 +31,84 @@ class Hive::Pool
     policy.pool_min_workers
     registry.workers
   end
-  
-  def synchronize
 
-    check_dead_workers
+
+  def synchronize()
+    checklist = registry.checked_workers( policy )
+
+    live = check_live_workers( checklist )
+    check_late_warn_workers( checklist )
+    check_late_kill_workers( checklist )
+    check_remote_workers( checklist )
 
     # we should have between pool_min_workers and pool_max_workers workers
-    running  = check_live_workers
     expected = policy.pool_min_workers
 
     # launch workers
-    (expected - running).times do
+    (expected - live).times do
       spawn
+    end
+
+    checklist = registry.checked_workers( policy )
+  end
+
+
+  def rpc
+    @rpc ||= begin
+      key = Hive::Key.new( "#{name}-pool", Process.pid )
+      me  = Hive::Messager.new storage, my_address: key
     end
   end
 
-  def check_dead_workers
-    cw = registry.checked_workers(policy)
-    if late_warn = cw[:late_warn] and late_warn.size > 0 then
-      late_warn.each do |key|
-        log "Overdue #{key}"
-      end
+
+  # this really should be protected but it's convenient to be able to force a spawn
+  def spawn()
+    Hive::Worker.spawn kind, registry: registry, policy: policy, name: name
+  end
+
+  # ----------------------------------------------------------------------------
+  protected
+  # ----------------------------------------------------------------------------
+
+  def check_live_workers( checked )
+    if live = checked[:live] and live.size > 0 then
+      log "Live worker count #{live.size}; members: #{live.inspect}"
+      live.size
+    else
+      0
     end
+  end
+
+
+  def check_late_warn_workers( checked )
+    if late_warn = checked[:late_warn] and late_warn.size > 0 then
+      log "Late worker count #{late_warn.size}; members: #{late_warn.inspect}"
+      late_warn.size
+    else
+      0
+    end
+  end
+
+
+  def check_late_kill_workers( checked )
     if late_kill = cw[:late_kill] and late_kill.size > 0 then
+      log "Hung worker count #{late_kill.size}"
       late_kill.each do |key|
         log "Killing #{key}"
         Hive::Utilities::Process.wait_and_terminate( key.pid )
         registry.unregister(key)
       end
     end
+    0
   end
 
-  def check_live_workers
-    live = registry.checked_workers(policy)[:live]
-    registry.workers.count
-  end
 
-  def spawn()
-    Hive::Worker.spawn kind, registry: registry, policy: policy, name: name
-  end
-
-  def rpc
-    @rpc ||= begin
-      key = Hive::Key.new( "#{name}-pool", Process.pid )
-      me  = Hive::Messager.new storage, my_address: key
+  def check_remote_workers( checked )
+    if remote = checked[:remote] and remote.size > 0 then
+      log "Remote worker count #{remote.size}; members: #{remote.inspect}"
+      remote.size
+    else
+      0
     end
   end
 
