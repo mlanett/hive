@@ -15,21 +15,29 @@ class Hive::Monitor
 
 
   def monitor
-    job = Hive::Idler.new( nil, min_sleep: 1, max_sleep: 10 ) { check_job }
+    status = {}
 
-    @ok = true
-    while @ok do
+    job = ->() do
+      changed = false
+      pools.each do |pool|
+        log pool.name
+        previous = status[pool.name]
+        current  = pool.synchronize
+        if previous != current then
+          status[pool.name] = current
+          changed = true
+        end
+      end
+      changed
+    end
+
+    job = Hive::Idler.new( job, min_sleep: 1, max_sleep: 10 )
+
+    ok = true
+    trap("TERM") { ok = false }
+    while ok do
       job.call
     end
   end # monitor
-
-
-  def check_job
-    pools.each do |pool|
-      log pool.name
-      pool.synchronize
-    end
-    false
-  end
 
 end
