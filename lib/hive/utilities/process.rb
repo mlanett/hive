@@ -35,20 +35,25 @@ module Hive::Utilities::Process
   end
 
   def fork_and_detach( options = {}, &action)
-    pid = fork do
+    # Fork twice. First child doesn't matter. The second is our favorite.
+    pid1 = fork do
       ::Process.setsid
       exit if fork
       redirect_stdio( options[:stdout] )
       action.call
     end
-    ::Process.waitpid(pid)
+
+    # We must call waitpid on the first child to keep it from turning into a zombie
+    ::Process.waitpid(pid1)
   end
+
 
   def wait2_now( pid )
     ::Process.wait2( pid, ::Process::WNOHANG )
   rescue Errno::ECHILD # No child processes
     return [ nil, 0 ]
   end
+
 
   def redirect_stdio( stdout )
     STDIN.reopen "/dev/null"
@@ -62,6 +67,7 @@ module Hive::Utilities::Process
     end
     STDERR.reopen(STDOUT)
   end
+
 
   def alive?( pid )
     !! ::Process.kill( 0, pid )
