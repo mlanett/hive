@@ -90,6 +90,7 @@ class Hive::Registry
     end
   end
 
+  # easier to test if we can stub Time.now
   def now
     Time.now.to_i
   end
