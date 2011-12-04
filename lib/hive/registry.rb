@@ -67,6 +67,8 @@ class Hive::Registry
         heartbeat = storage.get( status_key(key.to_s) ).to_i
         status    = heartbeat_status( policy, heartbeat )
         yield( key, status )
+      else
+        yield( key, :remote )
       end
     end
   end

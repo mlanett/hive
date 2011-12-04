@@ -20,6 +20,9 @@ class Hive::Monitor
         log pool.name
         log r.workers.inspect
         log r.checked_workers(pool.policy).inspect
+        if remote = r.checked_workers(pool.policy)[:remote] and remote.size > 0 then
+          log "Remote worker count #{remote.size}; members: #{remote.inspect}"
+        end
       end
       sleep(2)
     end
