@@ -42,7 +42,7 @@ describe Hive::Messager, redis: true do
       storage = Hive::Mocks::Storage.new
       a = Hive::Messager.new( storage, my_address: @a )
       b = Hive::Messager.new( storage, my_address: @b )
-      b.expect("Hello") { |body,message| false }
+      b.expect("Hello") { |message| false }
       a.send "Hello", to: @b
       expect { b.receive }.to_not raise_exception
     end
@@ -51,7 +51,7 @@ describe Hive::Messager, redis: true do
       storage = Hive::Mocks::Storage.new
       a = Hive::Messager.new( storage, my_address: @a )
       b = Hive::Messager.new( storage, my_address: @b )
-      b.expect(/ello/) { |body,message| false }
+      b.expect(/ello/) { |message| false }
       a.send "Hello", to: @b
       expect { b.receive }.to_not raise_exception
     end
@@ -60,7 +60,7 @@ describe Hive::Messager, redis: true do
       storage = Hive::Mocks::Storage.new
       a = Hive::Messager.new( storage, my_address: @a )
       b = Hive::Messager.new( storage, my_address: @b )
-      b.expect(//) { |body,message| false }
+      b.expect(//) { |message| false }
       a.receive.should eq(false)
       a.send "Hello", to: @b
       b.receive.should eq(true)
@@ -73,23 +73,23 @@ describe Hive::Messager, redis: true do
       b = Hive::Messager.new( storage, my_address: @b )
 
       callback = double("callback")
-      callback.should_receive(:call).with("Goodbye",anything)
+      callback.should_receive(:call).with(anything)
 
       reply_to_id = nil
 
-      b.expect("Hello") { |body,message|
-        body.should eq("Hello")
+      b.expect("Hello") { |message|
+        message.body.should eq("Hello")
         message.from.should eq(@a)
         reply_to_id = message.id
         b.reply( "Goodbye", to: message )
       }
 
-      a.expect("Goodbye") { |body,message|
-        body.should eq("Goodbye")
+      a.expect("Goodbye") { |message|
+        message.body.should eq("Goodbye")
         message.from.should eq(@b)
         message.id.should_not be_nil
         message.reply_to_id.should eq(reply_to_id)
-        callback.call(body,message)
+        callback.call(message)
       }
 
       a.send "Hello", to: @b
@@ -106,7 +106,7 @@ describe Hive::Messager, redis: true do
       me = Hive::Messager.new( storage, my_address: @a )
 
       ok = false
-      me.expect("Goodbye") do |body,message|
+      me.expect("Goodbye") do |message|
         ok = true
       end
 
@@ -114,7 +114,7 @@ describe Hive::Messager, redis: true do
         redis.client.disconnect
         me = Hive::Messager.new( storage, my_address: @b )
         ok = false
-        me.expect("Hello") do |body,message|
+        me.expect("Hello") do |message|
           me.reply "Goodbye", to: message
           ok = true
         end

@@ -49,7 +49,7 @@ describe Hive::Pool do
       pool.registry.workers.size.should be > 0
       other = pool.registry.workers.first
 
-      pool.rpc.expect(/State/) { |body,message| puts body }
+      pool.rpc.expect(/State/) { |message| puts message.body }
       pool.rpc.send "State?", to: other
       pool.rpc.receive
       pool.rpc.send "Quit", to: other

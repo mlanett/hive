@@ -71,7 +71,7 @@ class Hive::Messager
     if json then
       message  = Message.parse(json)
       callback = find_callback( message )
-      callback.call( message.body, message )
+      callback.call( message )
       true
     else
       false
