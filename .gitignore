@@ -2,3 +2,4 @@
 *.pid
 .bundle
 coverage
+Gemfile.lock
