@@ -3,11 +3,11 @@
 =begin
 
   Usage:
-  hive [options] start | stop | restart | status
+  hive [options] [check] | monitor | restart | status | stop
 
   e.g.
-  hive --dry-run --verbose --env production --name it --chdir /tmp/it start
-  hive /opt/rails/it/current/config/it start
+  hive --dry-run --verbose --env production --name it --chdir /tmp/it check
+  hive /opt/rails/it/current/config/it monitor
   Options must preceed the command.
 
   Note: the pid file depends on chdir, env, and name, so you have to specify them for any command to work.
@@ -21,6 +21,15 @@ File.expand_path(File.dirname(__FILE__)+"/../lib").tap { |d| $:.unshift(d) if ! 
 require "hive"
 
 my = Hive::Configuration.parse(ARGV)
+
+# TODO use my.options_for_daemon_spawn
+# TODO use my.args_for_daemon_spawn
+
 if ! my.dry_run then
-  Hive::Daemon.spawn!( my.options_for_daemon_spawn, my.args_for_daemon_spawn )
+  case ARGV.first
+  when "monitor"
+    Hive::Monitor.new(my).monitor
+  else
+    Kernel.abort "Unknown command #{argv.first}"
+  end
 end
