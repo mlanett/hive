@@ -9,6 +9,8 @@
 
 class Hive::Pool
 
+  include Hive::Log
+
   attr :kind      # job class
   attr :name
   attr :policy
@@ -45,6 +47,19 @@ class Hive::Pool
   end
 
   def check_dead_workers
+    cw = registry.checked_workers(policy)
+    if late_warn = cw[:late_warn] and late_warn.size > 0 then
+      late_warn.each do |key|
+        log "Overdue #{key}"
+      end
+    end
+    if late_kill = cw[:late_kill] and late_kill.size > 0 then
+      late_kill.each do |key|
+        log "Killing #{key}"
+        Hive::Utilities::Process.wait_and_terminate( key.pid )
+        registry.unregister(key)
+      end
+    end
   end
 
   def check_live_workers
