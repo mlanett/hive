@@ -20,7 +20,7 @@ set_defaults(
 )
 
 add_pool Job1,
-  worker_late_warn: 60,
+  worker_late:      60,
   pool_min_workers: 1,
   pool_max:         10
 

@@ -58,7 +58,7 @@ class Hive::Registry
   end
 
   # This method can be slow so it takes a block for incremental processing.
-  # @param block takes entry, status in [ :live, :late_warn, :late_kill, :dead ]
+  # @param block takes entry, status in [ :live, :late, :hung, :dead ]
   # @param options[:all] = true to get keys across all hosts
   def check_workers( policy, options = nil, &block )
     all = options && options[:all]
@@ -80,10 +80,10 @@ class Hive::Registry
   def heartbeat_status( policy, heartbeat )
     if heartbeat > 0 then
       age = now - heartbeat.to_i
-      if age >= policy.worker_late_kill then
-        :late_kill
-      elsif age >= policy.worker_late_warn
-        :late_warn
+      if age >= policy.worker_hung then
+        :hung
+      elsif age >= policy.worker_late
+        :late
       else
         :live
       end

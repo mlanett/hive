@@ -13,8 +13,8 @@ class Hive::Policy
     worker_none_spin_up:    86400,
     worker_max_jobs:        100,    # a worker should automatically exit after this many jobs
     worker_max_lifetime:    1000,   # a worker should automatically exit after this time
-    worker_late_warn:       10,     # a worker is overdue after this time with no heartbeat
-    worker_late_kill:       100,    # a worker must be killed after this time
+    worker_late:            10,     # a worker is overdue after this time with no heartbeat
+    worker_hung:            100,    # a worker will be killed after this time
     observers:              []
   }
 

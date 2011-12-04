@@ -37,8 +37,8 @@ class Hive::Pool
     checklist = registry.checked_workers( policy )
 
     live = check_live_workers( checklist )
-    check_late_warn_workers( checklist )
-    check_late_kill_workers( checklist )
+    check_late_workers( checklist )
+    check_hung_workers( checklist )
     check_remote_workers( checklist )
 
     # we should have between pool_min_workers and pool_max_workers workers
@@ -80,20 +80,20 @@ class Hive::Pool
   end
 
 
-  def check_late_warn_workers( checked )
-    if late_warn = checked[:late_warn] and late_warn.size > 0 then
-      log "Late worker count #{late_warn.size}; members: #{late_warn.inspect}"
-      late_warn.size
+  def check_late_workers( checked )
+    if late = checked[:late] and late.size > 0 then
+      log "Late worker count #{late.size}; members: #{late.inspect}"
+      late.size
     else
       0
     end
   end
 
 
-  def check_late_kill_workers( checked )
-    if late_kill = checked[:late_kill] and late_kill.size > 0 then
-      log "Hung worker count #{late_kill.size}"
-      late_kill.each do |key|
+  def check_hung_workers( checked )
+    if hung = checked[:hung] and hung.size > 0 then
+      log "Hung worker count #{hung.size}"
+      hung.each do |key|
         log "Killing #{key}"
         Hive::Utilities::Process.wait_and_terminate( key.pid )
         registry.unregister(key)
