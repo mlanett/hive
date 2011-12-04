@@ -91,7 +91,7 @@ class Hive::Pool
 
 
   def check_late_kill_workers( checked )
-    if late_kill = cw[:late_kill] and late_kill.size > 0 then
+    if late_kill = checked[:late_kill] and late_kill.size > 0 then
       log "Hung worker count #{late_kill.size}"
       late_kill.each do |key|
         log "Killing #{key}"
