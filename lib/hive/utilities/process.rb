@@ -6,7 +6,7 @@ module Hive::Utilities::Process
     status   = nil
     interval = 0.125
     begin # execute at least once to get status
-      dummy, status = ::Process.wait2( pid, ::Process::WNOHANG )
+      dummy, status = wait2_now(pid)
       break if status
       #log "Waiting for #{pid}", "Sleeping #{interval}" if false
       sleep(interval)
@@ -30,17 +30,24 @@ module Hive::Utilities::Process
     return status if status
     
     ::Process.kill( "TERM", pid ) if ! status
-    dummy, status = ::Process.wait2( pid, ::Process::WNOHANG )
+    dummy, status = wait2_now(pid)
     status
   end
 
   def fork_and_detach( options = {}, &action)
-    fork do
+    pid = fork do
       ::Process.setsid
       exit if fork
       redirect_stdio( options[:stdout] )
       action.call
     end
+    ::Process.waitpid(pid)
+  end
+
+  def wait2_now( pid )
+    ::Process.wait2( pid, ::Process::WNOHANG )
+  rescue Errno::ECHILD # No child processes
+    return [ nil, 0 ]
   end
 
   def redirect_stdio( stdout )
