@@ -14,7 +14,8 @@ module Hive::Utilities::Process
     end while Time.now.to_f < deadline
     status
   end
-  
+
+
   def wait_and_terminate( pid, options = {} )
     #log "Monitoring job #{pid}"
     timeout = options[:timeout] || 1024
@@ -33,6 +34,7 @@ module Hive::Utilities::Process
     dummy, status = wait2_now(pid)
     status
   end
+
 
   def fork_and_detach( options = {}, &action)
     # Fork twice. First child doesn't matter. The second is our favorite.

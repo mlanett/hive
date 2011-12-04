@@ -19,17 +19,20 @@ class Hive::Registry
     name.encoding
   end
 
+
   def register( key )
     key = key.to_s
     storage.set_add( workers_key, key )
     storage.put( status_key(key), Time.now.to_i )
   end
 
+
   def update( key )
     key = key.to_s
     storage.set_add( workers_key, key ) if ! storage.set_member?( workers_key, key )
     storage.put( status_key(key), Time.now.to_i )
   end
+
 
   def unregister( key )
     key = key.to_s
@@ -48,6 +51,7 @@ class Hive::Registry
     all.map { |key_string| Hive::Key.parse(key_string) }
   end
 
+
   def checked_workers( policy )
     groups = {}
     check_workers(policy) do |key, status|
@@ -56,6 +60,7 @@ class Hive::Registry
     end
     groups
   end
+
 
   # This method can be slow so it takes a block for incremental processing.
   # @param block takes entry, status in [ :live, :late, :hung, :dead ]
@@ -92,18 +97,22 @@ class Hive::Registry
     end
   end
 
+
   # easier to test if we can stub Time.now
   def now
     Time.now.to_i
   end
 
+
   def policy
     @policy ||= Hive::Policy.resolve
   end
 
+
   def workers_key
     @workers_key ||= "hive:#{name}:workers"
   end
+
 
   def status_key( key )
     "hive:#{name}:worker:#{key}"
