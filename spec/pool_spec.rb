@@ -49,11 +49,10 @@ describe Hive::Pool do
       pool.registry.workers.size.should be > 0
       other = pool.registry.workers.first
 
-      me = Hive::Messager.new storage, my_address: "Pool-me@localhost"
-      me.expect(/State/) { |body,message| puts body }
-      me.send "State?", to: other
-      me.receive
-      me.send "Quit", to: other
+      pool.rpc.expect(/State/) { |body,message| puts body }
+      pool.rpc.send "State?", to: other
+      pool.rpc.receive
+      pool.rpc.send "Quit", to: other
     end
 
     it "spins up a worker only once" #do

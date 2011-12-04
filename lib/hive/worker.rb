@@ -88,9 +88,11 @@ class Hive::Worker
   # the key is a constant string which uniquely identifies this worker
   # WARNING this would be invalidated if we forked or set this before forking
   def key
-    @key ||= begin
-      Hive::Key.new( name, Process.pid )
-    end
+    @key ||= Hive::Key.new( name, Process.pid )
+  end
+
+  def rpc
+    @rpc ||= Hive::Messager.new( storage, my_address: key )
   end
 
   # ----------------------------------------------------------------------------

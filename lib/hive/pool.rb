@@ -52,4 +52,11 @@ class Hive::Pool
     Hive::Worker.spawn kind, registry: registry, policy: policy, name: name
   end
 
+  def rpc
+    @rpc ||= begin
+      key = Hive::Key.new( "#{name}-pool", Process.pid )
+      me  = Hive::Messager.new storage, my_address: key
+    end
+  end
+
 end # Hive::Pool
