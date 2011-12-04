@@ -208,8 +208,10 @@ class Hive::Configuration
   private
   # ----------------------------------------------------------------------------
 
+  LOCAL_ENVS = [ "development", "test" ]
+
   def local?
-    %w(development test).member?(env)
+    LOCAL_ENVS.member?(env)
   end
 
   def default_root
