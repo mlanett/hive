@@ -48,7 +48,8 @@ class Hive::Pool
   end
 
   def check_live_workers
-    0
+    live = registry.checked_workers(policy)[:live]
+    registry.workers.count
   end
 
   def spawn()
