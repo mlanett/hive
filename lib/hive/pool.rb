@@ -41,12 +41,15 @@ class Hive::Pool
     check_hung_workers( checklist )
     check_remote_workers( checklist )
 
-    # we should have between pool_min_workers and pool_max_workers workers
-    expected = policy.pool_min_workers
+    if live < policy.pool_min_workers then
+      # launch workers
+      (policy.pool_min_workers - live).times do
+        spawn
+      end
 
-    # launch workers
-    (expected - live).times do
-      spawn
+    elsif policy.pool_max_workers < live then
+      # spin down some workers
+
     end
 
     checklist = registry.checked_workers( policy )
@@ -64,6 +67,7 @@ class Hive::Pool
   # this really should be protected but it's convenient to be able to force a spawn
   def spawn()
     Hive::Worker.spawn kind, registry: registry, policy: policy, name: name
+    log "Spawned new worker for #{name}"
   end
 
   # ----------------------------------------------------------------------------
