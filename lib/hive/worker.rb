@@ -16,9 +16,9 @@ class Hive::Worker
   # runs a loop which calls the job
   def self.spawn( *arguments )
     options = { stdout: "/tmp/debug.log" }
-    # before fork
+    # TODO before fork
     Hive::Utilities::Process.fork_and_detach( options ) do
-      # after fork
+      # TODO after fork
       worker = new( *arguments )
       trap("TERM") { worker.quit! }
       worker.run
