@@ -48,6 +48,7 @@ class ListenerJob
     storage = Hive::Redis::Storage.new(redis)
     @rpc = Hive::Messager.new( storage, my_address: context[:worker].key )
     @rpc.expect("Quit")   { |message| context[:worker].quit! }
+    @rpc.expect("Exit!")  { |message| Kernel.exit! }
     @rpc.expect("State?") { |message| @rpc.reply "State: #{context[:worker].state}", to: message }
   end
 
