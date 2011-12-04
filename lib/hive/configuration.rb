@@ -80,11 +80,12 @@ class Hive::Configuration
   attr :defaults
   attr :jobs
 
-  def initialize()
+  def initialize( filename = nil )
     @verbose  = 0
     @dry_run  = false
     @defaults = {}
     @jobs     = {}
+    load_file(filename) if filename
   end
 
   def load_script(string)
