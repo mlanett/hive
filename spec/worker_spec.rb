@@ -66,13 +66,13 @@ describe Hive::Worker do
   describe "when testing lifetime", time: true do
     it "should exit when the policy says to run out (of time)" do
       overhead = 1
-      lifetime = 2
+      worker_max_lifetime = 2
       count    = 0
       job      = ->(context) { count += 1; true }
-      policy   = Hive::Policy.resolve worker_max_lifetime: lifetime, worker_max_jobs: 1e9
+      policy   = Hive::Policy.resolve worker_max_lifetime: worker_max_lifetime, worker_max_jobs: 1e9
       worker   = Hive::Worker.new job, policy: policy
       time { worker.run }
-      elapsed.should be <= lifetime + overhead
+      elapsed.should be <= worker_max_lifetime + overhead
     end
   end
 
