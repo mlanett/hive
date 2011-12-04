@@ -29,7 +29,7 @@ class Hive::Key
   end
 
   def self.parse(key_string)
-    key_string =~ /^(.*)-([0-9]+)@([^@]+)$/ or raise "Malformed Key (#{key_string})"
+    key_string =~ /^(.*)-([0-9]+)@([^@]+)$/ or raise MalformedKey.new(key_string)
     new( $1, $2, $3 )
   end
 
@@ -40,6 +40,9 @@ class Hive::Key
   # @returns something like foo.example.com
   def self.local_host
     @local_host ||= `hostname`.chomp.strip
+  end
+
+  class MalformedKey < StandardError
   end
 
 end
