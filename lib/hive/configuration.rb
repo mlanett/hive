@@ -76,6 +76,8 @@ class Hive::Configuration
   attr :verbose, true
   attr :dry_run, true
   attr :args, true
+  attr :before_forks
+  attr :after_forks
 
   attr :defaults
   attr :jobs
@@ -193,9 +195,13 @@ class Hive::Configuration
   end
 
   def before_fork(&block)
+    @before_forks ||= []
+    @before_forks << block
   end
 
   def after_fork(&block)
+    @after_forks ||= []
+    @after_forks << block
   end
 
   # ----------------------------------------------------------------------------
