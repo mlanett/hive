@@ -18,8 +18,10 @@ class Hive::Monitor
       pools.each do |pool|
         r = pool.registry
         log pool.name
-        log r.workers.inspect
-        log r.checked_workers(pool.policy).inspect
+        pool.check_dead_workers
+        if live = r.checked_workers(pool.policy)[:live] and live.size > 0 then
+          log "Live worker count #{live.size}; members: #{live.inspect}"
+        end
         if remote = r.checked_workers(pool.policy)[:remote] and remote.size > 0 then
           log "Remote worker count #{remote.size}; members: #{remote.inspect}"
         end
