@@ -13,21 +13,23 @@ class Hive::Monitor
     end
   end
 
+
   def monitor
-    loop do
-      pools.each do |pool|
-        r = pool.registry
-        log pool.name
-        pool.check_dead_workers
-        if live = r.checked_workers(pool.policy)[:live] and live.size > 0 then
-          log "Live worker count #{live.size}; members: #{live.inspect}"
-        end
-        if remote = r.checked_workers(pool.policy)[:remote] and remote.size > 0 then
-          log "Remote worker count #{remote.size}; members: #{remote.inspect}"
-        end
-      end
-      sleep(2)
+    job = Hive::Idler.new( nil, min_sleep: 1, max_sleep: 10 ) { check_job }
+
+    @ok = true
+    while @ok do
+      job.call
     end
+  end # monitor
+
+
+  def check_job
+    pools.each do |pool|
+      log pool.name
+      pool.synchronize
+    end
+    false
   end
 
 end
