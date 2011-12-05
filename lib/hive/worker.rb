@@ -39,8 +39,8 @@ class Hive::Worker
   # @param options[:registry] is optional
   def initialize( prototype_job, options = nil )
     @policy   = options && options[:policy] || Hive::Policy.resolve
-    @registry = options && options[:registry] || Hive::Registry.new("Mock")
-    @storage  = options && options[:storage] || @registry.storage
+    @storage  = policy.storage
+    @registry = options && options[:registry] || Hive::Registry.new( "Mock", storage )
     @name     = options && options[:name] || policy.name || prototype_job.to_s
     @job      = Hive::Idler.new( resolve_job( prototype_job ), min_sleep: policy.worker_idle_min_sleep, max_sleep: policy.worker_idle_max_sleep )
 

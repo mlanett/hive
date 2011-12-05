@@ -19,8 +19,6 @@ require "support/jobs"        # simple helpers for testing
 require "support/redis"       # simple helpers for testing
 require "support/timing"      # simple helpers for testing
 
-Hive.default_storage = Hive::Mocks::Storage.new
-
 RSpec.configure do |spec|
   # @see https://www.relishapp.com/rspec/rspec-core/docs/helper-methods/define-helper-methods-in-a-module
   spec.include RedisClient, redis: true
@@ -30,6 +28,6 @@ RSpec.configure do |spec|
   # nuke the Redis database around each run
   # @see https://www.relishapp.com/rspec/rspec-core/docs/hooks/around-hooks
   spec.around( :each, redis: true ) do |example|
-    with_default_client { with_clean_redis { example.run } }
+    with_clean_redis { example.run }
   end
 end

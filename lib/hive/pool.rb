@@ -17,15 +17,15 @@ class Hive::Pool
   attr :registry
   attr :storage   # where to store worker details
 
-  def initialize( kind, policy_prototype = nil, storage = Hive.default_storage )
+  def initialize( kind, policy_prototype = {} )
     if kind.kind_of?(Array) then
       kind, policy_prototype = kind.first, kind.last
     end
     @kind     = kind
-    @policy   = Hive::Policy.resolve(policy_prototype)
+    @policy   = Hive::Policy.resolve(policy_prototype) or raise
     @name     = @policy.name || @kind.name or raise Hive::ConfigurationError, "Pool or Job must have a name"
+    @storage  = policy.storage
     @registry = Hive::Registry.new( name, storage )
-    @storage  = storage
 
     # type checks
     policy.pool_min_workers

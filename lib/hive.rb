@@ -46,16 +46,6 @@ module Hive
       classname.split(/::/).inject(Object) { |a,i| a.const_get(i) }
     end
 
-    attr :default_storage
-
-    def default_storage
-      @default_storage ||= Hive::Redis::Storage.new
-    end
-
-    def default_storage=(default_storage)
-      @default_storage = default_storage
-    end
-
   end # class
 end
 

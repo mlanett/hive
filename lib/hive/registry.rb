@@ -11,9 +11,9 @@ class Hive::Registry
   attr :name
   attr :storage
 
-  def initialize( name, storage = Hive.default_storage )
-    @name    = name
-    @storage = storage
+  def initialize( name, storage )
+    @name    = name    or raise
+    @storage = storage or raise
 
     # type checking
     name.encoding

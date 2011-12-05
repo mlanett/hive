@@ -21,11 +21,4 @@ module RedisClient
     redis.quit
   end
 
-  def with_default_client( before_default_storage = Hive.default_storage, &block)
-    Hive.default_storage = Hive::Redis::Storage.new
-    yield
-  ensure
-    Hive.default_storage = before_default_storage
-  end
-
 end # RedisClient

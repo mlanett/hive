@@ -26,12 +26,18 @@ describe Hive::Policy do
   end
 
   it "is copied from another policy" do
-    p1 = Hive::Policy.resolve worker_max_jobs: 12
-    p2 = Hive::Policy.resolve(p1)
-    p2.worker_max_jobs.should eq(p1.worker_max_jobs)
+    p1 = Hive::Policy.resolve worker_max_jobs: 7, worker_max_lifetime: 999
+    p2 = Hive::Policy.resolve policy: p1, worker_max_jobs: 12
 
-    p1.worker_max_jobs = 7
+    p2.worker_max_lifetime.should eq(p1.worker_max_lifetime)
+    p1.worker_max_jobs.should eq(7)
     p2.worker_max_jobs.should eq(12)
+  end
+
+  it "can resolve storage" do
+    p = Hive::Policy.resolve storage: nil
+    s = p.storage
+    s.should be_instance_of(Hive::Mocks::Storage)
   end
 
 end

@@ -4,10 +4,6 @@ require "helper"
 
 describe Hive::Worker do
 
-  before do
-    @default_policy = Hive::Policy.resolve worker_max_lifetime: 4, worker_max_jobs: 100
-  end
-
   it "should run once" do
     count  = 0
     worker = nil
@@ -78,6 +74,10 @@ describe Hive::Worker do
 
   describe "when spawning a process", redis: true do
 
+    before do
+      @policy = Hive::Policy.resolve worker_max_lifetime: 4, worker_max_jobs: 100, storage: :redis
+    end
+
     it "should spawn a new process" do
       Hive::Worker.spawn( QuitJobWithSet )
       wait_until { redis.get("QuitJobWithSet").to_i > 0 }
@@ -98,10 +98,10 @@ describe Hive::Worker do
 
     it "uses the registry" do
       job       = ForeverUntilQuitJob
-      registry  = Hive::Registry.new( job.to_s )
+      registry  = Hive::Registry.new( job.to_s, @policy.storage )
       registry.workers.size.should eq(0)
 
-      Hive::Worker.spawn ForeverUntilQuitJob, registry: registry, policy: @default_policy
+      Hive::Worker.spawn ForeverUntilQuitJob, registry: registry, policy: @policy
 
       wait_until { registry.workers.size > 0 }
       registry.workers.size.should eq(1)

@@ -25,10 +25,9 @@ describe Hive::Pool do
 
     it "should spawn a worker" do
       name    = "#{ described_class || 'Test' }::#{example.description}"
-      policy  = { name: name, worker_max_lifetime: 4 }
+      policy  = { name: name, worker_max_lifetime: 4, storage: :redis }
       job     = ->(context) {}
-      storage = Hive::Redis::Storage.new(redis)
-      pool    = Hive::Pool.new( job, policy, storage )
+      pool    = Hive::Pool.new( job, policy )
 
       pool.stub(:spawn) {} # must be called at least once
 
@@ -37,10 +36,9 @@ describe Hive::Pool do
 
     it "spins up an actual worker" do
       name    = "#{ described_class || 'Test' }::#{example.description}"
-      policy  = { name: name, observers: [ [ :log, "/tmp/debug.log" ] ], worker_max_lifetime: 4 }
+      policy  = { name: name, observers: [ [ :log, "/tmp/debug.log" ] ], worker_max_lifetime: 4, storage: :redis }
       factory = ->() { ListenerJob.new() }
-      storage = Hive::Redis::Storage.new(redis)
-      pool    = Hive::Pool.new( ListenerJob, policy, storage )
+      pool    = Hive::Pool.new( ListenerJob, policy )
 
       pool.registry.workers.size.should be == 0
 
@@ -57,9 +55,8 @@ describe Hive::Pool do
 
     it "spins up a worker only once" #do
     #  index   = 0
-    #  storage = Hive::Mocks::Storage.new
     #  policy  = Hive::Policy.resolve worker_max_lifetime: 4
-    #  pool    = Hive::Pool.new( SpawnWaitQuitJob, policy, storage )
+    #  pool    = Hive::Pool.new( SpawnWaitQuitJob, policy )
     #  pool.stub(:spawn) {}
     #end
 
