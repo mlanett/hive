@@ -5,16 +5,16 @@ require "redis"
 
 describe Hive::Pool do
 
-  describe "the name" do
+  describe "name" do
 
-    it "needs a name for a proc" do
+    it "needs to be specified for a proc" do
       name = "#{ described_class || 'Test' }::#{example.object_id}"
       job  = ->(context) { false }
       expect { pool = Hive::Pool.new( job ) }.to raise_error
       expect { pool = Hive::Pool.new( job, name: name ) }.to_not raise_error
     end
 
-    it "does not need a name for a class" do
+    it "does not need to be specified for a class" do
       job = TrueJob
       expect { pool = Hive::Pool.new( job ) }.to_not raise_error
     end
