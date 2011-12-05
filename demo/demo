@@ -21,7 +21,8 @@ set_defaults(
   worker_hung:          100,
   batchsize:            100,
   worker_max_lifetime:  3600,
-  observers:            []
+  observers:            [],
+  storage:              :redis
 )
 
 add_pool Job1,
