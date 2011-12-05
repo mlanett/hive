@@ -14,11 +14,12 @@ class Hive::Worker
   # forks a new process
   # creates a new instance of the job class
   # runs a loop which calls the job
-  def self.spawn( prototype_job, options = nil )
+  def self.spawn( prototype_job, options = {} )
     foptions = { stdout: "/tmp/debug.log" }
     # TODO before fork
     Hive::Utilities::Process.fork_and_detach( foptions ) do
       # TODO after fork
+      # $0 = "$0 #{name}"
       worker = new( prototype_job, options )
       trap("TERM") { worker.quit! }
       worker.run
@@ -37,11 +38,11 @@ class Hive::Worker
   # @param options[:name] is optional
   # @param options[:policy] is optional
   # @param options[:registry] is optional
-  def initialize( prototype_job, options = nil )
-    @policy   = options && options[:policy] || Hive::Policy.resolve
-    @name     = options && options[:name] || policy.name || prototype_job.to_s
+  def initialize( prototype_job, options = {} )
+    @policy   = options[:policy] || Hive::Policy.resolve
+    @name     = options[:name] || policy.name || prototype_job.to_s
     @storage  = policy.storage
-    @registry = options && options[:registry] || Hive::Registry.new( name, storage )
+    @registry = options[:registry] || Hive::Registry.new( name, storage )
     @job      = Hive::Idler.new( resolve_job( prototype_job ), min_sleep: policy.worker_idle_min_sleep, max_sleep: policy.worker_idle_max_sleep )
 
     # type checks
