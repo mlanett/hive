@@ -9,11 +9,8 @@ module Hive
   autoload :Messager,         "hive/messager"
   autoload :Monitor,          "hive/monitor"
   autoload :Policy,           "hive/policy"
-  autoload :PollingColony,    "hive/polling_colony"
   autoload :Pool,             "hive/pool"
   autoload :Registry,         "hive/registry"
-  autoload :SimpleColony,     "hive/simple_colony"
-  autoload :ThreadedColony,   "hive/threaded_colony"
   autoload :Worker,           "hive/worker"
 end
 
@@ -33,7 +30,6 @@ module Hive::Utilities
 end
 
 module Hive::Redis
-  autoload :Colony,           "hive/redis/colony"
   autoload :Storage,          "hive/redis/storage"
 end
 
