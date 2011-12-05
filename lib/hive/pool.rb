@@ -67,7 +67,6 @@ class Hive::Pool
   # this really should be protected but it's convenient to be able to force a spawn
   def spawn()
     Hive::Worker.spawn kind, registry: registry, policy: policy, name: name
-    log "Spawned new worker for #{name}"
   end
 
   # ----------------------------------------------------------------------------
