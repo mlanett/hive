@@ -1,5 +1,7 @@
 # -*- encoding: utf-8 -*-
 
+require 'ostruct'
+
 =begin
 
   A registry knows how to lookup up and register workers.
@@ -53,12 +55,11 @@ class Hive::Registry
 
 
   def checked_workers( policy )
-    groups = {}
+    groups = { live: [], late: [], hung: [], dead: [] }
     check_workers(policy) do |key, status|
-      groups[status] ||= []
       groups[status] << key
     end
-    groups
+    OpenStruct.new(groups)
   end
 
 

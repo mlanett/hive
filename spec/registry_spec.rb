@@ -34,7 +34,7 @@ describe Hive::Registry, redis: true do
 
     registry.register(key)
     checked = registry.checked_workers(@policy)
-    checked[:live].should eq([key])
+    checked.live.should eq([key])
   end
 
   it "can find late workers" do
@@ -46,7 +46,7 @@ describe Hive::Registry, redis: true do
     registry.register(key) # should register with heartbeat = now or now+1
     registry.stub(:now) { now + @policy.worker_late + 2 }
     checked = registry.checked_workers(@policy)
-    checked[:late].should eq([key])
+    checked.late.should eq([key])
   end
 
 end
