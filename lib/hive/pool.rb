@@ -44,7 +44,7 @@ class Hive::Pool
     if live < policy.pool_min_workers then
       # launch workers
       (policy.pool_min_workers - live).times do
-        spawn
+        spawn wait: true
       end
 
     elsif policy.pool_max_workers < live then
@@ -65,8 +65,25 @@ class Hive::Pool
 
 
   # this really should be protected but it's convenient to be able to force a spawn
-  def spawn()
+  # param options[:wait] can true to wait until after the process is spawned
+  def spawn( options = {} )
+    wait = options.delete(:wait)
+    raise if options.size > 0
+
+    if ! wait then
+      Hive::Worker.spawn kind, registry: registry, policy: policy, name: name
+      return
+    end
+
+    before = registry.checked_workers( policy ).live
+
     Hive::Worker.spawn kind, registry: registry, policy: policy, name: name
+
+    Hive::Idler.wait_until( 10 ) do
+      after = registry.checked_workers( policy ).live
+      diff  = ( after - before ).select { |k| k.host == Hive::Key.local_host }
+      diff.size > 0
+    end
   end
 
   # ----------------------------------------------------------------------------
