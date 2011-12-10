@@ -67,31 +67,26 @@ describe Hive::Pool do
       registry.checked_workers( policy ).live.size.should eq(1)
     end
 
-    it "does not spin up the worker twice" #do
-    #  policy = Hive::Policy.resolve worker_max_lifetime: 4
-    #  pool = Hive::Pool.new( SpawnWaitQuitJob )
-    #  pool.synchronize
-    #  wait_until { redis.get("SpawnWaitQuitJob").to_i != 0 }
-    #  pid_first = redis.get("SpawnWaitQuitJob").to_i
-    #
-    #  pool.synchronize
-    #  wait_until { redis.get("SpawnWaitQuitJob").to_i != pid_first }
-    #  redis.get("SpawnWaitQuitJob").to_i.should eq(pid_first)
-    #
-    #  redis.set("SpawnWaitQuitJob",0)
-    #end
+    it "should spin up two workers" do
+      policy   = Hive::Policy.resolve name: @name, observers: [ [ :log, "/tmp/debug.log" ] ], worker_max_lifetime: 4, pool_min_workers: 2, pool_max_workers: 2, storage: :redis
+      pool     = Hive::Pool.new( ListenerJob, policy )
+      registry = pool.registry
 
-    it "should spin up two workers"
-    # do
-    #  redis.del "Hive::SpecJob"
-    #
-    #  it = Hive::Pool.new( "Hive::SpecJob", Hive::Policy.resolve( pool_min_workers: 2, worker_max_jobs: 1) )
-    #  it.synchronize
-    #  wait_until { redis.scard("Hive::SpecJob") == 2 }
-    #
-    #  redis.scard("Hive::SpecJob").should eq 2
-    #  redis.del "Hive::SpecJob"
-    #end
+      registry.checked_workers( policy ).live.size.should eq(0)
+
+      pool.synchronize
+      registry.checked_workers( policy ).live.size.should eq(2)
+
+      first = registry.checked_workers( policy ).live.first
+      pool.rpc.send "Quit", to: first
+      wait_until { registry.checked_workers( policy ).live.size == 1 }
+      registry.checked_workers( policy ).live.size.should eq(1)
+
+#      pool.synchronize
+#      registry.checked_workers( policy ).live.size.should eq(1)
+    end
+
+    it "spins down workers when there are too many"
 
   end
 
