@@ -37,8 +37,7 @@ describe Hive::Pool do
     end
 
     it "spins up an actual worker" do
-      name    = "#{ described_class || 'Test' }::#{example.description}"
-      policy  = { name: name, observers: [ [ :log, "/tmp/debug.log" ] ], worker_max_lifetime: 4, storage: :redis }
+      policy  = { name: @name, observers: [ [ :log, "/tmp/debug.log" ] ], worker_max_lifetime: 4, storage: :redis }
       pool    = Hive::Pool.new( ListenerJob, policy )
 
       pool.registry.workers.size.should be == 0
@@ -55,8 +54,7 @@ describe Hive::Pool do
     end
 
     it "spins up a worker only once" do
-      name     = "#{ described_class || 'Test' }::#{example.description}"
-      policy   = Hive::Policy.resolve name: name, observers: [ [ :log, "/tmp/debug.log" ] ], worker_max_lifetime: 4, pool_max_workers: 1, storage: :redis
+      policy   = Hive::Policy.resolve name: @name, observers: [ [ :log, "/tmp/debug.log" ] ], worker_max_lifetime: 4, pool_max_workers: 1, storage: :redis
       pool     = Hive::Pool.new( ListenerJob, policy )
       registry = pool.registry
 
