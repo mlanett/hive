@@ -33,14 +33,21 @@ class Hive::Pool
   end
 
 
-  def synchronize()
-    checklist = registry.checked_workers( policy )
+  # @param options[:log] can be true
+  # @returns the checked worker lists
+  def synchronize( options = {} )
+    do_log = options.delete(:log)
+    raise if options.size > 0
 
-    live = check_live_workers( checklist )
-    check_late_workers( checklist )
-    check_hung_workers( checklist )
-    check_dead_workers( checklist )
+    checklist  = registry.checked_workers( policy )
     live_count = checklist.live.size
+
+    if do_log then
+      check_live_workers( checklist )
+      check_late_workers( checklist )
+      check_hung_workers( checklist )
+      check_dead_workers( checklist )
+    end
 
     if live_count < policy.pool_min_workers then
       # launch workers
