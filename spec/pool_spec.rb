@@ -5,13 +5,16 @@ require "redis"
 
 describe Hive::Pool do
 
+  before do
+    @name = "#{ described_class || 'Test' }::#{example.description}"
+  end
+
   describe "name" do
 
     it "needs to be specified for a proc" do
-      name = "#{ described_class || 'Test' }::#{example.object_id}"
       job  = ->(context) { false }
       expect { pool = Hive::Pool.new( job ) }.to raise_error
-      expect { pool = Hive::Pool.new( job, name: name ) }.to_not raise_error
+      expect { pool = Hive::Pool.new( job, name: @name ) }.to_not raise_error
     end
 
     it "does not need to be specified for a class" do
@@ -24,8 +27,7 @@ describe Hive::Pool do
   describe "when spawning proceses", redis: true do
 
     it "should spawn a worker" do
-      name    = "#{ described_class || 'Test' }::#{example.description}"
-      policy  = { name: name, worker_max_lifetime: 4, storage: :redis }
+      policy  = Hive::Policy.resolve name: @name, worker_max_lifetime: 4, storage: :redis
       job     = ->(context) {}
       pool    = Hive::Pool.new( job, policy )
 
@@ -37,7 +39,6 @@ describe Hive::Pool do
     it "spins up an actual worker" do
       name    = "#{ described_class || 'Test' }::#{example.description}"
       policy  = { name: name, observers: [ [ :log, "/tmp/debug.log" ] ], worker_max_lifetime: 4, storage: :redis }
-      factory = ->() { ListenerJob.new() }
       pool    = Hive::Pool.new( ListenerJob, policy )
 
       pool.registry.workers.size.should be == 0
