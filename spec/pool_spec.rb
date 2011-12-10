@@ -54,12 +54,20 @@ describe Hive::Pool do
       pool.rpc.send "Quit", to: other
     end
 
-    it "spins up a worker only once" #do
-    #  index   = 0
-    #  policy  = Hive::Policy.resolve worker_max_lifetime: 4
-    #  pool    = Hive::Pool.new( SpawnWaitQuitJob, policy )
-    #  pool.stub(:spawn) {}
-    #end
+    it "spins up a worker only once" do
+      name     = "#{ described_class || 'Test' }::#{example.description}"
+      policy   = Hive::Policy.resolve name: name, observers: [ [ :log, "/tmp/debug.log" ] ], worker_max_lifetime: 4, pool_max_workers: 1, storage: :redis
+      pool     = Hive::Pool.new( ListenerJob, policy )
+      registry = pool.registry
+
+      registry.checked_workers( policy ).live.size.should eq(0)
+
+      pool.synchronize
+      registry.checked_workers( policy ).live.size.should eq(1)
+
+      pool.synchronize
+      registry.checked_workers( policy ).live.size.should eq(1)
+    end
 
     it "does not spin up the worker twice" #do
     #  policy = Hive::Policy.resolve worker_max_lifetime: 4
