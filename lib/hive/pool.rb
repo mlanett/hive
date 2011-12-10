@@ -23,7 +23,7 @@ class Hive::Pool
     end
     @kind     = kind
     @policy   = Hive::Policy.resolve(policy_prototype) or raise
-    @name     = @policy.name || @kind.name or raise Hive::ConfigurationError, "Pool or Job must have a name"
+    @name     = @policy.name || kind.name or raise Hive::ConfigurationError, "Pool or Job must have a name"
     @storage  = policy.storage
     @registry = Hive::Registry.new( name, storage )
 
