@@ -50,6 +50,7 @@ class Hive::Registry
   # NOTICE this will include keys for workers on all hosts
   def workers
     all = storage.set_get_all( workers_key )
+    raise "Not a Set: #{workers_key}" unless all.kind_of?(Array)
     all.map { |key_string| Hive::Key.parse(key_string) }
   end
 
