@@ -40,14 +40,15 @@ class Hive::Pool
     check_late_workers( checklist )
     check_hung_workers( checklist )
     check_dead_workers( checklist )
+    live_count = checklist.live.size
 
-    if live < policy.pool_min_workers then
+    if live_count < policy.pool_min_workers then
       # launch workers
-      (policy.pool_min_workers - live).times do
+      (policy.pool_min_workers - live_count).times do
         spawn wait: true
       end
 
-    elsif policy.pool_max_workers < live then
+    elsif policy.pool_max_workers < live_count then
       # spin down some workers
 
     end
