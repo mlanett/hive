@@ -39,7 +39,7 @@ class Hive::Pool
     live = check_live_workers( checklist )
     check_late_workers( checklist )
     check_hung_workers( checklist )
-    check_remote_workers( checklist )
+    check_dead_workers( checklist )
 
     if live < policy.pool_min_workers then
       # launch workers
@@ -74,7 +74,7 @@ class Hive::Pool
   # ----------------------------------------------------------------------------
 
   def check_live_workers( checked )
-    if live = checked[:live] and live.size > 0 then
+    if live = checked.live and live.size > 0 then
       log "Live worker count #{live.size}; members: #{live.inspect}"
       live.size
     else
@@ -84,7 +84,7 @@ class Hive::Pool
 
 
   def check_late_workers( checked )
-    if late = checked[:late] and late.size > 0 then
+    if late = checked.late and late.size > 0 then
       log "Late worker count #{late.size}; members: #{late.inspect}"
       late.size
     else
@@ -94,7 +94,7 @@ class Hive::Pool
 
 
   def check_hung_workers( checked )
-    if hung = checked[:hung] and hung.size > 0 then
+    if hung = checked.hung and hung.size > 0 then
       log "Hung worker count #{hung.size}"
       hung.each do |key|
         log "Killing #{key}"
@@ -106,10 +106,10 @@ class Hive::Pool
   end
 
 
-  def check_remote_workers( checked )
-    if remote = checked[:remote] and remote.size > 0 then
-      log "Remote worker count #{remote.size}; members: #{remote.inspect}"
-      remote.size
+  def check_dead_workers( checked )
+    if dead = checked.dead and dead.size > 0 then
+      log "Dead worker count #{dead.size}; members: #{dead.inspect}"
+      dead.size
     else
       0
     end

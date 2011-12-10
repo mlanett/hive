@@ -67,15 +67,10 @@ class Hive::Registry
   # @param block takes entry, status in [ :live, :late, :hung, :dead ]
   # @param options[:all] = true to get keys across all hosts
   def check_workers( policy, options = nil, &block )
-    all = options && options[:all]
     workers.each do |key|
-      if all || key.host == Hive::Key.local_host then
-        heartbeat = storage.get( status_key(key.to_s) ).to_i
-        status    = heartbeat_status( policy, heartbeat )
-        yield( key, status )
-      else
-        yield( key, :remote )
-      end
+      heartbeat = storage.get( status_key(key.to_s) ).to_i
+      status    = heartbeat_status( policy, heartbeat )
+      yield( key, status )
     end
   end
 
