@@ -15,9 +15,16 @@ class Hive::Worker
   # creates a new instance of the job class
   # runs a loop which calls the job
   def self.spawn( prototype_job, options = {} )
+    policy   = options[:policy] || Hive::Policy.resolve
+    name     = options[:name] || policy.name || prototype_job.to_s
+    storage  = policy.storage
+    registry = options[:registry] || Hive::Registry.new( name, storage )
+
     foptions = { stdout: "/tmp/debug.log" }
     Hive::Utilities::Process.fork_and_detach( foptions ) do
-      # TODO after fork
+      if policy.after_fork then
+        # TODO after fork
+      end
       # $0 = "$0 #{name}"
       worker = new( prototype_job, options )
       trap("TERM") { worker.quit! }

@@ -59,6 +59,8 @@ describe Hive::Worker do
     count.should be <= 5
   end
 
+  it "should execute after_fork blocks"
+
   describe "when testing lifetime", time: true do
     it "should exit when the policy says to run out (of time)" do
       overhead = 1
