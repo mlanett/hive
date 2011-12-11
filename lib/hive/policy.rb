@@ -35,7 +35,7 @@ class Hive::Policy
     end
 
     def storage
-      Hive::Policy.resolve_storage @options[:storage]
+      Hive::Utilities::StorageBase.resolve @options[:storage]
     end
 
     def method_missing( symbol, *arguments )
@@ -54,38 +54,6 @@ class Hive::Policy
       # this will dup either an Instance or a Hash
       Hive::Policy::Instance.new(options.dup)
     end
-
-    # resolution is as so:
-    # nil, :mock => :mock
-    # :redis => redis://127.0.0.1:6379/1
-    # string => CLASS.new
-    # CLASS => CLASS.new
-    # PROC => yield
-    # [ ARRAY ] => first, *args
-    def resolve_storage( storage, *args )
-      storage ||= :mock
-      case
-      when storage.respond_to?(:call)
-        resolve_storage(storage.call(*args))
-      else
-        case storage
-        when :mock
-          resolve_storage( Hive::Mocks::Storage, *args )
-        when :redis
-          resolve_storage( Hive::Redis::Storage, *args )
-        when Class
-          storage.new(*args)
-        when String
-          resolve_storage( Hive.resolve_class(storage), *args )
-        when Array
-          args    = storage.dup + args
-          storage = args.shift
-          resolve_storage( storage, *args )
-        else
-          return storage
-        end
-      end
-    end # resolve_storage
 
   end # class
 

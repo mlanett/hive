@@ -27,6 +27,7 @@ module Hive::Utilities
   autoload :ObserverBase,     "hive/utilities/observer_base"
   autoload :Process,          "hive/utilities/process"
   autoload :SignalHook,       "hive/utilities/signal_hook"
+  autoload :StorageBase,      "hive/utilities/storage_base"
 end
 
 module Hive::Redis
