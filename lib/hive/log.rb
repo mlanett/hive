@@ -1,8 +1,8 @@
 module Hive::Log
   
   def log( *args )
-    log_io.print(log_message(*args))
-    log_io.flush
+    logger.print(log_message(*args))
+    logger.flush
   end
 
   def log_message( *args )
@@ -18,8 +18,12 @@ module Hive::Log
     ].compact.join
   end
 
-  def log_io
-    @log_io ||= STDOUT
+  def logger
+    @logger ||= STDOUT
+  end
+
+  def logger=( other )
+    @logger = other
   end
 
 end # Hive::Log

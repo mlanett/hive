@@ -16,7 +16,7 @@ class Hive::Utilities::LogObserver < Hive::Utilities::ObserverBase
 
   def initialize( filename = nil )
     if filename then
-      @log_io = File.open(filename,"w")
+      self.logger = File.open(filename,"w")
     end
   end
 
