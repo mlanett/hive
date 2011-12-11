@@ -10,6 +10,11 @@ class Hive::Redis::Storage
     self.redis = redis if redis
   end
 
+  def reconnect_after_fork
+    redis.client.disconnect
+  end
+
+
   # Simple values
 
   def put( key, value )

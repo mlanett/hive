@@ -6,6 +6,10 @@ class Hive::Mocks::Storage
     @storage = {}
   end
 
+  def reconnect_after_fork
+    # nop
+  end
+
   # Simple values
 
   def put( key, value )

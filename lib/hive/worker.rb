@@ -53,6 +53,10 @@ class Hive::Worker
     policy.pool_min_workers
     registry.workers
 
+    # post-fork processing
+    storage.reconnect_after_fork
+    registry.reconnect_after_fork
+
     # set up observers
     policy.observers.each do |observer|
       o = Hive::Utilities::ObserverBase.resolve(observer)

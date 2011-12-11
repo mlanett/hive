@@ -22,6 +22,11 @@ class Hive::Registry
   end
 
 
+  def reconnect_after_fork
+    @storage.reconnect_after_fork
+  end
+
+
   def register( key )
     key = key.to_s
     storage.set_add( workers_key, key )
