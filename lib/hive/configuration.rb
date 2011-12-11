@@ -76,7 +76,6 @@ class Hive::Configuration
   attr :verbose, true
   attr :dry_run, true
   attr :args, true
-  attr :before_forks
   attr :after_forks
 
   attr :defaults
@@ -192,11 +191,6 @@ class Hive::Configuration
     jobs[name] = options
     log "Added pool for #{name}" if verbose == 1
     log "Added pool for #{name} with #{options}" if verbose >= 2
-  end
-
-  def before_fork(&block)
-    @before_forks ||= []
-    @before_forks << block
   end
 
   def after_fork(&block)
