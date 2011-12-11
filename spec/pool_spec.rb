@@ -26,10 +26,14 @@ describe Hive::Pool do
 
   describe "when spawning proceses", redis: true do
 
+    def make_policy( options = {} )
+      options = { name: @name, worker_max_lifetime: 10, storage: :redis, observers: [ [ :log, "/tmp/debug.log" ] ] }.merge(options)
+      Hive::Policy.resolve(options)
+    end
+
     it "should spawn a worker" do
-      policy  = Hive::Policy.resolve name: @name, worker_max_lifetime: 4, storage: :redis
       job     = ->(context) {}
-      pool    = Hive::Pool.new( job, policy )
+      pool    = Hive::Pool.new( job, make_policy )
 
       pool.stub(:spawn) {} # must be called at least once
 
@@ -37,8 +41,7 @@ describe Hive::Pool do
     end
 
     it "spins up an actual worker" do
-      policy  = { name: @name, observers: [ [ :log, "/tmp/debug.log" ] ], worker_max_lifetime: 4, storage: :redis }
-      pool    = Hive::Pool.new( ListenerJob, policy )
+      pool    = Hive::Pool.new( ListenerJob, make_policy )
 
       pool.registry.workers.size.should be == 0
 
@@ -54,7 +57,7 @@ describe Hive::Pool do
     end
 
     it "spins up a worker only once" do
-      policy   = Hive::Policy.resolve name: @name, observers: [ [ :log, "/tmp/debug.log" ] ], worker_max_lifetime: 4, pool_max_workers: 1, storage: :redis
+      policy   = make_policy pool_max_workers: 1
       pool     = Hive::Pool.new( ListenerJob, policy )
       registry = pool.registry
 
@@ -67,8 +70,8 @@ describe Hive::Pool do
       registry.checked_workers( policy ).live.size.should eq(1)
     end
 
-    it "should spin up two workers" do
-      policy   = Hive::Policy.resolve name: @name, observers: [ [ :log, "/tmp/debug.log" ] ], worker_max_lifetime: 4, pool_min_workers: 2, pool_max_workers: 2, storage: :redis
+    it "should spin up new workers as necessary" do
+      policy   = make_policy pool_min_workers: 2, pool_max_workers: 2
       pool     = Hive::Pool.new( ListenerJob, policy )
       registry = pool.registry
 
