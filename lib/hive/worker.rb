@@ -21,11 +21,7 @@ class Hive::Worker
       # TODO after fork
       # $0 = "$0 #{name}"
       worker = new( prototype_job, options )
-      trap("TERM") {
-        STDOUT.puts("#{Time.now.to_i} [#{Process.pid}] Terminating...")
-        worker.quit!
-        STDOUT.puts("#{Time.now.to_i} [#{Process.pid}] Terminated")
-      }
+      trap("TERM") { worker.quit! }
       worker.run
     end
   end
