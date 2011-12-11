@@ -1,11 +1,11 @@
 module Hive::Log
   
   def log( *args )
-    logger.print(log_message(*args))
+    logger.print(format_for_logging(*args))
     logger.flush
   end
 
-  def log_message( *args )
+  def format_for_logging( *args )
     message = [
       #(Time.now.strftime "%Y%m%d%H%M%S"),
       Time.now.to_i,
