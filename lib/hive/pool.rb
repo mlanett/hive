@@ -49,15 +49,21 @@ class Hive::Pool
       check_dead_workers( checklist )
     end
 
-    if live_count < policy.pool_min_workers then
+    if (need = policy.pool_min_workers - live_count) > 0 then
       # launch workers
-      (policy.pool_min_workers - live_count).times do
+      need.times do
         spawn wait: true
       end
 
-    elsif policy.pool_max_workers < live_count then
+    elsif (excess = live_count - policy.pool_max_workers) > 0 then
       # spin down some workers
-
+      # try to find LOCAL workers to spin down first
+      locals = checklist.live.select { |k| k.host == Hive::Key.local_host }
+      if locals.size > 0 then
+        reap locals.first, wait: true
+      else
+        reap checklist.live.first, wait: true
+      end
     end
 
     checklist = registry.checked_workers( policy )
@@ -91,6 +97,26 @@ class Hive::Pool
       after = registry.checked_workers( policy ).live
       diff  = ( after - before ).select { |k| k.host == Hive::Key.local_host }
       diff.size > 0
+    end
+  end
+
+
+  # shut down a worker
+  def reap( key, options = {} )
+    wait = options.delete(:wait)
+    raise if options.size > 0
+
+    if key.host == Hive::Key.local_host then
+      puts "Terminating #{key}"
+      Hive::Utilities::Process.wait_and_terminate key.pid, timeout: 10
+    else
+      puts "Quitting #{key}"
+      rpc.send "Quit", to: key
+    end
+
+    Hive::Idler.wait_until( 10 ) do
+      live = registry.checked_workers( policy ).live
+      ! live.member? key
     end
   end
 

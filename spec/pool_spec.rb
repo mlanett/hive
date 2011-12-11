@@ -85,11 +85,26 @@ describe Hive::Pool do
       wait_until { registry.checked_workers( policy ).live.size == 1 }
       registry.checked_workers( policy ).live.size.should eq(1)
 
-#      pool.synchronize
-#      registry.checked_workers( policy ).live.size.should eq(1)
+      pool.synchronize
+      registry.checked_workers( policy ).live.size.should eq(2)
     end
 
-    it "spins down workers when there are too many"
+    it "spins down workers when there are too many" do
+      policy   = make_policy pool_min_workers: 2, pool_max_workers: 2
+      pool     = Hive::Pool.new( ListenerJob, policy )
+      registry = pool.registry
+
+      registry.checked_workers( policy ).live.size.should eq(0)
+
+      pool.synchronize
+      registry.checked_workers( policy ).live.size.should eq(2)
+
+      # create a second pool with its own policy to force quitting
+      policy2   = make_policy pool_min_workers: 1, pool_max_workers: 1
+      pool2     = Hive::Pool.new( ListenerJob, policy2 )
+      pool2.synchronize
+      registry.checked_workers( policy ).live.size.should eq(1)
+    end
 
   end
 
