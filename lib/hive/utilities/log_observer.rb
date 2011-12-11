@@ -16,7 +16,7 @@ class Hive::Utilities::LogObserver < Hive::Utilities::ObserverBase
 
   def initialize( filename = nil )
     if filename then
-      self.logger = File.open(filename,"w")
+      self.logger = File.open(filename,"a") # append or create, write only
     end
   end
 
