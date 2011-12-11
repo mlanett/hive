@@ -22,8 +22,9 @@ class Hive::Worker
       # $0 = "$0 #{name}"
       worker = new( prototype_job, options )
       trap("TERM") {
-        STDOUT.puts("#{Time.now.to_i} [#{Process.pid}] Terminating")
+        STDOUT.puts("#{Time.now.to_i} [#{Process.pid}] Terminating...")
         worker.quit!
+        STDOUT.puts("#{Time.now.to_i} [#{Process.pid}] Terminated")
       }
       worker.run
     end
