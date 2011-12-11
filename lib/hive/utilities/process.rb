@@ -19,7 +19,7 @@ module Hive::Utilities::Process
   def wait_and_terminate( pid, options = {} )
     #log "Monitoring job #{pid}"
     timeout = options[:timeout] || 1024
-    signal  = options[:signal] || "HUP"
+    signal  = options[:signal] || "TERM"
     
     status = wait_until_deadline( pid, Time.now.to_f + timeout )
     return status if status
@@ -30,7 +30,7 @@ module Hive::Utilities::Process
     status = wait_until_deadline( pid, Time.now.to_f + 1 )
     return status if status
     
-    ::Process.kill( "TERM", pid ) if ! status
+    ::Process.kill( "KILL", pid ) if ! status
     dummy, status = wait2_now(pid)
     status
   end
