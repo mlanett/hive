@@ -107,10 +107,9 @@ class Hive::Pool
     raise if options.size > 0
 
     if key.host == Hive::Key.local_host then
-      puts "Terminating #{key}"
+      ::Process.kill( "TERM", key.pid )
       Hive::Utilities::Process.wait_and_terminate key.pid, timeout: 10
     else
-      puts "Quitting #{key}"
       rpc.send "Quit", to: key
     end
 
