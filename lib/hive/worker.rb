@@ -104,8 +104,8 @@ class Hive::Worker
     @key ||= Hive::Key.new( name, Process.pid )
   end
 
-  def rpc
-    @rpc ||= Hive::Messager.new( storage, my_address: key )
+  def mq
+    @mq ||= Hive::Messager.new( storage, my_address: key )
   end
 
   # ----------------------------------------------------------------------------

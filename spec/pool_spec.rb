@@ -50,10 +50,10 @@ describe Hive::Pool do
       pool.registry.workers.size.should be > 0
       other = pool.registry.workers.first
 
-      pool.rpc.expect(/State/) { |message| puts message.body }
-      pool.rpc.send "State?", to: other
-      pool.rpc.receive
-      pool.rpc.send "Quit", to: other
+      pool.mq.expect(/State/) { |message| puts message.body }
+      pool.mq.send "State?", to: other
+      pool.mq.receive
+      pool.mq.send "Quit", to: other
     end
 
     it "spins up a worker only once" do
@@ -81,7 +81,7 @@ describe Hive::Pool do
       registry.checked_workers( policy ).live.size.should eq(2)
 
       first = registry.checked_workers( policy ).live.first
-      pool.rpc.send "Quit", to: first
+      pool.mq.send "Quit", to: first
       wait_until { registry.checked_workers( policy ).live.size == 1 }
       registry.checked_workers( policy ).live.size.should eq(1)
 

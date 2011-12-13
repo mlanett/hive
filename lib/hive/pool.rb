@@ -70,8 +70,8 @@ class Hive::Pool
   end
 
 
-  def rpc
-    @rpc ||= begin
+  def mq
+    @mq ||= begin
       key = Hive::Key.new( "#{name}-pool", Process.pid )
       me  = Hive::Messager.new storage, my_address: key
     end
@@ -110,7 +110,7 @@ class Hive::Pool
       ::Process.kill( "TERM", key.pid )
       Hive::Utilities::Process.wait_and_terminate key.pid, timeout: 10
     else
-      rpc.send "Quit", to: key
+      mq.send "Quit", to: key
     end
 
     Hive::Idler.wait_until( 10 ) do

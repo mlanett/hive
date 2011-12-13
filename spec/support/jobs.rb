@@ -46,13 +46,13 @@ class ListenerJob
 
   def initialize( context = {} )
     storage = Hive::Redis::Storage.new(redis)
-    @rpc = Hive::Messager.new( storage, my_address: context[:worker].key )
-    @rpc.expect("Quit")   { |message| context[:worker].quit! }
-    @rpc.expect("Exit!")  { |message| Kernel.exit! }
-    @rpc.expect("State?") { |message| @rpc.reply "State: #{context[:worker].state}", to: message }
+    @mq = Hive::Messager.new( storage, my_address: context[:worker].key )
+    @mq.expect("Quit")   { |message| context[:worker].quit! }
+    @mq.expect("Exit!")  { |message| Kernel.exit! }
+    @mq.expect("State?") { |message| @mq.reply "State: #{context[:worker].state}", to: message }
   end
 
   def call( context = {} )
-    @rpc.receive
+    @mq.receive
   end
 end
