@@ -43,4 +43,10 @@ class Hive::Monitor
     end
   end # monitor
 
+  def restart
+    pools.each do |pool|
+      pool.restart
+    end
+  end
+
 end

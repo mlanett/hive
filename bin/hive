@@ -27,6 +27,10 @@ my = Hive::Configuration.parse(ARGV)
 
 if ! my.dry_run then
   case ARGV.first
+  when "restart"
+    Hive::Monitor.new(my).restart
+  when "quit"
+    #
   when "monitor"
     Hive::Monitor.new(my).monitor
   else
