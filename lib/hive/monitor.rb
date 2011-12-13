@@ -20,13 +20,16 @@ class Hive::Monitor
     job = ->() do
       changed = false
       pools.each do |pool|
+
         log pool.name
         previous = status[pool.name]
-        current  = pool.synchronize
+        current  = pool.synchronize log: true
+
         if previous != current then
           status[pool.name] = current
           changed = true
         end
+
       end
       changed
     end
