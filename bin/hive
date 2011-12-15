@@ -34,6 +34,6 @@ if ! my.dry_run then
   when "monitor"
     Hive::Monitor.new(my).monitor
   else
-    Kernel.abort "Unknown command #{argv.first}"
+    Kernel.abort "Unknown command #{ARGV.first}"
   end
 end
