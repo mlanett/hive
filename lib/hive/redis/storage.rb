@@ -53,7 +53,7 @@ class Hive::Redis::Storage
 
   # Priority Queue
 
-  def queue_add( queue_name, item, score )
+  def queue_add( queue_name, item, score = Time.now.to_i )
     redis.zadd( queue_name, score, item )
   end
 
