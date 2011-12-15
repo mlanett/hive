@@ -1,3 +1,5 @@
+File.expand_path(File.dirname(__FILE__)).tap { |d| $: << d unless $:.member?(d) }
+
 require "hive/version"
 
 module Hive
