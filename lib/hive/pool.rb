@@ -113,9 +113,11 @@ class Hive::Pool
       mq.send "Quit", to: key
     end
 
-    Hive::Idler.wait_until( 10 ) do
-      live = registry.checked_workers( policy ).live
-      ! live.member? key
+    if wait then
+      Hive::Idler.wait_until( 10 ) do
+        live = registry.checked_workers( policy ).live
+        ! live.member? key
+      end
     end
   end
 
