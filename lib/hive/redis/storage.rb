@@ -54,7 +54,12 @@ class Hive::Redis::Storage
   # Priority Queue
 
   def queue_add( queue_name, item, score = Time.now.to_i )
-    redis.zadd( queue_name, score, item )
+    score = score.to_f
+    begin
+      redis.zadd( queue_name, score, item )
+    rescue Exception => x
+      raise x, "Failed zadd( #{queue_name.inspect}, #{score.inspect}, #{item.inspect} ) because of an error: #{x.message}", x.backtrace
+    end
   end
 
   # pop the lowest item from the queue IFF it scores <= max_score
