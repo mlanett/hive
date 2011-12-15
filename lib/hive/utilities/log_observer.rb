@@ -30,6 +30,7 @@ class Hive::Utilities::LogObserver < Hive::Utilities::ObserverBase
   
   def job_error(x)
     log "Warning: #{subject} experienced a job failure due to an error:#{x.inspect}"
+    log x.backtrace
   end
   
   def worker_stopped( *args )
