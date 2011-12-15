@@ -35,7 +35,7 @@ class Job3
 
       log "Processed #{page}; updated activity count to #{checker.activity_count}; estimated next time #{checker.next_time}"
 
-      storage.map_set "Last", start.to_i
+      storage.map_set "Last", page, start.to_i
     ensure
       storage.queue_add( "Next", page, checker.next_time )
     end
