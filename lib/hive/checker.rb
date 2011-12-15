@@ -21,6 +21,10 @@ class Checker
     next_interval   = @estimate > 0 ? @interval / @estimate : @interval * 2
   end
 
+  def estimate
+    @estimate
+  end
+
   def checked( actual )
     @activity_count = ( actual * DAY / @interval ).to_i               # e.g. 12
     next_interval   = actual > 0 ? @interval / actual : @interval * 2 # e.g. 300 seconds (3600 / 12)
@@ -37,7 +41,7 @@ class Checker
   end
 
   def estimated_delay
-    Math.sqrt(@estimate).to_i
+    @estimate > 0 ? Math.sqrt(@estimate).to_i : 1
   end
 
   def next_time
