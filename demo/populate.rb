@@ -1,3 +1,4 @@
+File.expand_path(File.dirname(__FILE__)+"/../lib").tap { |d| $: << d unless $:.member?(d) }
 require "hive"
 require "hive/squiggly"
 require "redis"
