@@ -78,6 +78,16 @@ class Hive::Pool
   end
 
 
+  # tell all workers to quit
+  def stop_all
+    checklist = registry.checked_workers( policy )
+    checklist.live.each { |key| reap(key) }
+    checklist.late.each { |key| reap(key) }
+    checklist.hung.each { |key| reap(key) }
+    checklist.dead.each { |key| reap(key) }
+  end
+
+
   # this really should be protected but it's convenient to be able to force a spawn
   # param options[:wait] can true to wait until after the process is spawned
   def spawn( options = {} )
