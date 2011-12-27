@@ -5,3 +5,5 @@ A pool contains several workers.
 Workers are processes which run jobs.
 
 Jobs are simple tasks.
+
+Collective was originally known as Hive.
