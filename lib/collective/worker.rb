@@ -21,9 +21,12 @@ class Collective::Worker
     registry = options[:registry] || Collective::Registry.new( name, storage )
 
     foptions = { stdout: "/tmp/debug.log" }
+    if before_forks = policy.before_forks then
+      before_forks.each { |f| f.call }
+    end
     Collective::Utilities::Process.fork_and_detach( foptions ) do
       if after_forks = policy.after_forks then
-        after_forks.each { |af| af.call }
+        after_forks.each { |f| f.call }
       end
       # $0 = "$0 #{name}"
       worker = new( prototype_job, options )

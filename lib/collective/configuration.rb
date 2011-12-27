@@ -76,16 +76,42 @@ class Collective::Configuration
   attr :verbose, true
   attr :dry_run, true
   attr :args, true
+  attr :before_forks
   attr :after_forks
 
   attr :defaults
-  attr :jobs
+  attr :pools
+
+  # I'm not sure why this is so complicated.
+  class PoolEnumerator
+    def initialize pools
+      @pools = pools
+    end
+    include Enumerable
+    def each(&block)
+      them = @pools.each
+      it = nil
+      loop do
+        begin
+          it = them.next
+        rescue StopIteration => x
+          break
+        end
+        policy = Collective::Policy.resolve(it.last)
+        yield([ it.first, policy ])
+      end
+    end
+  end
+
+  def policies
+    PoolEnumerator.new(pools)
+  end
 
   def initialize( filename = nil )
     @verbose  = 0
     @dry_run  = false
     @defaults = {}
-    @jobs     = {}
+    @pools    = {}
     load_file(filename) if filename
   end
 
@@ -186,11 +212,18 @@ class Collective::Configuration
     options.each { |k,v| set_default(k,v) }
   end
   
-  def add_pool(name,options)
-    options = defaults.merge(options)
-    jobs[name] = options
+  def add_pool( name, options = {} )
+    before_forks = (options[:before_forks] || []) + (self.before_forks || [])
+    after_forks  = (options[:after_forks] || []) + (self.after_forks || [])
+    options      = defaults.merge(options).merge before_forks: before_forks, after_forks: after_forks
+    pools[name]  = options
     log "Added pool for #{name}" if verbose == 1
     log "Added pool for #{name} with #{options}" if verbose >= 2
+  end
+
+  def before_fork(&block)
+    @before_forks ||= []
+    @before_forks << block
   end
 
   def after_fork(&block)
