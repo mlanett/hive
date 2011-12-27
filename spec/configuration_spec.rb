@@ -2,10 +2,10 @@
 
 require "helper"
 
-describe Hive::Configuration do
+describe Collective::Configuration do
 
   it "should parse command-line switches" do
-    c = Hive::Configuration.parse %w(--dry-run --env the_env --name a_name --chdir .)
+    c = Collective::Configuration.parse %w(--dry-run --env the_env --name a_name --chdir .)
     c.env.should eq("the_env")
     c.name.should eq("a_name")
   end
@@ -16,7 +16,7 @@ describe Hive::Configuration do
       set_name "a_name"
       chdir    "."
     EOT
-    c = Hive::Configuration.parse ["--dry-run", "--script", script]
+    c = Collective::Configuration.parse ["--dry-run", "--script", script]
     c.env.should eq("the_env")
     c.name.should eq("a_name")
   end

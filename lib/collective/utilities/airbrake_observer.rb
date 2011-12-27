@@ -7,9 +7,9 @@
   
 =end
 
-require "hoptoad_notifier"
+require "airbrake"
 
-class Hive::Utilities::HoptoadObserver < Hive::Utilities::ObserverBase
+class Collective::Utilities::AirbrakeObserver < Collective::Utilities::ObserverBase
 
   attr :it # job
   attr :me # worker
@@ -20,7 +20,7 @@ class Hive::Utilities::HoptoadObserver < Hive::Utilities::ObserverBase
   end
 
   def job_error(x)
-    HoptoadNotifier.notify(x)
+    Airbrake.notify(x)
   end
 
-end # Hive::Utilities::HoptoadObserver
+end # Collective::Utilities::AirbrakeObserver

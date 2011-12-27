@@ -6,13 +6,13 @@
 
 =end
 
-class Hive::Key
+class Collective::Key
 
   attr :name
   attr :pid
   attr :host
 
-  def initialize( name, pid, host = Hive::Key.local_host )
+  def initialize( name, pid, host = Collective::Key.local_host )
     @name = name
     @pid  = pid.to_i
     @host = host

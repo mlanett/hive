@@ -45,8 +45,8 @@ class ListenerJob
   include RedisClient
 
   def initialize( context = {} )
-    storage = Hive::Redis::Storage.new(redis)
-    @mq = Hive::Messager.new( storage, my_address: context[:worker].key )
+    storage = Collective::Redis::Storage.new(redis)
+    @mq = Collective::Messager.new( storage, my_address: context[:worker].key )
     @mq.expect("Quit")   { |message| context[:worker].quit! }
     @mq.expect("Exit!")  { |message| Kernel.exit! }
     @mq.expect("State?") { |message| @mq.reply "State: #{context[:worker].state}", to: message }

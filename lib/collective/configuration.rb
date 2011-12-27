@@ -5,10 +5,10 @@ require "ruby-debug"
 
 =begin
 
-Evaluate a ruby configuration file in the context of a Hive Configuration instance.
+Evaluate a ruby configuration file in the context of a Collective Configuration instance.
 Offers a DSL to build the jobs as well as setting before/after-fork hooks.
 
-Hive configuration:
+Collective configuration:
 
 env()
 set_env(ENV)
@@ -42,7 +42,7 @@ Can be used multiple times.
 
 =end
 
-class Hive::Configuration
+class Collective::Configuration
 
   def self.parse( argv = ARGV )
     us = new
@@ -68,7 +68,7 @@ class Hive::Configuration
     us.finalize
   end
 
-  include Hive::Log
+  include Collective::Log
 
   attr :env
   attr :root
@@ -109,7 +109,7 @@ class Hive::Configuration
       log "Defaulting env to #{env}" if verbose >= 1
     end
     if ! name then
-      @name = "hive"
+      @name = "collective"
       log "Defaulting name to #{name}" if verbose >= 1
     end
     if ! @root then

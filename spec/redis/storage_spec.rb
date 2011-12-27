@@ -2,10 +2,10 @@
 
 require "helper"
 
-describe Hive::Redis::Storage, redis: true do
+describe Collective::Redis::Storage, redis: true do
   
   before do
-    @it = Hive::Redis::Storage.new(redis)
+    @it = Collective::Redis::Storage.new(redis)
   end
   
   it "should be concrete" do
@@ -109,15 +109,15 @@ describe Hive::Redis::Storage, redis: true do
       # write our 1..1000 in two separate processes
       # plus some extra just to mess us up
 
-      Hive::Utilities::Process.fork_and_detach do
+      Collective::Utilities::Process.fork_and_detach do
         redis.client.reconnect
-        q = Hive::Redis::Storage.new(redis)
+        q = Collective::Redis::Storage.new(redis)
         (1..2000).each { |i| q.queue_add( "foo", i.to_s, i ) if i % 2 == 0 }
       end
 
-      Hive::Utilities::Process.fork_and_detach do
+      Collective::Utilities::Process.fork_and_detach do
         redis.client.reconnect
-        q = Hive::Redis::Storage.new(redis)
+        q = Collective::Redis::Storage.new(redis)
         (1..2000).each { |i| q.queue_add( "foo", i.to_s, i ) if i % 2 == 1 }
       end
 

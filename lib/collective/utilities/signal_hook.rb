@@ -16,7 +16,7 @@
     SignalHook.trap("QUIT") { foo.quit! }.attempt { foo.run }
 =end
 
-class Hive::SignalHook
+class Collective::SignalHook
 
   attr_writer :local, :chain
 
@@ -44,4 +44,4 @@ class Hive::SignalHook
     end # trap
   end
 
-end # Hive::SignalHook
+end # Collective::SignalHook

@@ -1,5 +1,5 @@
-require "hive"
-require "hive/checker"
+require "collective"
+require "collective/checker"
 
 =begin
 
@@ -14,10 +14,10 @@ class Job3
 
   def initialize( options = {} )
     @redis   = Redis.connect url: "redis://127.0.0.1:6379/0"
-    @storage = Hive::Redis::Storage.new(redis)
+    @storage = Collective::Redis::Storage.new(redis)
   end
 
-  include Hive::Log
+  include Collective::Log
 
   def call(context)
     page           = storage.queue_pop( "Next" )

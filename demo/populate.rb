@@ -1,10 +1,10 @@
 File.expand_path(File.dirname(__FILE__)+"/../lib").tap { |d| $: << d unless $:.member?(d) }
-require "hive"
-require "hive/squiggly"
+require "collective"
+require "collective/squiggly"
 require "redis"
 
 redis   = Redis.connect url: "redis://127.0.0.1:6379/0"
-storage = Hive::Redis::Storage.new(redis)
+storage = Collective::Redis::Storage.new(redis)
 
 storage.del "Names"
 storage.del "Activity"

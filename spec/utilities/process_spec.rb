@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
 
 require "helper"
-require "hive"
+require "collective"
 
-describe Hive::Utilities::Process do
+describe Collective::Utilities::Process do
   it "does not fail like Process.wait2" do
     system("false")
     pid = $?.pid
@@ -12,6 +12,6 @@ describe Hive::Utilities::Process do
   it "can handle dead processes" do
     system("false")
     pid = $?.pid
-    expect { Hive::Utilities::Process.wait_and_terminate(pid) }.to_not raise_exception
+    expect { Collective::Utilities::Process.wait_and_terminate(pid) }.to_not raise_exception
   end
 end

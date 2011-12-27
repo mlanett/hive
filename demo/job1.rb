@@ -1,4 +1,4 @@
-require "hive"
+require "collective"
 
 =begin
 
@@ -12,7 +12,7 @@ class Job1
   def initialize( options = {} )
   end
   
-  include Hive::Log
+  include Collective::Log
   
   def call(context)
     p = rand

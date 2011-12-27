@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-module Hive::Utilities::Process
+module Collective::Utilities::Process
   
   def wait_until_deadline( pid, deadline )
     status   = nil
@@ -77,6 +77,6 @@ module Hive::Utilities::Process
     false
   end
 
-  extend Hive::Utilities::Process
+  extend Collective::Utilities::Process
 
-end # Hive::Utilities::Process
+end # Collective::Utilities::Process

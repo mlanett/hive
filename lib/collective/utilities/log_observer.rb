@@ -10,9 +10,9 @@
   
 =end
 
-class Hive::Utilities::LogObserver < Hive::Utilities::ObserverBase
+class Collective::Utilities::LogObserver < Collective::Utilities::ObserverBase
   
-  include Hive::Log
+  include Collective::Log
 
   def initialize( filename = nil )
     if filename then
@@ -37,4 +37,4 @@ class Hive::Utilities::LogObserver < Hive::Utilities::ObserverBase
     log "#{subject} has stopped"
   end
 
-end # Hive::Utilities::LogObserver
+end # Collective::Utilities::LogObserver

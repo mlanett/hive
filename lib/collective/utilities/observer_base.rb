@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-class Hive::Utilities::ObserverBase
+class Collective::Utilities::ObserverBase
 
   attr :subject
 
@@ -33,15 +33,15 @@ class Hive::Utilities::ObserverBase
     else
       case factory_or_observer
       when :airbrake
-        resolve(Hive::Utilities::AirbrakeObserver,*args)
+        resolve(Collective::Utilities::AirbrakeObserver,*args)
       when :hoptoad
-        resolve(Hive::Utilities::HoptoadObserver,*args)
+        resolve(Collective::Utilities::HoptoadObserver,*args)
       when :log
-        resolve(Hive::Utilities::LogObserver,*args)
+        resolve(Collective::Utilities::LogObserver,*args)
       when Class
         factory_or_observer.new(*args)
       when String
-        resolve(Hive.resolve_class(factory_or_observer.to_s),*args)
+        resolve(Collective.resolve_class(factory_or_observer.to_s),*args)
       when Array
         args = factory_or_observer.dup
         fobs = args.shift
@@ -56,4 +56,4 @@ class Hive::Utilities::ObserverBase
     s.to_s.gsub(/(?:^|_|\s)(.)/) { $1.upcase }
   end
 
-end # Hive::Utilities::ObserverBase
+end # Collective::Utilities::ObserverBase

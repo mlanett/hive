@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-class Hive::Utilities::StorageBase
+class Collective::Utilities::StorageBase
 
   module Resolver
     # resolution is as so:
@@ -18,13 +18,13 @@ class Hive::Utilities::StorageBase
       else
         case storage
         when :mock
-          resolve( Hive::Mocks::Storage, *args )
+          resolve( Collective::Mocks::Storage, *args )
         when :redis
-          resolve( Hive::Redis::Storage, *args )
+          resolve( Collective::Redis::Storage, *args )
         when Class
           storage.new(*args)
         when String
-          resolve( Hive.resolve_class(storage), *args )
+          resolve( Collective.resolve_class(storage), *args )
         when Array
           args    = storage.dup + args
           storage = args.shift
@@ -38,4 +38,4 @@ class Hive::Utilities::StorageBase
 
   extend Resolver
 
-end # Hive::Utilities::StorageBase
+end # Collective::Utilities::StorageBase

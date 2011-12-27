@@ -10,7 +10,7 @@ require "json"
 
 =end
 
-class Hive::Messager
+class Collective::Messager
 
   attr :callbacks
   attr :storage
@@ -92,7 +92,7 @@ class Hive::Messager
     attr :reply_to_id  # optional
 
     def initialize( data )
-      data         = ::Hive::Messager.symbolize(data)
+      data         = ::Collective::Messager.symbolize(data)
       @to          = data[:to] or raise "must specify to address"
       @from        = data[:from] or raise "must specify from address"
       @at          = (data[:at] || Time.now).to_f

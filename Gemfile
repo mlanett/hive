@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-# Specify your gem's dependencies in hive.gemspec
+# Specify your gem's dependencies in collective.gemspec
 gemspec
 
 group :development, :test do

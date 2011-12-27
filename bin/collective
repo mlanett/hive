@@ -3,11 +3,11 @@
 =begin
 
   Usage:
-  hive [options] [check] | monitor | restart | status | stop
+  collective [options] [check] | monitor | restart | status | stop
 
   e.g.
-  hive --dry-run --verbose --env production --name it --chdir /tmp/it check
-  hive /opt/rails/it/current/config/it monitor
+  collective --dry-run --verbose --env production --name it --chdir /tmp/it check
+  collective /opt/rails/it/current/config/it monitor
   Options must preceed the command.
 
   Note: the pid file depends on chdir, env, and name, so you have to specify them for any command to work.
@@ -16,11 +16,11 @@
 =end
 
 # We don't use Bundler because that is up to the client.
-# The client can use 'bundle exec hive' if desired.
+# The client can use 'bundle exec collective' if desired.
 File.expand_path(File.dirname(__FILE__)+"/../lib").tap { |d| $:.unshift(d) if ! $:.member?(d) }
-require "hive"
+require "collective"
 
-my = Hive::Configuration.parse(ARGV)
+my = Collective::Configuration.parse(ARGV)
 
 # TODO use my.options_for_daemon_spawn
 # TODO use my.args_for_daemon_spawn
@@ -28,9 +28,9 @@ my = Hive::Configuration.parse(ARGV)
 if ! my.dry_run then
   case ARGV.first
   when "stop"
-    Hive::Monitor.new(my).stop_all
+    Collective::Monitor.new(my).stop_all
   when "monitor"
-    Hive::Monitor.new(my).monitor
+    Collective::Monitor.new(my).monitor
   else
     Kernel.abort "Unknown command #{ARGV.first}"
   end

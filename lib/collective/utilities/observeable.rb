@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-module Hive::Utilities::Observeable
+module Collective::Utilities::Observeable
 
   def add_observer(o)
     o.focus(self)
