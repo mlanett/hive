@@ -46,6 +46,14 @@ class Collective::Policy
       @options.dup
     end
 
+    def before_fork
+      (before_forks || []).each { |f| f.call }
+    end
+
+    def after_fork
+      (after_forks || []).each { |f| f.call }
+    end
+
   end # Instance
 
   class << self
