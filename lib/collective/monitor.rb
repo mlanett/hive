@@ -8,8 +8,8 @@ class Collective::Monitor
   attr :pools
 
   def initialize( configuration )
-    @pools = configuration.jobs.map do |kind,options|
-      pool = Collective::Pool.new( kind, Collective::Policy.resolve(options) )
+    @pools = configuration.policies.map do |kind,policy|
+      pool = Collective::Pool.new( kind, policy )
     end
   end
 
