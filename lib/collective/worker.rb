@@ -143,7 +143,7 @@ class Collective::Worker
 
     case
     when job_factory.respond_to?(:call)
-      job_factory
+      job_factory.call
     when job_factory.respond_to?(:new)
       context = { worker: self }
       resolve_job(job_factory.new(context))
