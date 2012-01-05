@@ -41,7 +41,7 @@ class Collective::Utilities::ObserverBase
       when Class
         factory_or_observer.new(*args)
       when String
-        resolve(Collective.resolve_class(factory_or_observer.to_s),*args)
+        resolve(Collective::Utilities::Resolver.resolve_class(factory_or_observer.to_s),*args)
       when Array
         args = factory_or_observer.dup
         fobs = args.shift

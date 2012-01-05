@@ -152,7 +152,7 @@ class Collective::Worker
     else
       case job_factory
       when String, Symbol
-        resolve_job(Collective.resolve_class(job_factory.to_s))
+        resolve_job(Collective::Utilities::Resolver.resolve_class(job_factory.to_s))
       else
         raise Collective::ConfigurationError, "Unknown kind of job #{job_factory.inspect}"
       end

@@ -24,7 +24,7 @@ class Collective::Utilities::StorageBase
         when Class
           storage.new(*args)
         when String
-          resolve( Collective.resolve_class(storage), *args )
+          resolve( Collective::Utilities::Resolver.resolve_class(storage), *args )
         when Array
           args    = storage.dup + args
           storage = args.shift

@@ -29,24 +29,13 @@ module Collective::Utilities
   autoload :Observeable,      "collective/utilities/observeable"
   autoload :ObserverBase,     "collective/utilities/observer_base"
   autoload :Process,          "collective/utilities/process"
+  autoload :Resolver,         "collective/utilities/resolver"
   autoload :SignalHook,       "collective/utilities/signal_hook"
   autoload :StorageBase,      "collective/utilities/storage_base"
 end
 
 module Collective::Redis
   autoload :Storage,          "collective/redis/storage"
-end
-
-module Collective
-  class << self
-
-    # @param classname
-    # @returns class object
-    def resolve_class(classname)
-      classname.split(/::/).inject(Object) { |a,i| a.const_get(i) }
-    end
-
-  end # class
 end
 
 class Collective::ConfigurationError < Exception
