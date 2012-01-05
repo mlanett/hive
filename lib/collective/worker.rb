@@ -143,7 +143,9 @@ class Collective::Worker
 
     case
     when job_factory.respond_to?(:call)
-      job_factory.call
+      # A job factory can not be a proc, because a job itself is a proc; we would call it.
+      # Once we've found a proc, we have the result.
+      job_factory
     when job_factory.respond_to?(:new)
       context = { worker: self }
       resolve_job(job_factory.new(context))
