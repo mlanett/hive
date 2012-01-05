@@ -183,7 +183,6 @@ class Collective::Messager
       end
     end
     return best_result if best_result
-    debugger
     raise NoMatch
   end
 
