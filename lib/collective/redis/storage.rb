@@ -14,6 +14,9 @@ class Collective::Redis::Storage
     redis.client.disconnect
   end
 
+  def to_s
+    "#{self.class.name}(#{redis.inspect})"
+  end
 
   # Simple values
 

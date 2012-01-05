@@ -10,6 +10,10 @@ class Collective::Mocks::Storage
     # nop
   end
 
+  def to_s
+    "#{self.class.name}()"
+  end
+
   # Simple values
 
   def put( key, value )
