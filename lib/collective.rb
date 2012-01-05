@@ -13,6 +13,7 @@ module Collective
   autoload :Policy,           "collective/policy"
   autoload :Pool,             "collective/pool"
   autoload :Registry,         "collective/registry"
+  autoload :Trace,            "collective/trace"
   autoload :Worker,           "collective/worker"
 end
 
