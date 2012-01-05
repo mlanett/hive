@@ -21,6 +21,10 @@ module Collective::Mocks
   autoload :Storage,          "collective/mocks/storage"
 end
 
+module Collective::Redis
+  autoload :Storage,          "collective/redis/storage"
+end
+
 module Collective::Utilities
   autoload :AirbrakeObserver, "collective/utilities/airbrake_observer"
   autoload :HoptoadObserver,  "collective/utilities/hoptoad_observer"
@@ -32,10 +36,6 @@ module Collective::Utilities
   autoload :Resolver,         "collective/utilities/resolver"
   autoload :SignalHook,       "collective/utilities/signal_hook"
   autoload :StorageBase,      "collective/utilities/storage_base"
-end
-
-module Collective::Redis
-  autoload :Storage,          "collective/redis/storage"
 end
 
 class Collective::ConfigurationError < Exception
