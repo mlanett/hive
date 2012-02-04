@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-class Collective::Mocks::Storage
+class Hive::Mocks::Storage
   
   def initialize
     @storage = {}
@@ -109,4 +109,4 @@ class Collective::Mocks::Storage
     @storage.delete( queue_name )
   end
   
-end # Collective::Mocks::Storage
+end # Hive::Mocks::Storage

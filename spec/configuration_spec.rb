@@ -2,10 +2,10 @@
 
 require "helper"
 
-describe Collective::Configuration do
+describe Hive::Configuration do
 
   it "should parse command-line switches" do
-    c = Collective::Configuration.parse %w(--dry-run --env the_env --name a_name --chdir .)
+    c = Hive::Configuration.parse %w(--dry-run --env the_env --name a_name --chdir .)
     c.env.should eq("the_env")
     c.name.should eq("a_name")
   end
@@ -18,7 +18,7 @@ describe Collective::Configuration do
       before_fork() { true }
       after_fork() { true }
     EOT
-    c = Collective::Configuration.parse ["--dry-run", "--script", script]
+    c = Hive::Configuration.parse ["--dry-run", "--script", script]
     c.env.should eq("the_env")
     c.name.should eq("a_name")
     c.before_forks.size.should eq(1)
@@ -29,7 +29,7 @@ describe Collective::Configuration do
     script = <<-EOT.gsub(/^ +/,'')
       add_pool "Test", pool_max_workers: 1
     EOT
-    c = Collective::Configuration.parse ["--dry-run", "--script", script]
+    c = Hive::Configuration.parse ["--dry-run", "--script", script]
     c.policies.first.first.should eq("Test")
     c.policies.first.last.pool_max_workers.should eq(1)
   end
@@ -40,7 +40,7 @@ describe Collective::Configuration do
       after_fork() { false }
       add_pool "Test"
     EOT
-    c = Collective::Configuration.parse ["--dry-run", "--script", script]
+    c = Hive::Configuration.parse ["--dry-run", "--script", script]
     c.policies.to_a.size.should eq(1)
     pool = c.policies.to_a.first.last
     pool.before_forks.first.call.should eq(true)

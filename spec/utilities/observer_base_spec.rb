@@ -3,7 +3,7 @@
 require "helper"
 require "collective"
 
-class TestObserver < Collective::Utilities::ObserverBase
+class TestObserver < Hive::Utilities::ObserverBase
   attr :alpha
   attr :beta
   def initialize( alpha = 1, beta = 2 )
@@ -12,36 +12,36 @@ class TestObserver < Collective::Utilities::ObserverBase
   end
 end
 
-describe Collective::Utilities::ObserverBase do
+describe Hive::Utilities::ObserverBase do
 
   it "can instaniate from a class name" do
-    o = Collective::Utilities::ObserverBase.resolve TestObserver
+    o = Hive::Utilities::ObserverBase.resolve TestObserver
     o.should be_instance_of TestObserver
     o.alpha.should eq(1)
     o.beta.should eq(2)
   end
 
   it "can instaniate from a string" do
-    o = Collective::Utilities::ObserverBase.resolve "TestObserver"
+    o = Hive::Utilities::ObserverBase.resolve "TestObserver"
     o.should be_instance_of TestObserver
     o.alpha.should eq(1)
     o.beta.should eq(2)
   end
 
   it "can instaniate from a symbol" do
-    o = Collective::Utilities::ObserverBase.resolve :log
-    o.should be_instance_of Collective::Utilities::LogObserver
+    o = Hive::Utilities::ObserverBase.resolve :log
+    o.should be_instance_of Hive::Utilities::LogObserver
   end
 
   it "can instaniate from a block" do
-    o = Collective::Utilities::ObserverBase.resolve (->() { TestObserver.new })
+    o = Hive::Utilities::ObserverBase.resolve (->() { TestObserver.new })
     o.should be_instance_of TestObserver
     o.alpha.should eq(1)
     o.beta.should eq(2)
   end
 
   it "can instaniate from an array" do
-    o = Collective::Utilities::ObserverBase.resolve [ TestObserver, 2, 4 ]
+    o = Hive::Utilities::ObserverBase.resolve [ TestObserver, 2, 4 ]
     o.should be_instance_of TestObserver
     o.alpha.should eq(2)
     o.beta.should eq(4)

@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-# This file is evaluated in the context of a Collective::Configuration instance.
+# This file is evaluated in the context of a Hive::Configuration instance.
 # DSL attributes include: env, set_env, name, set_name (best to set these via command options)
 # DSL methods include: chdir, add_path, set_defaults, add_pool, after_fork.
 

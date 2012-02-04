@@ -2,7 +2,7 @@
 
 require "helper"
 
-describe Collective::Monitor do
+describe Hive::Monitor do
 
   it "can monitor all pools continuously"
 

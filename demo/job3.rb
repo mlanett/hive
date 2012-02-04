@@ -14,10 +14,10 @@ class Job3
 
   def initialize( options = {} )
     @redis   = Redis.connect url: "redis://127.0.0.1:6379/0"
-    @storage = Collective::Redis::Storage.new(redis)
+    @storage = Hive::Redis::Storage.new(redis)
   end
 
-  include Collective::Log
+  include Hive::Log
 
   def call(context)
     page           = storage.queue_pop( "Next" )

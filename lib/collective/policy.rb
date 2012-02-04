@@ -2,7 +2,7 @@
 
 require "ostruct"
 
-class Collective::Policy
+class Hive::Policy
 
   DEFAULTS = {
     pool_min_workers:       1,
@@ -35,7 +35,7 @@ class Collective::Policy
     end
 
     def storage
-      Collective::Utilities::StorageBase.resolve @options[:storage]
+      Hive::Utilities::StorageBase.resolve @options[:storage]
     end
 
     def method_missing( symbol, *arguments )
@@ -60,9 +60,9 @@ class Collective::Policy
 
     def resolve( options = {} )
       # this will dup either an Instance or a Hash
-      Collective::Policy::Instance.new(options.dup)
+      Hive::Policy::Instance.new(options.dup)
     end
 
   end # class
 
-end # Collective::Policy
+end # Hive::Policy

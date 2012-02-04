@@ -4,10 +4,10 @@ require "optparse"
 
 =begin
 
-Evaluate a ruby configuration file in the context of a Collective Configuration instance.
+Evaluate a ruby configuration file in the context of a Hive Configuration instance.
 Offers a DSL to build the jobs as well as setting before/after-fork hooks.
 
-Collective configuration:
+Hive configuration:
 
 env()
 set_env(ENV)
@@ -41,7 +41,7 @@ Can be used multiple times.
 
 =end
 
-class Collective::Configuration
+class Hive::Configuration
 
   def self.parse( argv = ARGV )
     us = new
@@ -67,7 +67,7 @@ class Collective::Configuration
     us.finalize
   end
 
-  include Collective::Log
+  include Hive::Log
 
   attr :env
   attr :root
@@ -96,7 +96,7 @@ class Collective::Configuration
         rescue StopIteration => x
           break
         end
-        policy = Collective::Policy.resolve(it.last)
+        policy = Hive::Policy.resolve(it.last)
         yield([ it.first, policy ])
       end
     end

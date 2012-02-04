@@ -4,7 +4,7 @@ require "redis"
 require "redis-namespace"
 require "timeout"
 
-class Collective::Redis::Storage
+class Hive::Redis::Storage
 
   def initialize( redis = nil )
     self.redis = redis if redis
@@ -125,7 +125,7 @@ class Collective::Redis::Storage
 
   # @param redis_client can only be set once
   def redis=( redis_or_options )
-    raise Collective::ConfigurationError if @redis
+    raise Hive::ConfigurationError if @redis
 
     case redis_or_options
     when Hash
@@ -142,4 +142,4 @@ class Collective::Redis::Storage
     @redis ||= ::Redis.connect( url: "redis://127.0.0.1:6379/1" )
   end
 
-end # Collective::Redis::Storage
+end # Hive::Redis::Storage

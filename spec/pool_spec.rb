@@ -3,7 +3,7 @@
 require "helper"
 require "redis"
 
-describe Collective::Pool do
+describe Hive::Pool do
 
   before do
     @name = "#{ described_class || 'Test' }::#{example.description}"
@@ -13,13 +13,13 @@ describe Collective::Pool do
 
     it "needs to be specified for a proc" do
       job  = ->(context) { false }
-      expect { pool = Collective::Pool.new( job ) }.to raise_error
-      expect { pool = Collective::Pool.new( job, name: @name ) }.to_not raise_error
+      expect { pool = Hive::Pool.new( job ) }.to raise_error
+      expect { pool = Hive::Pool.new( job, name: @name ) }.to_not raise_error
     end
 
     it "does not need to be specified for a class" do
       job = TrueJob
-      expect { pool = Collective::Pool.new( job ) }.to_not raise_error
+      expect { pool = Hive::Pool.new( job ) }.to_not raise_error
     end
 
   end
@@ -28,12 +28,12 @@ describe Collective::Pool do
 
     def make_policy( options = {} )
       options = { name: @name, worker_max_lifetime: 10, storage: :redis, observers: [ [ :log, "/tmp/debug.log" ] ] }.merge(options)
-      Collective::Policy.resolve(options)
+      Hive::Policy.resolve(options)
     end
 
     it "should spawn a worker" do
       job     = ->(context) {}
-      pool    = Collective::Pool.new( job, make_policy )
+      pool    = Hive::Pool.new( job, make_policy )
 
       pool.stub(:spawn) {} # must be called at least once
 
@@ -41,7 +41,7 @@ describe Collective::Pool do
     end
 
     it "spins up an actual worker" do
-      pool    = Collective::Pool.new( ListenerJob, make_policy )
+      pool    = Hive::Pool.new( ListenerJob, make_policy )
 
       pool.registry.workers.size.should be == 0
 
@@ -58,7 +58,7 @@ describe Collective::Pool do
 
     it "spins up a worker only once" do
       policy   = make_policy pool_max_workers: 1
-      pool     = Collective::Pool.new( ListenerJob, policy )
+      pool     = Hive::Pool.new( ListenerJob, policy )
       registry = pool.registry
 
       registry.checked_workers( policy ).live.size.should eq(0)
@@ -72,7 +72,7 @@ describe Collective::Pool do
 
     it "should spin up new workers as necessary" do
       policy   = make_policy pool_min_workers: 2, pool_max_workers: 2
-      pool     = Collective::Pool.new( ListenerJob, policy )
+      pool     = Hive::Pool.new( ListenerJob, policy )
       registry = pool.registry
 
       registry.checked_workers( policy ).live.size.should eq(0)
@@ -91,7 +91,7 @@ describe Collective::Pool do
 
     it "spins down workers when there are too many" do
       policy   = make_policy pool_min_workers: 2, pool_max_workers: 2
-      pool     = Collective::Pool.new( ListenerJob, policy )
+      pool     = Hive::Pool.new( ListenerJob, policy )
       registry = pool.registry
 
       registry.checked_workers( policy ).live.size.should eq(0)
@@ -101,7 +101,7 @@ describe Collective::Pool do
 
       # create a second pool with its own policy to force quitting
       policy2   = make_policy pool_min_workers: 1, pool_max_workers: 1
-      pool2     = Collective::Pool.new( ListenerJob, policy2 )
+      pool2     = Hive::Pool.new( ListenerJob, policy2 )
       pool2.synchronize
       registry.checked_workers( policy ).live.size.should eq(1)
     end

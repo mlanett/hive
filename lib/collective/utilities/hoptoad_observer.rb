@@ -9,7 +9,7 @@
 
 require "hoptoad_notifier"
 
-class Collective::Utilities::HoptoadObserver < Collective::Utilities::ObserverBase
+class Hive::Utilities::HoptoadObserver < Hive::Utilities::ObserverBase
 
   attr :it # job
   attr :me # worker
@@ -23,4 +23,4 @@ class Collective::Utilities::HoptoadObserver < Collective::Utilities::ObserverBa
     HoptoadNotifier.notify(x)
   end
 
-end # Collective::Utilities::HoptoadObserver
+end # Hive::Utilities::HoptoadObserver

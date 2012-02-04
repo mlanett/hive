@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-module Collective::Utilities::Resolver
+module Hive::Utilities::Resolver
 
   # @param classname
   # @returns class object
@@ -8,5 +8,5 @@ module Collective::Utilities::Resolver
     classname.split(/::/).inject(Object) { |a,i| a.const_get(i) }
   end
 
-  extend Collective::Utilities::Resolver
+  extend Hive::Utilities::Resolver
 end

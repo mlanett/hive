@@ -7,9 +7,9 @@
 
 =end
 
-class Collective::Pool
+class Hive::Pool
 
-  include Collective::Log
+  include Hive::Log
 
   attr :kind      # job class
   attr :name
@@ -22,10 +22,10 @@ class Collective::Pool
       kind, policy_prototype = kind.first, kind.last
     end
     @kind     = kind
-    @policy   = Collective::Policy.resolve(policy_prototype) or raise
-    @name     = @policy.name || kind.name or raise Collective::ConfigurationError, "Pool or Job must have a name"
+    @policy   = Hive::Policy.resolve(policy_prototype) or raise
+    @name     = @policy.name || kind.name or raise Hive::ConfigurationError, "Pool or Job must have a name"
     @storage  = policy.storage
-    @registry = Collective::Registry.new( name, storage )
+    @registry = Hive::Registry.new( name, storage )
 
     # type checks
     policy.pool_min_workers
@@ -58,7 +58,7 @@ class Collective::Pool
     elsif (excess = live_count - policy.pool_max_workers) > 0 then
       # spin down some workers
       # try to find LOCAL workers to spin down first
-      locals = checklist.live.select { |k| k.host == Collective::Key.local_host }
+      locals = checklist.live.select { |k| k.host == Hive::Key.local_host }
       if locals.size > 0 then
         reap locals.first, wait: true
       else
@@ -72,8 +72,8 @@ class Collective::Pool
 
   def mq
     @mq ||= begin
-      key = Collective::Key.new( "#{name}-pool", Process.pid )
-      me  = Collective::Messager.new storage, my_address: key
+      key = Hive::Key.new( "#{name}-pool", Process.pid )
+      me  = Hive::Messager.new storage, my_address: key
     end
   end
 
@@ -95,17 +95,17 @@ class Collective::Pool
     raise if options.size > 0
 
     if ! wait then
-      Collective::Worker.spawn kind, registry: registry, policy: policy, name: name
+      Hive::Worker.spawn kind, registry: registry, policy: policy, name: name
       return
     end
 
     before = registry.checked_workers( policy ).live
 
-    Collective::Worker.spawn kind, registry: registry, policy: policy, name: name
+    Hive::Worker.spawn kind, registry: registry, policy: policy, name: name
 
-    Collective::Idler.wait_until( 10 ) do
+    Hive::Idler.wait_until( 10 ) do
       after = registry.checked_workers( policy ).live
-      diff  = ( after - before ).select { |k| k.host == Collective::Key.local_host }
+      diff  = ( after - before ).select { |k| k.host == Hive::Key.local_host }
       diff.size > 0
     end
   end
@@ -116,15 +116,15 @@ class Collective::Pool
     wait = options.delete(:wait)
     raise if options.size > 0
 
-    if key.host == Collective::Key.local_host then
+    if key.host == Hive::Key.local_host then
       ::Process.kill( "TERM", key.pid )
-      Collective::Utilities::Process.wait_and_terminate key.pid, timeout: 10
+      Hive::Utilities::Process.wait_and_terminate key.pid, timeout: 10
     else
       mq.send "Quit", to: key
     end
 
     if wait then
-      Collective::Idler.wait_until( 10 ) do
+      Hive::Idler.wait_until( 10 ) do
         live = registry.checked_workers( policy ).live
         ! live.member? key
       end
@@ -160,7 +160,7 @@ class Collective::Pool
       log "Hung worker count #{hung.size}"
       hung.each do |key|
         log "Killing #{key}"
-        Collective::Utilities::Process.wait_and_terminate( key.pid )
+        Hive::Utilities::Process.wait_and_terminate( key.pid )
         registry.unregister(key)
       end
     end
@@ -177,4 +177,4 @@ class Collective::Pool
     end
   end
 
-end # Collective::Pool
+end # Hive::Pool

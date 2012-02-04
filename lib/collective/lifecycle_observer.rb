@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-class Collective::LifecycleObserver < Collective::Utilities::ObserverBase
+class Hive::LifecycleObserver < Hive::Utilities::ObserverBase
 
   attr :key
   attr :registry
@@ -22,4 +22,4 @@ class Collective::LifecycleObserver < Collective::Utilities::ObserverBase
     registry.unregister( key )
   end
 
-end # Collective::LifecycleObserver
+end # Hive::LifecycleObserver

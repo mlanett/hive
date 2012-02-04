@@ -12,7 +12,7 @@ class Job2
   def initialize( options = {} )
   end
   
-  include Collective::Log
+  include Hive::Log
   
   def call(context)
     p = rand

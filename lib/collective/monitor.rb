@@ -1,14 +1,14 @@
 # -*- encoding: utf-8 -*-
 
-class Collective::Monitor
+class Hive::Monitor
 
-  include Collective::Log
+  include Hive::Log
 
   attr :pools
 
   def initialize( configuration )
     @pools = configuration.policies.map do |kind,policy|
-      pool = Collective::Pool.new( kind, policy )
+      pool = Hive::Pool.new( kind, policy )
     end
   end
 
@@ -33,7 +33,7 @@ class Collective::Monitor
       changed
     end
 
-    job = Collective::Idler.new( job, min_sleep: 1, max_sleep: 10 )
+    job = Hive::Idler.new( job, min_sleep: 1, max_sleep: 10 )
 
     ok = true
     trap("TERM") { ok = false }

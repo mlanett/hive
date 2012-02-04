@@ -1,4 +1,4 @@
-module Collective::Log
+module Hive::Log
   
   def log( *args )
     logger.print(format_for_logging(*args))
@@ -26,4 +26,4 @@ module Collective::Log
     @logger = other
   end
 
-end # Collective::Log
+end # Hive::Log

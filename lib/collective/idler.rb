@@ -9,7 +9,7 @@ The idler will sleep when there is nothing to do.
 
 =end
 
-class Collective::Idler
+class Hive::Idler
   
   MIN_SLEEP = 0.125
   MAX_SLEEP = 1.0
@@ -68,7 +68,7 @@ class Collective::Idler
   module Utilities
     # execute test repeatedly, until timeout, or until test returns true
     def wait_until( timeout = 1, &test )
-      tester = Collective::Idler.new(test)
+      tester = Hive::Idler.new(test)
       finish = Time.now.to_f + timeout
       loop do
         break if tester.call
@@ -78,4 +78,4 @@ class Collective::Idler
   end
   extend Utilities
 
-end # Collective::Idler
+end # Hive::Idler

@@ -2,7 +2,7 @@ File.expand_path(File.dirname(__FILE__)).tap { |d| $: << d unless $:.member?(d) 
 
 require "collective/version"
 
-module Collective
+module Hive
   autoload :Configuration,    "collective/configuration"
   autoload :Idler,            "collective/idler"
   autoload :Key,              "collective/key"
@@ -17,15 +17,15 @@ module Collective
   autoload :Worker,           "collective/worker"
 end
 
-module Collective::Mocks
+module Hive::Mocks
   autoload :Storage,          "collective/mocks/storage"
 end
 
-module Collective::Redis
+module Hive::Redis
   autoload :Storage,          "collective/redis/storage"
 end
 
-module Collective::Utilities
+module Hive::Utilities
   autoload :AirbrakeObserver, "collective/utilities/airbrake_observer"
   autoload :HoptoadObserver,  "collective/utilities/hoptoad_observer"
   autoload :LogObserver,      "collective/utilities/log_observer"
@@ -38,5 +38,5 @@ module Collective::Utilities
   autoload :StorageBase,      "collective/utilities/storage_base"
 end
 
-class Collective::ConfigurationError < Exception
+class Hive::ConfigurationError < Exception
 end

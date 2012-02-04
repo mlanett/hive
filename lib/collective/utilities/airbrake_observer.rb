@@ -9,7 +9,7 @@
 
 require "airbrake"
 
-class Collective::Utilities::AirbrakeObserver < Collective::Utilities::ObserverBase
+class Hive::Utilities::AirbrakeObserver < Hive::Utilities::ObserverBase
 
   attr :it # job
   attr :me # worker
@@ -23,4 +23,4 @@ class Collective::Utilities::AirbrakeObserver < Collective::Utilities::ObserverB
     Airbrake.notify(x)
   end
 
-end # Collective::Utilities::AirbrakeObserver
+end # Hive::Utilities::AirbrakeObserver

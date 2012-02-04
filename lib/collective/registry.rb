@@ -8,7 +8,7 @@ require 'ostruct'
 
 =end
 
-class Collective::Registry
+class Hive::Registry
 
   attr :name
   attr :storage
@@ -56,7 +56,7 @@ class Collective::Registry
   def workers
     all = storage.set_get_all( workers_key )
     raise "Not a Set: #{workers_key} (#{all.class})" unless all.kind_of?(Array)
-    all.map { |key_string| Collective::Key.parse(key_string) }
+    all.map { |key_string| Hive::Key.parse(key_string) }
   end
 
 
@@ -107,7 +107,7 @@ class Collective::Registry
 
 
   def policy
-    @policy ||= Collective::Policy.resolve
+    @policy ||= Hive::Policy.resolve
   end
 
 
@@ -120,4 +120,4 @@ class Collective::Registry
     "collective:#{name}:worker:#{key}"
   end
 
-end # Collective::Registry
+end # Hive::Registry

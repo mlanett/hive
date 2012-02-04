@@ -7,22 +7,22 @@
 
 =end
 
-class Collective::Worker
+class Hive::Worker
 
-  include Collective::Utilities::Observeable
+  include Hive::Utilities::Observeable
 
   # forks a new process
   # creates a new instance of the job class
   # runs a loop which calls the job
   def self.spawn( prototype_job, options = {} )
-    policy   = options[:policy] || Collective::Policy.resolve
+    policy   = options[:policy] || Hive::Policy.resolve
     name     = options[:name] || policy.name || prototype_job.to_s
     storage  = policy.storage
-    registry = options[:registry] || Collective::Registry.new( name, storage )
+    registry = options[:registry] || Hive::Registry.new( name, storage )
 
     foptions = { stdout: "/tmp/debug.log" }
     policy.before_fork
-    Collective::Utilities::Process.fork_and_detach( foptions ) do
+    Hive::Utilities::Process.fork_and_detach( foptions ) do
       policy.after_fork
       # $0 = "$0 #{name}"
       worker = new( prototype_job, options )
@@ -44,11 +44,11 @@ class Collective::Worker
   # @param options[:policy] is optional
   # @param options[:registry] is optional
   def initialize( prototype_job, options = {} )
-    @policy   = options[:policy] || Collective::Policy.resolve
+    @policy   = options[:policy] || Hive::Policy.resolve
     @name     = options[:name] || policy.name || prototype_job.to_s
     @storage  = policy.storage
-    @registry = options[:registry] || Collective::Registry.new( name, storage )
-    @job      = Collective::Idler.new( resolve_job( prototype_job ), min_sleep: policy.worker_idle_min_sleep, max_sleep: policy.worker_idle_max_sleep )
+    @registry = options[:registry] || Hive::Registry.new( name, storage )
+    @job      = Hive::Idler.new( resolve_job( prototype_job ), min_sleep: policy.worker_idle_min_sleep, max_sleep: policy.worker_idle_max_sleep )
 
     # type checks
     policy.pool_min_workers
@@ -60,12 +60,12 @@ class Collective::Worker
 
     # set up observers
     policy.observers.each do |observer|
-      o = Collective::Utilities::ObserverBase.resolve(observer)
+      o = Hive::Utilities::ObserverBase.resolve(observer)
       add_observer(o)
     end
 
     # manage the registry via an observer
-    add_observer( Collective::LifecycleObserver.new( key, registry ) )
+    add_observer( Hive::LifecycleObserver.new( key, registry ) )
   end
 
   def run()
@@ -100,11 +100,11 @@ class Collective::Worker
   # the key is a constant string which uniquely identifies this worker
   # WARNING this would be invalidated if we forked or set this before forking
   def key
-    @key ||= Collective::Key.new( name, Process.pid )
+    @key ||= Hive::Key.new( name, Process.pid )
   end
 
   def mq
-    @mq ||= Collective::Messager.new( storage, my_address: key )
+    @mq ||= Hive::Messager.new( storage, my_address: key )
   end
 
   # ----------------------------------------------------------------------------
@@ -139,7 +139,7 @@ class Collective::Worker
   end
 
   def resolve_job( job_factory )
-    raise Collective::ConfigurationError if ! job_factory
+    raise Hive::ConfigurationError if ! job_factory
 
     case
     when job_factory.respond_to?(:call)
@@ -152,11 +152,11 @@ class Collective::Worker
     else
       case job_factory
       when String, Symbol
-        resolve_job(Collective::Utilities::Resolver.resolve_class(job_factory.to_s))
+        resolve_job(Hive::Utilities::Resolver.resolve_class(job_factory.to_s))
       else
-        raise Collective::ConfigurationError, "Unknown kind of job #{job_factory.inspect}"
+        raise Hive::ConfigurationError, "Unknown kind of job #{job_factory.inspect}"
       end
     end
   end
 
-end # Collective::Worker
+end # Hive::Worker

@@ -5,7 +5,7 @@ require "collective/version"
 
 Gem::Specification.new do |s|
   s.name        = "collective"
-  s.version     = Collective::VERSION
+  s.version     = Hive::VERSION
   s.authors     = ["Mark Lanett"]
   s.email       = ["mark.lanett@gmail.com"]
   s.homepage    = ""
