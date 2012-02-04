@@ -1,7 +1,6 @@
 # -*- encoding: utf-8 -*-
 
 require "optparse"
-require "ruby-debug"
 
 =begin
 
