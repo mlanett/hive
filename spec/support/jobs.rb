@@ -3,18 +3,24 @@
 require "support/redis"
 
 class QuitJob
+  def initialize( options = {} )
+  end
   def call( context = {} )
     context[:worker].quit!
   end
 end
 
 class TrueJob
+  def initialize( options = {} )
+  end
   def call
     true
   end
 end
 
 class QuitJobWithSet
+  def initialize( options = {} )
+  end
   include RedisClient
   def call( context = {} )
     redis.set("QuitJobWithSet",Process.pid)
@@ -23,6 +29,8 @@ class QuitJobWithSet
 end
 
 class ForeverJobWithSet
+  def initialize( options = {} )
+  end
   include RedisClient
   def call( context = {} )
     redis.set("ForeverJobWithSet",Process.pid)
@@ -31,6 +39,8 @@ class ForeverJobWithSet
 end
 
 class ForeverUntilQuitJob
+  def initialize( options = {} )
+  end
   include RedisClient
   def call( context = {} )
     if redis.get("ForeverUntilQuitJob") then
