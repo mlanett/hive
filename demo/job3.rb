@@ -1,5 +1,5 @@
-require "collective"
-require "collective/checker"
+require "hive"
+require "hive/checker"
 
 =begin
 

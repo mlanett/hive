@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 
 require "helper"
-require "collective/checker"
+require "hive/checker"
 
 describe Checker do
 

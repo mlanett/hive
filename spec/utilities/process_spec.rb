@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 
 require "helper"
-require "collective"
+require "hive"
 
 describe Hive::Utilities::Process do
   it "does not fail like Process.wait2" do

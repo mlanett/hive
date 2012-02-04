@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 
 require "helper"
-require "collective"
+require "hive"
 
 class TestObserver < Hive::Utilities::ObserverBase
   attr :alpha

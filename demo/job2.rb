@@ -1,4 +1,4 @@
-require "collective"
+require "hive"
 
 =begin
 

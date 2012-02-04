@@ -134,7 +134,7 @@ class Hive::Configuration
       log "Defaulting env to #{env}" if verbose >= 1
     end
     if ! name then
-      @name = "collective"
+      @name = "hive"
       log "Defaulting name to #{name}" if verbose >= 1
     end
     if ! @root then

@@ -112,12 +112,12 @@ class Hive::Registry
 
 
   def workers_key
-    @workers_key ||= "collective:#{name}:workers"
+    @workers_key ||= "hive:#{name}:workers"
   end
 
 
   def status_key( key )
-    "collective:#{name}:worker:#{key}"
+    "hive:#{name}:worker:#{key}"
   end
 
 end # Hive::Registry

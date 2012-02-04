@@ -14,7 +14,7 @@ require "bundler/setup"       # set up gem paths
 #require "simplecov"           # code coverage
 #SimpleCov.start               # must be loaded before our own code
 
-require "collective"                # load this gem
+require "hive"                # load this gem
 require "support/jobs"        # simple helpers for testing
 require "support/redis"       # simple helpers for testing
 require "support/timing"      # simple helpers for testing

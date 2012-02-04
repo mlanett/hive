@@ -3,11 +3,11 @@
 =begin
 
   Usage:
-  collective [options] [check] | monitor | restart | status | stop
+  hive [options] [check] | monitor | restart | status | stop
 
   e.g.
-  collective --dry-run --verbose --env production --name it --chdir /tmp/it check
-  collective /opt/rails/it/current/config/it monitor
+  hive --dry-run --verbose --env production --name it --chdir /tmp/it check
+  hive /opt/rails/it/current/config/it monitor
   Options must preceed the command.
 
   Note: the pid file depends on chdir, env, and name, so you have to specify them for any command to work.
@@ -16,9 +16,9 @@
 =end
 
 # We don't use Bundler because that is up to the client.
-# The client can use 'bundle exec collective' if desired.
+# The client can use 'bundle exec hive' if desired.
 File.expand_path(File.dirname(__FILE__)+"/../lib").tap { |d| $:.unshift(d) if ! $:.member?(d) }
-require "collective"
+require "hive"
 
 my = Hive::Configuration.parse(ARGV)
 
