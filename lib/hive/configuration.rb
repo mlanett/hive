@@ -145,20 +145,6 @@ class Hive::Configuration
     self
   end
 
-  def options_for_daemon_spawn
-    mkdirp root, "#{root}/log", "#{root}/tmp", "#{root}/tmp/pids" if ! dry_run
-    return {
-      working_dir: root,
-      log_file:    "#{root}/log/#{name}_#{env}.log",
-      pid_file:    "#{root}/tmp/pids/#{name}_#{env}.pid",
-      sync_log:    local?
-    }
-  end
-
-  def args_for_daemon_spawn
-    args + [self]
-  end
-
   # ----------------------------------------------------------------------------
   # DSL
   # ----------------------------------------------------------------------------

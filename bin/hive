@@ -20,17 +20,14 @@
 File.expand_path(File.dirname(__FILE__)+"/../lib").tap { |d| $:.unshift(d) if ! $:.member?(d) }
 require "hive"
 
-my = Hive::Configuration.parse(ARGV)
+options = Hive::Configuration.parse(ARGV)
 
-# TODO use my.options_for_daemon_spawn
-# TODO use my.args_for_daemon_spawn
-
-if ! my.dry_run then
+if ! options.dry_run then
   case ARGV.first
   when "stop"
-    Hive::Monitor.new(my).stop_all
+    Hive::Monitor.new(options).stop_all
   when "monitor"
-    Hive::Monitor.new(my).monitor
+    Hive::Monitor.new(options).monitor
   else
     Kernel.abort "Unknown command #{ARGV.first}"
   end
