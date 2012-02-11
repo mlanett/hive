@@ -9,7 +9,7 @@
 =end
 
 require "bundler/setup"       # set up gem paths
-#require "ruby-debug"          # because sometimes you need it
+####### "ruby-debug"          # because sometimes you need it
 
 #require "simplecov"           # code coverage
 #SimpleCov.start               # must be loaded before our own code
