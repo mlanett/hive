@@ -8,7 +8,7 @@ group :development, :test do
   gem "rb-fsevent"      # for guard
   gem "growl_notify"    # for guard
   gem "rspec"
-  gem "ruby-debug19", require: false
+  ### "ruby-debug19", require: false
 end
 
 group :test do
