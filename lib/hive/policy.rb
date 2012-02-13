@@ -21,6 +21,7 @@ class Hive::Policy
 
     # including options[:policy] will merge over these options
     def initialize( options = {} )
+      options  = Hash[ options.map { |k,v| [ k.to_sym, v ] } ] # poor man's symbolize keys
       if options[:policy] then
         policy   = options.delete(:policy)
         defaults = policy.dup
@@ -28,7 +29,6 @@ class Hive::Policy
         defaults = DEFAULTS
       end
 
-      options  = Hash[ options.map { |k,v| [ k.to_sym, v ] } ] # poor man's symbolize keys
       @options = defaults.merge( options )
     end
 
