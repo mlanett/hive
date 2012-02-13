@@ -27,6 +27,7 @@ end
 
 module Hive::Utilities
   autoload :AirbrakeObserver, "hive/utilities/airbrake_observer"
+  autoload :Hash,             "hive/utilities/hash"
   autoload :HoptoadObserver,  "hive/utilities/hoptoad_observer"
   autoload :LogObserver,      "hive/utilities/log_observer"
   autoload :NullObserver,     "hive/utilities/null_observer"

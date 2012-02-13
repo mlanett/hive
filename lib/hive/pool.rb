@@ -10,6 +10,7 @@
 class Hive::Pool
 
   include Hive::Log
+  include Hive::Utilities::Hash
 
   attr :kind      # job class
   attr :name
@@ -36,8 +37,8 @@ class Hive::Pool
   # @param options[:log] can be true
   # @returns the checked worker lists
   def synchronize( options = {} )
-    do_log = options.delete(:log)
-    raise if options.size > 0
+    assert_valid_keys( options, :log )
+    do_log = options[:log]
 
     checklist  = registry.checked_workers( policy )
     live_count = checklist.live.size
@@ -91,8 +92,8 @@ class Hive::Pool
   # this really should be protected but it's convenient to be able to force a spawn
   # param options[:wait] can true to wait until after the process is spawned
   def spawn( options = {} )
-    wait = options.delete(:wait)
-    raise if options.size > 0
+    assert_valid_keys( options, :wait )
+    wait = options[:wait]
 
     if ! wait then
       Hive::Worker.spawn kind, registry: registry, policy: policy, name: name
@@ -113,8 +114,8 @@ class Hive::Pool
 
   # shut down a worker
   def reap( key, options = {} )
-    wait = options.delete(:wait)
-    raise if options.size > 0
+    assert_valid_keys( options, :wait )
+    wait = options[:wait]
 
     if key.host == Hive::Key.local_host then
       ::Process.kill( "TERM", key.pid )
