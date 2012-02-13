@@ -1,7 +1,5 @@
 # -*- encoding: utf-8 -*-
 
-require "ostruct"
-
 class Hive::Policy
 
   DEFAULTS = {
