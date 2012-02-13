@@ -17,19 +17,9 @@ class Hive::Policy
     observers:              []
   }
 
-  class Instance
-
-    # including options[:policy] will merge over these options
     def initialize( options = {} )
       options  = Hash[ options.map { |k,v| [ k.to_sym, v ] } ] # poor man's symbolize keys
-      if options[:policy] then
-        policy   = options.delete(:policy)
-        defaults = policy.dup
-      else
-        defaults = DEFAULTS
-      end
-
-      @options = defaults.merge( options )
+      @options = DEFAULTS.merge( options )
     end
 
     def storage
@@ -40,8 +30,13 @@ class Hive::Policy
       @options[symbol.to_sym]
     end
 
+    def merge( options = {} )
+      @options.merge!( options )
+      self
+    end
+
     def dup
-      @options.dup
+      self.class.new( @options.dup )
     end
 
     def before_fork
@@ -52,13 +47,12 @@ class Hive::Policy
       (after_forks || []).each { |f| f.call }
     end
 
-  end # Instance
-
   class << self
-
-    def resolve( options = {} )
-      # this will dup either an Instance or a Hash
-      Hive::Policy::Instance.new(options.dup)
+    # @returns a new policy
+    # @options_or_policy can be a set of options or a source policy
+    def resolve( options_or_policy = {} )
+      # if it is a policy, just dup it
+      options_or_policy.kind_of?(Hive::Policy) ? options_or_policy.dup : new(options_or_policy.dup)
     end
 
   end # class

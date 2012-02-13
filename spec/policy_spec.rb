@@ -27,7 +27,7 @@ describe Hive::Policy do
 
   it "is copied from another policy" do
     p1 = Hive::Policy.resolve worker_max_jobs: 7, worker_max_lifetime: 999
-    p2 = Hive::Policy.resolve policy: p1, worker_max_jobs: 12
+    p2 = p1.dup.merge worker_max_jobs: 12
 
     p2.worker_max_lifetime.should eq(p1.worker_max_lifetime)
     p1.worker_max_jobs.should eq(7)
