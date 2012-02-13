@@ -17,6 +17,7 @@ class Hive::Pool
   attr :policy
   attr :registry
   attr :storage   # where to store worker details
+  attr :verbose,  true
 
   def initialize( kind, policy_prototype = {} )
     if kind.kind_of?(Array) then

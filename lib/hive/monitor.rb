@@ -5,10 +5,12 @@ class Hive::Monitor
   include Hive::Log
 
   attr :pools
+  attr :verbose
 
   def initialize( configuration )
+    @verbose = configuration.verbose
     @pools = configuration.policies.map do |kind,policy|
-      pool = Hive::Pool.new( kind, policy )
+      pool = Hive::Pool.new( kind, policy ).tap { |it| it.verbose = verbose }
     end
   end
 
